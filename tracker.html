@@ -1538,6 +1538,15 @@ function recalcStreaks() {
 //  AUTH STATE — Entry point
 // ============================================================
 
+// Auto-open signup tab if coming from "Begin the Protocol"
+document.addEventListener('DOMContentLoaded', () => {
+  const tab = sessionStorage.getItem('mt_open_tab');
+  if (tab === 'signup') {
+    sessionStorage.removeItem('mt_open_tab');
+    switchTab('signup');
+  }
+});
+
 sb.auth.onAuthStateChange(async (event, session) => {
   if (session && session.user) {
     currentUser = session.user;
