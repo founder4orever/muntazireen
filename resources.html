@@ -433,9 +433,10 @@ window.addEventListener('scroll', () => {
   const sb=supabase.createClient(URL,KEY);
   window._sb=sb;
   window._signOut=async function(){await sb.auth.signOut();sessionStorage.setItem("mt_open_tab","signin");window.location.href="tracker.html";};
-  sb.auth.getSession().then(({data:{session}})=>{
-    if(!session){sessionStorage.setItem("mt_open_tab","signup");window.location.href="tracker.html";}
-    else{
+  sb.auth.onAuthStateChange((event,session)=>{
+    if(event==='INITIAL_SESSION'){
+      if(!session){sessionStorage.setItem("mt_open_tab","signup");window.location.href="tracker.html";}
+      else{
       document.getElementById("page-content").style.display="block";
       const ud=document.getElementById("nav-user-display");
       const so=document.getElementById("nav-signout-btn");

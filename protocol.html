@@ -133,9 +133,10 @@ footer{background:var(--void);border-top:1px solid var(--border);padding:28px 48
   const URL="https://ulsbuqsjsssqflydwylm.supabase.co";
   const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsc2J1cXNqc3NzcWZseWR3eWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTAxNTYsImV4cCI6MjA4ODI2NjE1Nn0.EIJVQBN9bkufyroUDE1Va8zExBKbEH9CegBOIGauRfs";
   const sb=supabase.createClient(URL,KEY);
-  sb.auth.getSession().then(({data:{session}})=>{
-    if(session&&session.user){window.location.href="tracker.html";}
+  const {data:{subscription}}=sb.auth.onAuthStateChange((event,session)=>{
+    if(session&&session.user){subscription.unsubscribe();window.location.href="tracker.html";}
   });
+  setTimeout(()=>{try{subscription.unsubscribe();}catch(e){}},1500);
   window._sb=sb;
   window._signOut=async function(){await sb.auth.signOut();window.location.reload();};
 })();
