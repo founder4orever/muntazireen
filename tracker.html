@@ -773,8 +773,8 @@ async function submitOnboarding(){
 //  DATA
 // ═══════════════════════════════════════════════
 async function loadData(){
-  const{data}=await sb.from('protocol_progress').select('*').eq('user_id',currentUser.id).single();
-  if(data){
+  const{data,error}=await sb.from('protocol_progress').select('*').eq('user_id',currentUser.id).maybeSingle();
+  if(data&&!error){
     ud.startDate=data.start_date;
     ud.onboarding=data.onboarding||null;
     ud.onboardingDone=data.onboarding_complete||false;
