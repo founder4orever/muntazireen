@@ -132,13 +132,40 @@ footer{background:var(--void);border-top:1px solid var(--border);padding:28px 48
 (function(){
   const URL="https://ulsbuqsjsssqflydwylm.supabase.co";
   const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsc2J1cXNqc3NzcWZseWR3eWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTAxNTYsImV4cCI6MjA4ODI2NjE1Nn0.EIJVQBN9bkufyroUDE1Va8zExBKbEH9CegBOIGauRfs";
+
+  // Check localStorage directly before Supabase initialises
+  // Supabase stores session under this key pattern
+  function hasLocalSession(){
+    try{
+      for(let i=0;i<localStorage.length;i++){
+        const k=localStorage.key(i);
+        if(k&&k.includes('supabase')&&k.includes('auth-token')){
+          const v=JSON.parse(localStorage.getItem(k));
+          if(v&&v.access_token)return true;
+        }
+      }
+    }catch(e){}
+    return false;
+  }
+
+  // If local session exists, redirect immediately — no flicker, no wait
+  if(hasLocalSession()){
+    window.location.href="tracker.html";
+    return;
+  }
+
+  // No local session — user is not signed in, show the protocol page
   const sb=supabase.createClient(URL,KEY);
-  const {data:{subscription}}=sb.auth.onAuthStateChange((event,session)=>{
-    if(session&&session.user){subscription.unsubscribe();window.location.href="tracker.html";}
-  });
-  setTimeout(()=>{try{subscription.unsubscribe();}catch(e){}},1500);
   window._sb=sb;
   window._signOut=async function(){await sb.auth.signOut();window.location.reload();};
+
+  // Update nav for signed-out state
+  document.addEventListener('DOMContentLoaded',function(){
+    const begin=document.getElementById('nav-begin');
+    const signout=document.getElementById('nav-signout');
+    if(begin)begin.style.display='';
+    if(signout)signout.style.display='none';
+  });
 })();
 </script>
 
