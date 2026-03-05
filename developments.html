@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muntazireen — Developments Feed</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --void: #080807;
+  --deep: #0e0d0b;
+  --surface: #141310;
+  --panel: #1a1916;
+  --border: #272521;
+  --border-light: #333128;
+  --dim: #4a463e;
+  --muted: #6b6558;
+  --mid: #9a9184;
+  --sand: #c4b89a;
+  --cream: #e8dfc8;
+  --white: #f2ece0;
+  --gold: #b8963c;
+  --gold-bright: #d4a843;
+  --gold-dim: #6b5520;
+  --gold-faint: rgba(184,150,60,0.07);
+  --live-red: #c0392b;
+  --live-red-dim: rgba(192,57,43,0.15);
+
+  --cat-iran: #c06060;
+  --cat-palestine: #6db87f;
+  --cat-signs: #b8963c;
+  --cat-economic: #6a9fcc;
+  --cat-seismic: #a87fc4;
+  --cat-general: #9a9184;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'Courier Prime', 'Courier New', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--sand);
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.5;
+}
+
+::selection { background: var(--gold-dim); color: var(--cream); }
+
+/* ============ NAV ============ */
+
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 48px;
+  background: rgba(8,8,7,0.97);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+}
+
+.nav-logo {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.nav-logo span {
+  color: var(--muted);
+  font-size: 9px;
+  display: block;
+  letter-spacing: 0.2em;
+  margin-top: 1px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover { color: var(--cream); }
+.nav-links a.active { color: var(--gold); }
+
+/* ============ LIVE TICKER ============ */
+
+.ticker-bar {
+  position: fixed;
+  top: 65px;
+  left: 0; right: 0;
+  z-index: 190;
+  background: var(--live-red);
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+  height: 32px;
+  overflow: hidden;
+}
+
+.ticker-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  font-weight: 700;
+  color: white;
+  background: rgba(0,0,0,0.35);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(255,255,255,0.2);
+}
+
+.ticker-label .pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: white;
+  animation: pulse 1s ease infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.ticker-scroll {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.ticker-inner {
+  display: flex;
+  gap: 0;
+  animation: tickerMove 60s linear infinite;
+  white-space: nowrap;
+}
+
+.ticker-inner:hover { animation-play-state: paused; }
+
+@keyframes tickerMove {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-item {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 0.08em;
+  padding: 0 32px;
+  border-right: 1px solid rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 32px;
+}
+
+.ticker-item .ticker-src {
+  color: rgba(255,255,255,0.5);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* ============ MASTHEAD ============ */
+
+.masthead {
+  padding: 116px 48px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.masthead-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+
+.masthead-left h1 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 80px);
+  font-weight: 900;
+  color: var(--white);
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+}
+
+.masthead-left h1 em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--gold-bright);
+}
+
+.masthead-left .sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 10px;
+}
+
+.masthead-right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--live-red);
+  border: 1px solid var(--live-red);
+  padding: 6px 14px;
+  background: var(--live-red-dim);
+}
+
+.live-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--live-red);
+  animation: pulse 1s ease infinite;
+}
+
+.refresh-info {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+  line-height: 1.7;
+}
+
+#last-updated {
+  color: var(--muted);
+}
+
+/* Category filter */
+.cat-filter {
+  display: flex;
+  border-top: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.cat-filter::-webkit-scrollbar { display: none; }
+
+.cat-btn {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 14px 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.25s;
+}
+
+.cat-btn:hover { color: var(--cream); }
+.cat-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+.cat-btn[data-cat="iran"].active { color: var(--cat-iran); border-bottom-color: var(--cat-iran); }
+.cat-btn[data-cat="palestine"].active { color: var(--cat-palestine); border-bottom-color: var(--cat-palestine); }
+.cat-btn[data-cat="signs"].active { color: var(--cat-signs); border-bottom-color: var(--cat-signs); }
+.cat-btn[data-cat="economic"].active { color: var(--cat-economic); border-bottom-color: var(--cat-economic); }
+.cat-btn[data-cat="seismic"].active { color: var(--cat-seismic); border-bottom-color: var(--cat-seismic); }
+
+/* ============ MAIN LAYOUT ============ */
+
+.page-body {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 0;
+  min-height: calc(100vh - 200px);
+}
+
+/* ============ FEED MAIN ============ */
+
+.feed-main {
+  border-right: 1px solid var(--border);
+  padding: 0;
+}
+
+.feed-status {
+  padding: 16px 32px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface);
+}
+
+.feed-status-text {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+}
+
+#story-count {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.refresh-btn {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.refresh-btn:hover {
+  color: var(--gold);
+  border-color: var(--gold-dim);
+}
+
+/* LOADING STATE */
+.feed-loading {
+  padding: 60px 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* ERROR STATE */
+.feed-error {
+  padding: 48px 32px;
+  border: 1px solid var(--border);
+  margin: 24px 32px;
+  background: var(--surface);
+  display: none;
+}
+
+.feed-error .err-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--cat-iran);
+  margin-bottom: 12px;
+}
+
+.feed-error .err-msg {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* STORY CARDS */
+.story-card {
+  border-bottom: 1px solid var(--border);
+  padding: 28px 32px;
+  transition: background 0.25s;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  color: inherit;
+  position: relative;
+}
+
+.story-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.story-card:hover { background: var(--surface); }
+.story-card:hover::before { opacity: 1; }
+
+.story-card[data-cat="iran"]::before { background: var(--cat-iran); }
+.story-card[data-cat="palestine"]::before { background: var(--cat-palestine); }
+.story-card[data-cat="signs"]::before { background: var(--cat-signs); }
+.story-card[data-cat="economic"]::before { background: var(--cat-economic); }
+.story-card[data-cat="seismic"]::before { background: var(--cat-seismic); }
+.story-card[data-cat="general"]::before { background: var(--dim); }
+
+.story-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.story-cat-badge {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border: 1px solid;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.story-cat-badge.iran { color: var(--cat-iran); border-color: var(--cat-iran); background: rgba(192,96,96,0.08); }
+.story-cat-badge.palestine { color: var(--cat-palestine); border-color: var(--cat-palestine); background: rgba(109,184,127,0.08); }
+.story-cat-badge.signs { color: var(--cat-signs); border-color: var(--cat-signs); background: rgba(184,150,60,0.08); }
+.story-cat-badge.economic { color: var(--cat-economic); border-color: var(--cat-economic); background: rgba(106,159,204,0.08); }
+.story-cat-badge.seismic { color: var(--cat-seismic); border-color: var(--cat-seismic); background: rgba(168,127,196,0.08); }
+.story-cat-badge.general { color: var(--muted); border-color: var(--border); }
+
+.story-age {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.story-headline {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--cream);
+  line-height: 1.25;
+  margin-bottom: 10px;
+  transition: color 0.3s;
+}
+
+.story-card:hover .story-headline { color: var(--white); }
+
+.story-excerpt {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.story-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.story-source-name {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--gold-dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.story-read {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.story-card:hover .story-read { color: var(--gold); }
+
+/* NEW STORIES NOTIFICATION */
+.new-stories-btn {
+  display: none;
+  position: sticky;
+  top: 97px;
+  z-index: 50;
+  width: 100%;
+  background: var(--gold);
+  color: var(--void);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.new-stories-btn:hover { background: var(--gold-bright); }
+.new-stories-btn.visible { display: block; }
+
+/* ============ SIDEBAR ============ */
+
+.sidebar {
+  padding: 0;
+  background: var(--deep);
+}
+
+/* Signs watch sidebar */
+.sidebar-section {
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-header-text {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.sidebar-header-text.gold { color: var(--gold); }
+
+.sidebar-hadith {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.sidebar-hadith::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--gold-dim);
+}
+
+.sh-arabic {
+  font-size: 15px;
+  color: var(--cream);
+  direction: rtl;
+  text-align: right;
+  line-height: 1.8;
+  margin-bottom: 8px;
+}
+
+.sh-trans {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.65;
+  margin-bottom: 6px;
+}
+
+.sh-ref {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--gold-dim);
+  letter-spacing: 0.1em;
+}
+
+/* Active signs tracker */
+.sign-tracker {
+  padding: 0;
+}
+
+.sign-tracker-item {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.sign-tracker-item:last-child { border-bottom: none; }
+
+.sign-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.sign-dot.active { background: var(--gold); box-shadow: 0 0 8px var(--gold); animation: pulse 2s ease infinite; }
+.sign-dot.fulfilled { background: var(--cat-palestine); }
+.sign-dot.awaited { background: var(--dim); }
+
+.sign-tracker-name {
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: var(--sand);
+  line-height: 1.3;
+  margin-bottom: 3px;
+}
+
+.sign-tracker-status {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.sign-tracker-status.active { color: var(--gold); }
+.sign-tracker-status.fulfilled { color: var(--cat-palestine); }
+
+/* Source list */
+.source-item {
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.source-name {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.source-status {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.source-status.ok { color: var(--cat-palestine); }
+.source-status.ok::before { content: '●'; }
+.source-status.err { color: var(--cat-iran); }
+.source-status.err::before { content: '●'; }
+.source-status.loading { color: var(--dim); }
+.source-status.loading::before { content: '○'; }
+
+/* ============ FOOTER ============ */
+
+footer {
+  background: var(--void);
+  border-top: 1px solid var(--border);
+  padding: 32px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-left {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+}
+
+.footer-left a {
+  color: var(--gold-dim);
+  text-decoration: none;
+  margin-left: 16px;
+  transition: color 0.3s;
+}
+
+.footer-left a:hover { color: var(--gold); }
+
+.footer-right {
+  font-size: 13px;
+  color: var(--dim);
+  font-style: italic;
+}
+
+/* ============ RESPONSIVE ============ */
+
+@media (max-width: 900px) {
+  nav { padding: 14px 20px; }
+  .masthead { padding: 110px 20px 0; }
+  .page-body { grid-template-columns: 1fr; }
+  .feed-main { border-right: none; }
+  .sidebar { display: none; }
+  footer { padding: 24px 20px; flex-direction: column; gap: 10px; text-align: center; }
+  .story-card { padding: 20px; }
+  .feed-status { padding: 12px 20px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    MUNTAZIREEN
+    <span>منتظرين</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#signs">Signs</a></li>
+    <li><a href="index.html#protocol">Protocol</a></li>
+    <li><a href="developments.html" class="active">Developments</a></li>
+    <li><a href="reports.html">Analysis</a></li>
+  </ul>
+</nav>
+
+<!-- LIVE TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-label">
+    <span class="pulse-dot"></span>
+    LIVE
+  </div>
+  <div class="ticker-scroll">
+    <div class="ticker-inner" id="ticker-inner">
+      <span class="ticker-item">Loading live developments... <span class="ticker-src">Muntazireen</span></span>
+      <span class="ticker-item">Loading live developments... <span class="ticker-src">Muntazireen</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-left">
+      <h1>DEVELOPMENTS<br><em>Live Feed</em></h1>
+      <div class="sub">منتظرين — Auto-refreshing · Sourced · Watching for the signs</div>
+    </div>
+    <div class="masthead-right">
+      <div class="live-badge">
+        <span class="dot"></span>
+        LIVE — AUTO REFRESH
+      </div>
+      <div class="refresh-info">
+        Refreshes every 10 minutes<br>
+        Last updated: <span id="last-updated">Loading...</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-filter">
+    <button class="cat-btn active" data-cat="all" onclick="filterFeed('all', this)">All Developments</button>
+    <button class="cat-btn" data-cat="iran" onclick="filterFeed('iran', this)">US / Iran & Middle East</button>
+    <button class="cat-btn" data-cat="palestine" onclick="filterFeed('palestine', this)">Palestine</button>
+    <button class="cat-btn" data-cat="signs" onclick="filterFeed('signs', this)">Signs Watch</button>
+    <button class="cat-btn" data-cat="economic" onclick="filterFeed('economic', this)">Economic</button>
+    <button class="cat-btn" data-cat="seismic" onclick="filterFeed('seismic', this)">Natural & Seismic</button>
+  </div>
+</div>
+
+<!-- PAGE BODY -->
+<div class="page-body">
+
+  <!-- FEED MAIN -->
+  <div class="feed-main">
+
+    <button class="new-stories-btn" id="new-stories-btn" onclick="loadNewStories()">
+      ↑ New developments — tap to load
+    </button>
+
+    <div class="feed-status">
+      <div class="feed-status-text">
+        Showing <span id="story-count">0</span> developments — filtered for signs-relevant content
+      </div>
+      <button class="refresh-btn" onclick="fetchAllFeeds()">↻ Refresh now</button>
+    </div>
+
+    <div class="feed-loading" id="feed-loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Fetching live developments...</div>
+    </div>
+
+    <div class="feed-error" id="feed-error">
+      <div class="err-label">Feed Error</div>
+      <div class="err-msg">Unable to load live feeds. This can happen due to network restrictions. Try refreshing, or check your connection. The feeds will retry automatically.</div>
+    </div>
+
+    <div id="feed-container"></div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- Signs tracker -->
+    <div class="sidebar-section">
+      <div class="sidebar-header">
+        <div class="sidebar-header-text gold">Active Signs — Status</div>
+      </div>
+      <div class="sign-tracker">
+        <div class="sign-tracker-item">
+          <span class="sign-dot active"></span>
+          <div>
+            <div class="sign-tracker-name">Time Passes Faster</div>
+            <div class="sign-tracker-status active">Active Now</div>
+          </div>
+        </div>
+        <div class="sign-tracker-item">
+          <span class="sign-dot active"></span>
+          <div>
+            <div class="sign-tracker-name">Earthquakes Increasing</div>
+            <div class="sign-tracker-status active">Active Now</div>
+          </div>
+        </div>
+        <div class="sign-tracker-item">
+          <span class="sign-dot active"></span>
+          <div>
+            <div class="sign-tracker-name">Tall Buildings — Arabia</div>
+            <div class="sign-tracker-status active">Active Now</div>
+          </div>
+        </div>
+        <div class="sign-tracker-item">
+          <span class="sign-dot active"></span>
+          <div>
+            <div class="sign-tracker-name">Knowledge Decreases</div>
+            <div class="sign-tracker-status active">Active Now</div>
+          </div>
+        </div>
+        <div class="sign-tracker-item">
+          <span class="sign-dot fulfilled"></span>
+          <div>
+            <div class="sign-tracker-name">Splitting of the Moon</div>
+            <div class="sign-tracker-status fulfilled">Fulfilled</div>
+          </div>
+        </div>
+        <div class="sign-tracker-item">
+          <span class="sign-dot awaited"></span>
+          <div>
+            <div class="sign-tracker-name">Emergence of Dajjal</div>
+            <div class="sign-tracker-status">Major — Awaited</div>
+          </div>
+        </div>
+        <div class="sign-tracker-item">
+          <span class="sign-dot awaited"></span>
+          <div>
+            <div class="sign-tracker-name">Descent of Isa ﷺ</div>
+            <div class="sign-tracker-status">Major — Awaited</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Daily hadith -->
+    <div class="sidebar-section">
+      <div class="sidebar-header">
+        <div class="sidebar-header-text gold">Anchor Hadith</div>
+      </div>
+      <div class="sidebar-hadith">
+        <div class="sh-arabic">بَادِرُوا بِالأَعْمَالِ فِتَنًا كَقِطَعِ اللَّيْلِ الْمُظْلِمِ</div>
+        <div class="sh-trans">"Hasten to do good deeds before trials come like pieces of a dark night."</div>
+        <div class="sh-ref">Sahih Muslim 118 — Grade: Sahih</div>
+      </div>
+      <div class="sidebar-hadith">
+        <div class="sh-arabic">اقْتَرَبَتِ السَّاعَةُ وَانشَقَّ الْقَمَرُ</div>
+        <div class="sh-trans">"The Hour has drawn near and the moon has split."</div>
+        <div class="sh-ref">Al-Qamar 54:1</div>
+      </div>
+    </div>
+
+    <!-- Feed sources status -->
+    <div class="sidebar-section">
+      <div class="sidebar-header">
+        <div class="sidebar-header-text">Live Sources</div>
+      </div>
+      <div id="source-status-list">
+        <div class="source-item">
+          <span class="source-name">Al Jazeera English</span>
+          <span class="source-status loading" id="src-aljazeera">Loading</span>
+        </div>
+        <div class="source-item">
+          <span class="source-name">Reuters World</span>
+          <span class="source-status loading" id="src-reuters">Loading</span>
+        </div>
+        <div class="source-item">
+          <span class="source-name">BBC Middle East</span>
+          <span class="source-status loading" id="src-bbc">Loading</span>
+        </div>
+        <div class="source-item">
+          <span class="source-name">AP News</span>
+          <span class="source-status loading" id="src-ap">Loading</span>
+        </div>
+        <div class="source-item">
+          <span class="source-name">Middle East Eye</span>
+          <span class="source-status loading" id="src-mee">Loading</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Protocol reminder -->
+    <div class="sidebar-section">
+      <div class="sidebar-header">
+        <div class="sidebar-header-text">The Protocol</div>
+      </div>
+      <div style="padding: 20px 24px;">
+        <div style="font-size:13px; color:var(--muted); line-height:1.7; margin-bottom:16px;">
+          The news is the why. The Protocol is the what. Watching developments without preparation is anxiety, not readiness.
+        </div>
+        <a href="index.html#protocol" style="font-family:var(--font-mono); font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); text-decoration:none; border:1px solid var(--gold-dim); padding:8px 16px; display:inline-block; transition:all 0.3s;">
+          Begin the Protocol →
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    MUNTAZIREEN — Free Forever
+    <a href="index.html">Home</a>
+    <a href="reports.html">Analysis</a>
+    <a href="index.html#signs">Signs</a>
+  </div>
+  <div class="footer-right">"And remind, for indeed the reminder benefits the believers." — 51:55</div>
+</footer>
+
+<script>
+
+// ============================================================
+//  CONFIGURATION
+// ============================================================
+
+const REFRESH_INTERVAL = 10 * 60 * 1000; // 10 minutes
+let currentFilter = 'all';
+let allStories = [];
+let pendingStories = [];
+let lastFetchTime = null;
+
+// RSS sources via allorigins CORS proxy (free, no key)
+// Using rss2json.com free API as the RSS->JSON converter
+const RSS_API = 'https://api.rss2json.com/v1/api.json?rss_url=';
+
+const SOURCES = [
+  {
+    id: 'aljazeera',
+    name: 'Al Jazeera',
+    url: 'https://www.aljazeera.com/xml/rss/all.xml',
+    statusEl: 'src-aljazeera'
+  },
+  {
+    id: 'bbc',
+    name: 'BBC Middle East',
+    url: 'http://feeds.bbci.co.uk/news/world/middle_east/rss.xml',
+    statusEl: 'src-bbc'
+  },
+  {
+    id: 'reuters',
+    name: 'Reuters World',
+    url: 'https://feeds.reuters.com/reuters/worldNews',
+    statusEl: 'src-reuters'
+  },
+  {
+    id: 'ap',
+    name: 'AP News',
+    url: 'https://rsshub.app/apnews/topics/world-news',
+    statusEl: 'src-ap'
+  },
+  {
+    id: 'mee',
+    name: 'Middle East Eye',
+    url: 'https://www.middleeasteye.net/rss',
+    statusEl: 'src-mee'
+  }
+];
+
+// ============================================================
+//  KEYWORD CLASSIFICATION
+// ============================================================
+
+const KEYWORDS = {
+  iran: [
+    'iran', 'tehran', 'irgc', 'khamenei', 'persian', 'hormuz',
+    'nuclear deal', 'jcpoa', 'sanctions', 'us-iran', 'middle east war',
+    'hezbollah', 'houthi', 'houthis', 'yemen', 'iraq militia',
+    'syria', 'damascus', 'lebanon', 'beirut', 'missile', 'drone strike',
+    'military strike', 'proxy', 'axis of resistance'
+  ],
+  palestine: [
+    'palestine', 'palestinian', 'gaza', 'west bank', 'al-quds', 'jerusalem',
+    'hamas', 'rafah', 'ceasefire', 'idf', 'israel', 'occupation',
+    'settler', 'displacement', 'humanitarian', 'aqsa', 'al aqsa',
+    'khan younis', 'jabalia', 'siege', 'blockade'
+  ],
+  signs: [
+    'earthquake', 'seismic', 'tsunami', 'volcano', 'eruption',
+    'apocalypse', 'end times', 'prophecy', 'sign', 'judgement',
+    'solar eclipse', 'blood moon', 'famine', 'pestilence', 'plague',
+    'black flag', 'khorasan', 'dajjal', 'antichrist', 'second coming',
+    'armageddon', 'time compression', 'dajal'
+  ],
+  economic: [
+    'dollar collapse', 'inflation', 'recession', 'economic crisis',
+    'bank failure', 'fdic', 'federal reserve', 'interest rate',
+    'gold price', 'silver price', 'de-dollarization', 'brics',
+    'petrodollar', 'currency crisis', 'debt ceiling', 'stock crash',
+    'oil price', 'food shortage', 'supply chain', 'cost of living'
+  ],
+  seismic: [
+    'earthquake', 'magnitude', 'richter', 'seismic', 'tremor',
+    'aftershock', 'tsunami', 'volcano', 'eruption', 'flood',
+    'wildfire', 'hurricane', 'cyclone', 'tornado', 'disaster',
+    'natural disaster', 'climate', 'drought', 'extreme weather'
+  ]
+};
+
+// Minimum relevance — stories must match at least one category
+// or contain these general relevant terms
+const GENERAL_RELEVANT = [
+  'war', 'conflict', 'military', 'attack', 'bombing', 'airstrike',
+  'nuclear', 'weapons', 'refugees', 'displaced', 'casualties',
+  'killed', 'dead', 'deaths', 'wounded', 'crisis', 'tension',
+  'escalation', 'nato', 'russia', 'ukraine', 'china', 'taiwan',
+  'arab', 'muslim', 'islam', 'mosque', 'ramadan', 'ummah'
+];
+
+function classifyStory(title, description) {
+  const text = (title + ' ' + (description || '')).toLowerCase();
+
+  for (const [cat, keywords] of Object.entries(KEYWORDS)) {
+    if (keywords.some(kw => text.includes(kw))) {
+      return cat;
+    }
+  }
+
+  // Check general relevance
+  if (GENERAL_RELEVANT.some(kw => text.includes(kw))) {
+    return 'general';
+  }
+
+  return null; // Not relevant — filter out
+}
+
+// ============================================================
+//  TIME FORMATTING
+// ============================================================
+
+function timeAgo(dateStr) {
+  const now = new Date();
+  const then = new Date(dateStr);
+  if (isNaN(then)) return 'Recently';
+  const diff = Math.floor((now - then) / 1000);
+  if (diff < 60) return 'Just now';
+  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+  return Math.floor(diff / 86400) + 'd ago';
+}
+
+function formatTime(dateStr) {
+  const d = new Date(dateStr);
+  if (isNaN(d)) return '';
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+// ============================================================
+//  FETCH FEEDS
+// ============================================================
+
+async function fetchFeed(source) {
+  const statusEl = document.getElementById(source.statusEl);
+  if (statusEl) {
+    statusEl.className = 'source-status loading';
+    statusEl.textContent = 'Loading';
+  }
+
+  try {
+    const encodedUrl = encodeURIComponent(source.url);
+    const apiUrl = `${RSS_API}${encodedUrl}&count=30`;
+
+    const res = await fetch(apiUrl, { signal: AbortSignal.timeout(12000) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const data = await res.json();
+    if (data.status !== 'ok' || !data.items) throw new Error('Bad response');
+
+    if (statusEl) {
+      statusEl.className = 'source-status ok';
+      statusEl.textContent = `${data.items.length} items`;
+    }
+
+    return data.items.map(item => ({
+      title: item.title || '',
+      description: item.description || item.content || '',
+      link: item.link || '#',
+      pubDate: item.pubDate || new Date().toISOString(),
+      source: source.name,
+      sourceId: source.id
+    }));
+
+  } catch (err) {
+    console.warn(`Feed failed: ${source.name}`, err);
+    if (statusEl) {
+      statusEl.className = 'source-status err';
+      statusEl.textContent = 'Unavailable';
+    }
+    return [];
+  }
+}
+
+async function fetchAllFeeds() {
+  const loadingEl = document.getElementById('feed-loading');
+  const errorEl = document.getElementById('feed-error');
+  const container = document.getElementById('feed-container');
+
+  if (allStories.length === 0) {
+    loadingEl.style.display = 'flex';
+    container.innerHTML = '';
+  }
+
+  errorEl.style.display = 'none';
+
+  try {
+    const results = await Promise.allSettled(SOURCES.map(fetchFeed));
+    const rawItems = results.flatMap(r => r.status === 'fulfilled' ? r.value : []);
+
+    // Classify and filter
+    const classified = rawItems
+      .map(item => ({
+        ...item,
+        category: classifyStory(item.title, item.description)
+      }))
+      .filter(item => item.category !== null);
+
+    // Deduplicate by title similarity
+    const seen = new Set();
+    const deduped = classified.filter(item => {
+      const key = item.title.toLowerCase().replace(/[^a-z0-9]/g, '').substring(0, 40);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    // Sort by date, newest first
+    deduped.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+
+    loadingEl.style.display = 'none';
+
+    // If this is a refresh (not first load), show new stories notification
+    if (allStories.length > 0 && deduped.length > 0) {
+      const newOnes = deduped.filter(s =>
+        !allStories.some(existing => existing.title === s.title)
+      );
+      if (newOnes.length > 0) {
+        pendingStories = newOnes;
+        const btn = document.getElementById('new-stories-btn');
+        btn.textContent = `↑ ${newOnes.length} new development${newOnes.length > 1 ? 's' : ''} — tap to load`;
+        btn.classList.add('visible');
+      }
+    } else {
+      allStories = deduped;
+      renderFeed(allStories);
+    }
+
+    // Update ticker
+    updateTicker(deduped.slice(0, 15));
+
+    // Update last updated
+    lastFetchTime = new Date();
+    document.getElementById('last-updated').textContent =
+      lastFetchTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    if (deduped.length === 0) {
+      errorEl.style.display = 'block';
+    }
+
+  } catch (err) {
+    console.error('Feed fetch error', err);
+    loadingEl.style.display = 'none';
+    if (allStories.length === 0) {
+      errorEl.style.display = 'block';
+    }
+  }
+}
+
+function loadNewStories() {
+  allStories = [...pendingStories, ...allStories];
+  pendingStories = [];
+  document.getElementById('new-stories-btn').classList.remove('visible');
+  renderFeed(allStories);
+  filterFeed(currentFilter, document.querySelector(`.cat-btn[data-cat="${currentFilter}"]`));
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+
+// ============================================================
+//  RENDER
+// ============================================================
+
+function renderFeed(stories) {
+  const container = document.getElementById('feed-container');
+
+  if (stories.length === 0) {
+    container.innerHTML = `
+      <div style="padding:48px 32px; text-align:center;">
+        <div style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.2em; color:var(--dim); text-transform:uppercase;">
+          No developments match this filter
+        </div>
+      </div>`;
+    document.getElementById('story-count').textContent = '0';
+    return;
+  }
+
+  document.getElementById('story-count').textContent = stories.length;
+
+  container.innerHTML = stories.map(story => {
+    const cat = story.category;
+    const catLabels = {
+      iran: 'US / Iran & Middle East',
+      palestine: 'Palestine',
+      signs: 'Signs Watch',
+      economic: 'Economic',
+      seismic: 'Natural & Seismic',
+      general: 'World Development'
+    };
+
+    // Clean description — strip HTML tags
+    const cleanDesc = (story.description || '')
+      .replace(/<[^>]*>/g, '')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .trim()
+      .substring(0, 200);
+
+    return `
+      <a class="story-card" href="${story.link}" target="_blank" rel="noopener noreferrer"
+         data-cat="${cat}" data-date="${story.pubDate}">
+        <div class="story-top">
+          <span class="story-cat-badge ${cat}">${catLabels[cat] || 'Development'}</span>
+          <span class="story-age">${timeAgo(story.pubDate)}</span>
+        </div>
+        <div class="story-headline">${story.title}</div>
+        ${cleanDesc ? `<div class="story-excerpt">${cleanDesc}</div>` : ''}
+        <div class="story-footer">
+          <span class="story-source-name">${story.source}</span>
+          <span class="story-read">Read source →</span>
+        </div>
+      </a>`;
+  }).join('');
+}
+
+// ============================================================
+//  FILTER
+// ============================================================
+
+function filterFeed(cat, btn) {
+  currentFilter = cat;
+
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const cards = document.querySelectorAll('.story-card');
+  let visible = 0;
+
+  cards.forEach(card => {
+    const show = cat === 'all' || card.dataset.cat === cat;
+    card.style.display = show ? 'block' : 'none';
+    if (show) visible++;
+  });
+
+  document.getElementById('story-count').textContent = visible;
+}
+
+// ============================================================
+//  TICKER
+// ============================================================
+
+function updateTicker(stories) {
+  if (!stories || stories.length === 0) return;
+
+  const inner = document.getElementById('ticker-inner');
+  const items = [...stories, ...stories]; // double for seamless loop
+
+  inner.innerHTML = items.map(s => `
+    <span class="ticker-item">
+      ${s.title.substring(0, 90)}${s.title.length > 90 ? '...' : ''}
+      <span class="ticker-src">${s.source}</span>
+    </span>
+  `).join('');
+}
+
+// ============================================================
+//  COUNTDOWN TIMER IN UI
+// ============================================================
+
+function startRefreshCountdown() {
+  let secondsLeft = REFRESH_INTERVAL / 1000;
+  const el = document.getElementById('last-updated');
+
+  setInterval(() => {
+    secondsLeft--;
+    if (secondsLeft <= 0) secondsLeft = REFRESH_INTERVAL / 1000;
+
+    const mins = Math.floor(secondsLeft / 60);
+    const secs = secondsLeft % 60;
+    const nextStr = `${mins}:${String(secs).padStart(2, '0')}`;
+
+    if (lastFetchTime && el) {
+      el.textContent = `${lastFetchTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} — next in ${nextStr}`;
+    }
+  }, 1000);
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+  fetchAllFeeds();
+  setInterval(fetchAllFeeds, REFRESH_INTERVAL);
+  startRefreshCountdown();
+});
+
+</script>
+</body>
+</html>

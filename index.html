@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muntazireen — Those who wait, watch, and prepare.</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+
+/* ============================================
+   MUNTAZIREEN — ROOT & RESET
+============================================ */
+
+:root {
+  --void: #080807;
+  --deep: #0e0d0b;
+  --surface: #141310;
+  --panel: #1a1916;
+  --border: #272521;
+  --border-light: #333128;
+  --dim: #4a463e;
+  --muted: #6b6558;
+  --mid: #9a9184;
+  --sand: #c4b89a;
+  --cream: #e8dfc8;
+  --white: #f2ece0;
+  --gold: #b8963c;
+  --gold-bright: #d4a843;
+  --gold-dim: #6b5520;
+  --gold-faint: rgba(184,150,60,0.08);
+  --green-flag: #1a3d2b;
+  --green-dim: #2a5c40;
+  --red-dim: #3d1a1a;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'Courier Prime', 'Courier New', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--sand);
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* Grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.6;
+}
+
+::selection { background: var(--gold-dim); color: var(--cream); }
+
+/* ============================================
+   NAVIGATION
+============================================ */
+
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 48px;
+  border-bottom: 1px solid transparent;
+  transition: all 0.6s ease;
+}
+
+nav.scrolled {
+  background: rgba(8,8,7,0.95);
+  border-bottom-color: var(--border);
+  backdrop-filter: blur(12px);
+}
+
+.nav-logo {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.nav-logo span {
+  color: var(--muted);
+  font-size: 10px;
+  display: block;
+  letter-spacing: 0.2em;
+  margin-top: 2px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover { color: var(--cream); }
+
+.nav-cta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold) !important;
+  border: 1px solid var(--gold-dim);
+  padding: 8px 20px;
+  text-decoration: none;
+  transition: all 0.3s !important;
+}
+
+.nav-cta:hover {
+  background: var(--gold-faint) !important;
+  border-color: var(--gold) !important;
+  color: var(--gold-bright) !important;
+}
+
+/* ============================================
+   HERO
+============================================ */
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  padding: 120px 48px 80px;
+  overflow: hidden;
+}
+
+/* Vertical rule lines */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 48px;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--border) 20%, var(--border) 80%, transparent);
+}
+
+/* Horizontal rule */
+.hero-rule {
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border) 10%, var(--border) 90%, transparent);
+  pointer-events: none;
+}
+
+/* Arabic watermark */
+.hero-watermark {
+  position: absolute;
+  right: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: clamp(200px, 25vw, 380px);
+  color: rgba(184,150,60,0.04);
+  font-family: var(--font-body);
+  direction: rtl;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -0.02em;
+}
+
+.hero-inner {
+  max-width: 900px;
+  padding-left: 48px;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.2s forwards;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--gold-dim);
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 9vw, 130px);
+  font-weight: 400;
+  line-height: 0.92;
+  color: var(--white);
+  letter-spacing: -0.01em;
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: fadeUp 1.2s ease 0.4s forwards;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--gold-bright);
+}
+
+.hero-title .line-indent {
+  padding-left: 80px;
+  display: block;
+}
+
+.hero-ayah {
+  border-left: 2px solid var(--gold-dim);
+  padding-left: 24px;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeUp 1.2s ease 0.7s forwards;
+}
+
+.hero-ayah .arabic {
+  font-size: 22px;
+  color: var(--cream);
+  direction: rtl;
+  text-align: right;
+  line-height: 1.8;
+  margin-bottom: 10px;
+  font-weight: 300;
+}
+
+.hero-ayah .translation {
+  font-size: 15px;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.7;
+}
+
+.hero-ayah .reference {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--gold-dim);
+  letter-spacing: 0.15em;
+  margin-top: 8px;
+}
+
+.hero-desc {
+  font-size: 20px;
+  color: var(--mid);
+  line-height: 1.7;
+  max-width: 560px;
+  margin-bottom: 56px;
+  font-weight: 300;
+  opacity: 0;
+  animation: fadeUp 1.2s ease 0.9s forwards;
+}
+
+.hero-desc strong {
+  color: var(--sand);
+  font-weight: 400;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  opacity: 0;
+  animation: fadeUp 1.2s ease 1.1s forwards;
+}
+
+.btn-primary {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--void);
+  background: var(--gold);
+  border: none;
+  padding: 16px 36px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background: var(--gold-bright);
+}
+
+.btn-secondary {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: 1px solid var(--border);
+  padding: 16px 36px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.btn-secondary:hover {
+  color: var(--cream);
+  border-color: var(--dim);
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 48px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.5s forwards;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(to bottom, var(--border), transparent);
+  animation: scrollPulse 2s ease infinite;
+}
+
+.scroll-text {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--dim);
+  writing-mode: vertical-rl;
+}
+
+/* ============================================
+   STATEMENT BAND
+============================================ */
+
+.statement-band {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 48px;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow: hidden;
+}
+
+.statement-text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  animation: marquee 30s linear infinite;
+  display: flex;
+  gap: 80px;
+}
+
+.statement-text span { color: var(--gold); }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ============================================
+   SIGNS SECTION
+============================================ */
+
+.section {
+  padding: 100px 48px;
+  position: relative;
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  max-width: 80px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 20px;
+  letter-spacing: -0.01em;
+}
+
+.section-title em { font-style: italic; color: var(--gold-bright); }
+
+.section-intro {
+  font-size: 20px;
+  color: var(--mid);
+  max-width: 600px;
+  line-height: 1.7;
+  margin-bottom: 64px;
+}
+
+/* Signs grid */
+.signs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.sign-card {
+  background: var(--deep);
+  padding: 36px 40px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.4s;
+}
+
+.sign-card:hover { background: var(--surface); }
+
+.sign-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--border);
+  transition: background 0.4s;
+}
+
+.sign-card.active-sign::before { background: var(--gold); }
+.sign-card.fulfilled-sign::before { background: var(--green-dim); }
+.sign-card.major-sign::before { background: var(--dim); }
+
+.sign-status {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sign-status::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.sign-card.active-sign .sign-status { color: var(--gold); }
+.sign-card.active-sign .sign-status::before { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+
+.sign-card.fulfilled-sign .sign-status { color: var(--green-dim); }
+.sign-card.fulfilled-sign .sign-status::before { background: var(--green-dim); }
+
+.sign-card.major-sign .sign-status { color: var(--muted); }
+.sign-card.major-sign .sign-status::before { background: var(--dim); }
+
+.sign-name {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--cream);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.sign-desc {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.sign-ref {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--dim);
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+
+.sign-number {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  font-family: var(--font-mono);
+  font-size: 48px;
+  color: rgba(255,255,255,0.03);
+  font-weight: 700;
+  line-height: 1;
+  user-select: none;
+}
+
+/* ============================================
+   PROTOCOL SECTION
+============================================ */
+
+.protocol-section {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.protocol-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.protocol-left {
+  padding: 80px 48px;
+  border-right: 1px solid var(--border);
+}
+
+.protocol-right {
+  padding: 80px 48px;
+}
+
+.protocol-pillars {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 40px;
+}
+
+.pillar {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--border);
+  transition: border-color 0.3s;
+  cursor: default;
+}
+
+.pillar:hover { border-color: var(--border-light); }
+
+.pillar-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--dim);
+  padding: 20px 20px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  min-width: 56px;
+  justify-content: center;
+}
+
+.pillar-body {
+  padding: 20px 24px;
+  flex: 1;
+}
+
+.pillar-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--cream);
+  margin-bottom: 4px;
+}
+
+.pillar-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.pillar-tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 20px 20px;
+  display: flex;
+  align-items: center;
+  border-left: 1px solid var(--border);
+}
+
+.pillar.deen .pillar-tag { color: var(--gold); }
+.pillar.body .pillar-tag { color: #6db87f; }
+.pillar.blade .pillar-tag { color: #c06060; }
+.pillar.survival .pillar-tag { color: #6a9fcc; }
+
+.protocol-principles {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.principle {
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.principle:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.principle-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--gold-dim);
+  letter-spacing: 0.2em;
+  margin-bottom: 8px;
+}
+
+.principle-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--cream);
+  margin-bottom: 8px;
+  font-weight: 400;
+}
+
+.principle-body {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* ============================================
+   REPORTS SECTION
+============================================ */
+
+.reports-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.report-featured {
+  background: var(--deep);
+  padding: 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.report-featured::after {
+  content: 'DEVELOPING';
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  border: 1px solid var(--gold-dim);
+  padding: 4px 10px;
+  animation: blink 2s ease infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.report-date {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.15em;
+  margin-bottom: 20px;
+}
+
+.report-category {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.report-category::before {
+  content: '';
+  width: 20px;
+  height: 1px;
+  background: var(--gold-dim);
+}
+
+.report-title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.2;
+  margin-bottom: 20px;
+  letter-spacing: -0.01em;
+}
+
+.report-excerpt {
+  font-size: 16px;
+  color: var(--mid);
+  line-height: 1.8;
+  margin-bottom: 32px;
+  max-width: 480px;
+}
+
+.report-sign-link {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--gold-dim);
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  display: inline-block;
+  margin-bottom: 32px;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.report-sign-link:hover {
+  color: var(--gold);
+  border-color: var(--gold-dim);
+}
+
+.report-read {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: color 0.3s;
+}
+
+.report-read::after {
+  content: '→';
+  transition: transform 0.3s;
+}
+
+.report-read:hover { color: var(--cream); }
+.report-read:hover::after { transform: translateX(4px); }
+
+.reports-sidebar {
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  padding: 24px 28px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.sidebar-item {
+  padding: 24px 28px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s;
+  cursor: pointer;
+}
+
+.sidebar-item:hover { background: var(--surface); }
+
+.sidebar-item:last-child { border-bottom: none; }
+
+.sidebar-cat {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 8px;
+}
+
+.sidebar-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--sand);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.sidebar-date {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--dim);
+}
+
+/* ============================================
+   MISSION SECTION
+============================================ */
+
+.mission-section {
+  background: var(--void);
+  padding: 120px 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.mission-section::before {
+  content: 'منتظرين';
+  position: absolute;
+  bottom: -60px;
+  left: -20px;
+  font-size: clamp(180px, 22vw, 340px);
+  color: rgba(184,150,60,0.03);
+  font-family: var(--font-body);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.mission-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.mission-ornament {
+  font-size: 32px;
+  color: var(--gold-dim);
+  margin-bottom: 32px;
+  letter-spacing: 0.3em;
+}
+
+.mission-title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 60px);
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.15;
+  margin-bottom: 32px;
+  letter-spacing: -0.01em;
+}
+
+.mission-title em { font-style: italic; color: var(--gold-bright); }
+
+.mission-body {
+  font-size: 20px;
+  color: var(--mid);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.mission-body strong { color: var(--sand); font-weight: 400; }
+
+.mission-hadith {
+  margin: 48px 0;
+  padding: 32px 40px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  text-align: right;
+  direction: rtl;
+  position: relative;
+}
+
+.mission-hadith::before {
+  content: 'HADITH';
+  position: absolute;
+  top: -1px;
+  right: 24px;
+  background: var(--surface);
+  padding: 0 8px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--gold-dim);
+  direction: ltr;
+}
+
+.mission-hadith .arabic {
+  font-size: 20px;
+  color: var(--cream);
+  line-height: 2;
+  margin-bottom: 16px;
+}
+
+.mission-hadith .trans {
+  font-size: 14px;
+  color: var(--muted);
+  font-style: italic;
+  direction: ltr;
+  text-align: left;
+  line-height: 1.7;
+}
+
+.mission-hadith .source {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--dim);
+  direction: ltr;
+  text-align: left;
+  margin-top: 10px;
+  letter-spacing: 0.1em;
+}
+
+.mission-three {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 64px;
+  text-align: left;
+}
+
+.mission-pillar {
+  background: var(--deep);
+  padding: 36px 32px;
+}
+
+.mission-pillar-num {
+  font-family: var(--font-mono);
+  font-size: 40px;
+  color: rgba(184,150,60,0.15);
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.mission-pillar-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--cream);
+  margin-bottom: 10px;
+}
+
+.mission-pillar-body {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* ============================================
+   PAPER FIRST SECTION
+============================================ */
+
+.paper-section {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 80px 48px;
+}
+
+.paper-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.paper-visual {
+  position: relative;
+  height: 320px;
+}
+
+.paper-stack {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paper-doc {
+  position: absolute;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  width: 200px;
+  height: 260px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 8px;
+}
+
+.paper-doc:nth-child(1) { transform: rotate(-4deg) translate(-30px, 10px); }
+.paper-doc:nth-child(2) { transform: rotate(2deg) translate(10px, -10px); z-index: 1; }
+.paper-doc:nth-child(3) { transform: rotate(-1deg); z-index: 2; background: var(--deep); border-color: var(--border-light); }
+
+.paper-line {
+  height: 1px;
+  background: var(--border);
+}
+
+.paper-line.thick { height: 2px; background: var(--border-light); width: 70%; }
+.paper-line.short { width: 50%; }
+.paper-line.gold { background: var(--gold-dim); width: 40%; }
+
+.paper-stamp {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  color: var(--gold-dim);
+  border: 1px solid var(--gold-dim);
+  padding: 4px 8px;
+  transform: rotate(8deg);
+}
+
+/* ============================================
+   CTA SECTION
+============================================ */
+
+.cta-section {
+  padding: 120px 48px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(ellipse, rgba(184,150,60,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cta-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 24px;
+}
+
+.cta-title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 80px);
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+}
+
+.cta-title em { font-style: italic; color: var(--gold-bright); }
+
+.cta-sub {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 500px;
+  margin: 0 auto 48px;
+  line-height: 1.7;
+}
+
+.cta-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cta-note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--dim);
+  margin-top: 24px;
+  letter-spacing: 0.1em;
+}
+
+/* ============================================
+   FOOTER
+============================================ */
+
+footer {
+  background: var(--void);
+  border-top: 1px solid var(--border);
+  padding: 48px;
+}
+
+.footer-top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+
+.footer-brand .logo {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.footer-brand .tagline {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.footer-brand .mission-stmt {
+  font-size: 15px;
+  color: var(--dim);
+  line-height: 1.7;
+  max-width: 280px;
+}
+
+.footer-col-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-links a {
+  font-size: 15px;
+  color: var(--dim);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover { color: var(--sand); }
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-copy {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+}
+
+.footer-ayah {
+  font-size: 13px;
+  color: var(--dim);
+  font-style: italic;
+  text-align: right;
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+/* ============================================
+   ANIMATIONS
+============================================ */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ============================================
+   RESPONSIVE
+============================================ */
+
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 24px 60px; }
+  .hero::before { left: 24px; }
+  .hero-inner { padding-left: 24px; }
+  .scroll-indicator { left: 24px; }
+  .section { padding: 60px 24px; }
+  .signs-grid { grid-template-columns: 1fr; }
+  .protocol-grid { grid-template-columns: 1fr; }
+  .protocol-left { border-right: none; border-bottom: 1px solid var(--border); padding: 48px 24px; }
+  .protocol-right { padding: 48px 24px; }
+  .reports-grid { grid-template-columns: 1fr; }
+  .mission-three { grid-template-columns: 1fr; }
+  .paper-inner { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+  .statement-band { padding: 20px 24px; }
+  .cta-section { padding: 80px 24px; }
+  .mission-section { padding: 80px 24px; }
+  .paper-section { padding: 60px 24px; }
+  footer { padding: 40px 24px; }
+  .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+  .footer-ayah { text-align: center; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    MUNTAZIREEN
+    <span>منتظرين — Those who wait, watch, and prepare.</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#signs">The Signs</a></li>
+    <li><a href="#protocol">The Protocol</a></li>
+    <li><a href="#reports">Reports</a></li>
+    <li><a href="#mission">Mission</a></li>
+    <li><a href="#protocol" class="nav-cta">Begin</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-rule"></div>
+  <div class="hero-watermark">منتظرين</div>
+
+  <div class="hero-inner">
+    <div class="hero-eyebrow">The Hour is Near</div>
+
+    <h1 class="hero-title">
+      The signs<br>
+      <em>are here.</em>
+      <span class="line-indent">Now what?</span>
+    </h1>
+
+    <div class="hero-ayah">
+      <div class="arabic">اقْتَرَبَتِ السَّاعَةُ وَانشَقَّ الْقَمَرُ</div>
+      <div class="translation">"The Hour has drawn near and the moon has split."</div>
+      <div class="reference">Surah Al-Qamar 54:1 — Sahih Al-Bukhari 3636</div>
+    </div>
+
+    <p class="hero-desc">
+      You are not paranoid. You are <strong>paying attention.</strong><br>
+      Muntazireen exists for those who see what is unfolding —
+      and need to know what to do about it.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#signs" class="btn-primary">Read the Signs</a>
+      <a href="#protocol" class="btn-secondary">The Protocol</a>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll</span>
+  </div>
+</section>
+
+<!-- STATEMENT BAND -->
+<div class="statement-band">
+  <div class="statement-text">
+    <span>Watch</span> &nbsp;·&nbsp; Prepare &nbsp;·&nbsp; <span>Return</span> &nbsp;·&nbsp; Deen First &nbsp;·&nbsp; <span>Free. Always.</span> &nbsp;·&nbsp; Paper-First Design &nbsp;·&nbsp; <span>For the Ummah</span> &nbsp;·&nbsp; No Fear. Certainty. &nbsp;·&nbsp;
+    <span>Watch</span> &nbsp;·&nbsp; Prepare &nbsp;·&nbsp; <span>Return</span> &nbsp;·&nbsp; Deen First &nbsp;·&nbsp; <span>Free. Always.</span> &nbsp;·&nbsp; Paper-First Design &nbsp;·&nbsp; <span>For the Ummah</span> &nbsp;·&nbsp; No Fear. Certainty. &nbsp;·&nbsp;
+  </div>
+</div>
+
+<!-- SIGNS SECTION -->
+<section class="section" id="signs">
+  <div class="section-label">The Signs</div>
+  <h2 class="section-title reveal">What was <em>foretold</em><br>is unfolding.</h2>
+  <p class="section-intro reveal reveal-delay-1">
+    The Prophet ﷺ described the signs of the Hour in precise detail fourteen centuries ago.
+    We document them here — sourced, referenced, and plainly explained.
+  </p>
+
+  <div class="signs-grid">
+
+    <div class="sign-card active-sign reveal">
+      <div class="sign-number">01</div>
+      <div class="sign-status">Active Now</div>
+      <div class="sign-name">Time Passes Faster</div>
+      <div class="sign-desc">The Prophet ﷺ foretold that time would compress — a year feeling like a month, a month like a week. This is not metaphor. It is widely felt and increasingly documented.</div>
+      <div class="sign-ref">Sahih Al-Bukhari 1036 — Grade: Sahih</div>
+    </div>
+
+    <div class="sign-card active-sign reveal reveal-delay-1">
+      <div class="sign-number">02</div>
+      <div class="sign-status">Active Now</div>
+      <div class="sign-name">Earthquakes Multiply</div>
+      <div class="sign-desc">Earthquakes would increase in frequency before the Hour. Global seismic data shows a marked increase in significant earthquakes over the last two decades.</div>
+      <div class="sign-ref">Sahih Al-Bukhari 1036 — Grade: Sahih</div>
+    </div>
+
+    <div class="sign-card active-sign reveal">
+      <div class="sign-number">03</div>
+      <div class="sign-status">Active Now</div>
+      <div class="sign-name">Barefoot Shepherds in Tall Buildings</div>
+      <div class="sign-desc">Those who were poor and barefoot would compete in constructing tall buildings. The Gulf states — historically Bedouin — now host the world's tallest structures.</div>
+      <div class="sign-ref">Sahih Muslim 8a — Grade: Sahih</div>
+    </div>
+
+    <div class="sign-card active-sign reveal reveal-delay-1">
+      <div class="sign-number">04</div>
+      <div class="sign-status">Active Now</div>
+      <div class="sign-name">Knowledge Decreases, Ignorance Spreads</div>
+      <div class="sign-desc">Scholars would diminish and ignorance would prevail. Misinformation, false scholarship, and religious illiteracy are at historic highs globally and within the ummah.</div>
+      <div class="sign-ref">Sahih Al-Bukhari 80 — Grade: Sahih</div>
+    </div>
+
+    <div class="sign-card fulfilled-sign reveal">
+      <div class="sign-number">05</div>
+      <div class="sign-status">Fulfilled</div>
+      <div class="sign-name">The Splitting of the Moon</div>
+      <div class="sign-desc">This occurred in the time of the Prophet ﷺ as a miracle. The Quran opens Surah Al-Qamar with it. The Hour began drawing near from that moment.</div>
+      <div class="sign-ref">Surah Al-Qamar 54:1 — Sahih Al-Bukhari 3636</div>
+    </div>
+
+    <div class="sign-card major-sign reveal reveal-delay-1">
+      <div class="sign-number">06</div>
+      <div class="sign-status">Major Sign — Awaited</div>
+      <div class="sign-name">The Emergence of Dajjal</div>
+      <div class="sign-desc">The greatest trial humanity will face. One-eyed. Claims divinity. Crosses the earth except Mecca and Medina. The first 10 ayat of Al-Kahf are protection against him.</div>
+      <div class="sign-ref">Sahih Muslim 2933 — Grade: Sahih</div>
+    </div>
+
+  </div>
+
+  <div style="text-align:center; margin-top: 40px;" class="reveal">
+    <a href="#" class="btn-secondary">View All Signs →</a>
+  </div>
+</section>
+
+<!-- PROTOCOL SECTION -->
+<section class="section protocol-section" id="protocol">
+  <div class="protocol-grid">
+    <div class="protocol-left">
+      <div class="section-label">The Protocol</div>
+      <h2 class="section-title reveal">Twelve weeks.<br><em>Four pillars.</em><br>One direction.</h2>
+      <p style="font-size:17px; color:var(--muted); line-height:1.8; margin-bottom:48px; max-width:460px;" class="reveal reveal-delay-1">
+        A structured system for the believer who is awake and wants to act.
+        Built to be printed. Built to survive without a phone or internet connection.
+        <strong style="color:var(--sand); font-weight:400;">Deen always first.</strong>
+      </p>
+
+      <div class="protocol-pillars reveal reveal-delay-2">
+        <div class="pillar deen">
+          <div class="pillar-num">I</div>
+          <div class="pillar-body">
+            <div class="pillar-name">Deen</div>
+            <div class="pillar-desc">Salah, Al-Kahf, adhkar, aqeedah — the foundation everything else stands on.</div>
+          </div>
+          <div class="pillar-tag">Priority</div>
+        </div>
+        <div class="pillar body">
+          <div class="pillar-num">II</div>
+          <div class="pillar-body">
+            <div class="pillar-name">Body</div>
+            <div class="pillar-desc">Strength, conditioning, endurance. The believer's body is a trust.</div>
+          </div>
+          <div class="pillar-tag">Physical</div>
+        </div>
+        <div class="pillar blade">
+          <div class="pillar-num">III</div>
+          <div class="pillar-body">
+            <div class="pillar-name">Blade & Defence</div>
+            <div class="pillar-desc">Knife fundamentals, situational awareness, Filipino Kali principles.</div>
+          </div>
+          <div class="pillar-tag">Defence</div>
+        </div>
+        <div class="pillar survival">
+          <div class="pillar-num">IV</div>
+          <div class="pillar-body">
+            <div class="pillar-name">Survival</div>
+            <div class="pillar-desc">Water, food, shelter, first aid, navigation. Tier-ranked by urgency.</div>
+          </div>
+          <div class="pillar-tag">Practical</div>
+        </div>
+      </div>
+
+      <div style="margin-top:40px;" class="reveal reveal-delay-3">
+        <a href="#" class="btn-primary">Begin the Protocol</a>
+        &nbsp;&nbsp;
+        <a href="#" class="btn-secondary" style="margin-top:0;">Download PDF</a>
+      </div>
+    </div>
+
+    <div class="protocol-right">
+      <div class="section-label">Principles</div>
+      <div class="protocol-principles">
+        <div class="principle reveal">
+          <div class="principle-num">01 —</div>
+          <div class="principle-title">Paper-First</div>
+          <div class="principle-body">Every guide, schedule, and resource is printable. When phones die and servers go dark, the knowledge lives in your hands.</div>
+        </div>
+        <div class="principle reveal reveal-delay-1">
+          <div class="principle-num">02 —</div>
+          <div class="principle-title">Referenced & Verified</div>
+          <div class="principle-body">Every hadith is graded and sourced. Every claim is checked against scholarship. Nothing here is speculation presented as fact.</div>
+        </div>
+        <div class="principle reveal reveal-delay-2">
+          <div class="principle-num">03 —</div>
+          <div class="principle-title">Certainty, Not Fear</div>
+          <div class="principle-body">The Hour is Allah's promise — not a threat. We prepare with calm certainty, not panic. The believer who knows their Lord does not fear what is coming.</div>
+        </div>
+        <div class="principle reveal reveal-delay-3">
+          <div class="principle-num">04 —</div>
+          <div class="principle-title">Free. Always.</div>
+          <div class="principle-body">No paywall. No premium tier. No merchandise. Sadaqah jariyah is the model. If this helps one person stand firm, that is enough.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REPORTS SECTION -->
+<section class="section" id="reports" style="padding-bottom:40px;">
+  <div class="section-label">Muntazireen Reports</div>
+  <h2 class="section-title reveal">The world is speaking.<br><em>We document it.</em></h2>
+  <p class="section-intro reveal reveal-delay-1">Curated developments and deep analysis — US/Iran, Palestine, natural events, geopolitical shifts. Everything sourced, dated, and connected to the signs.</p>
+
+  <div class="reports-grid reveal reveal-delay-2">
+    <div class="report-featured">
+      <div class="report-date">March 2026</div>
+      <div class="report-category">Deep Analysis — US / Iran</div>
+      <h3 class="report-title">The Gathering Storm: What the Iran Standoff Means for the Ummah</h3>
+      <p class="report-excerpt">
+        Tensions between Washington and Tehran have reached a threshold not seen since 2020.
+        We trace the timeline, examine the strategic calculations on both sides,
+        and — crucially — situate this within what was foretold fourteen centuries ago.
+      </p>
+      <a href="#" class="report-sign-link">↗ Connected sign: Romans becoming dominant in number</a>
+      <br>
+      <a href="#" class="report-read">Read full analysis</a>
+    </div>
+
+    <div class="reports-sidebar">
+      <div class="sidebar-header">Latest Developments</div>
+
+      <div class="sidebar-item">
+        <div class="sidebar-cat">Palestine</div>
+        <div class="sidebar-title">Ceasefire collapse — what the latest breakdown means on the ground</div>
+        <div class="sidebar-date">March 2026 · Sourced: Al Jazeera, Reuters</div>
+      </div>
+
+      <div class="sidebar-item">
+        <div class="sidebar-cat">Natural Events</div>
+        <div class="sidebar-title">Significant seismic activity recorded across three continents in 30 days</div>
+        <div class="sidebar-date">February 2026 · Sourced: USGS</div>
+      </div>
+
+      <div class="sidebar-item">
+        <div class="sidebar-cat">Economic</div>
+        <div class="sidebar-title">Dollar instability signals — what believers in the West need to know</div>
+        <div class="sidebar-date">February 2026 · Sourced: FT, Bloomberg</div>
+      </div>
+
+      <div class="sidebar-item">
+        <div class="sidebar-cat">Signs Watch</div>
+        <div class="sidebar-title">Time compression — new research aligns with prophetic description</div>
+        <div class="sidebar-date">January 2026 · Deep Analysis</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:40px;" class="reveal">
+    <a href="#" class="btn-secondary">All Reports →</a>
+  </div>
+</section>
+
+<!-- MISSION SECTION -->
+<section class="mission-section" id="mission">
+  <div class="mission-inner">
+    <div class="mission-ornament reveal">— ﷽ —</div>
+    <h2 class="mission-title reveal">What is<br><em>Muntazireen?</em></h2>
+
+    <p class="mission-body reveal reveal-delay-1">
+      Muntazireen — <em>those who wait, watch, and prepare.</em><br><br>
+      We are a collective. No names. No faces. No agenda except the truth.
+      We exist because the signs are real, the Hour is near,
+      and <strong>too many believers have no idea what to do.</strong>
+    </p>
+
+    <p class="mission-body reveal reveal-delay-2">
+      This is not a business. This is not a brand.
+      This is infrastructure for the ummah —
+      built to function when everything else fails,
+      designed to spread without marketing,
+      grounded in nothing except <strong>Quran and authenticated Sunnah.</strong>
+    </p>
+
+    <div class="mission-hadith reveal reveal-delay-3">
+      <div class="arabic">«بَادِرُوا بِالأَعْمَالِ فِتَنًا كَقِطَعِ اللَّيْلِ الْمُظْلِمِ»</div>
+      <div class="trans">"Hasten to do good deeds before trials come like pieces of a dark night."</div>
+      <div class="source">Sahih Muslim 118 — Grade: Sahih</div>
+    </div>
+
+    <div class="mission-three">
+      <div class="mission-pillar reveal">
+        <div class="mission-pillar-num">01</div>
+        <div class="mission-pillar-title">Awaken</div>
+        <div class="mission-pillar-body">For those who feel something is coming but cannot name it. We give the language, the framework, and the evidence.</div>
+      </div>
+      <div class="mission-pillar reveal reveal-delay-1">
+        <div class="mission-pillar-num">02</div>
+        <div class="mission-pillar-title">Equip</div>
+        <div class="mission-pillar-body">The Protocol gives you a structured path — deen, body, defence, survival. Printable. Practical. Tested.</div>
+      </div>
+      <div class="mission-pillar reveal reveal-delay-2">
+        <div class="mission-pillar-num">03</div>
+        <div class="mission-pillar-title">Unify</div>
+        <div class="mission-pillar-body">Prepared individuals form prepared communities. Communities form the foundation of what comes next.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAPER FIRST -->
+<section class="paper-section">
+  <div class="paper-inner">
+    <div>
+      <div class="section-label reveal">Built for the Long Game</div>
+      <h2 class="section-title reveal" style="font-size:clamp(28px,4vw,48px);">When the grid goes down,<br><em>your knowledge doesn't.</em></h2>
+      <p style="font-size:17px; color:var(--muted); line-height:1.8; margin: 24px 0 32px;" class="reveal reveal-delay-1">
+        Every resource on Muntazireen is designed to be printed, memorised, or passed hand to hand.
+        No app. No account. No dependency. The protocol lives in people — not servers.
+      </p>
+      <ul style="list-style:none; display:flex; flex-direction:column; gap:12px;" class="reveal reveal-delay-2">
+        <li style="font-family:var(--font-mono); font-size:11px; color:var(--muted); letter-spacing:0.1em; display:flex; gap:12px;">
+          <span style="color:var(--gold);">✓</span> Every guide available as print-ready PDF
+        </li>
+        <li style="font-family:var(--font-mono); font-size:11px; color:var(--muted); letter-spacing:0.1em; display:flex; gap:12px;">
+          <span style="color:var(--gold);">✓</span> Gear lists require no technology to use
+        </li>
+        <li style="font-family:var(--font-mono); font-size:11px; color:var(--muted); letter-spacing:0.1em; display:flex; gap:12px;">
+          <span style="color:var(--gold);">✓</span> Signs documented with hadith — memorisable
+        </li>
+        <li style="font-family:var(--font-mono); font-size:11px; color:var(--muted); letter-spacing:0.1em; display:flex; gap:12px;">
+          <span style="color:var(--gold);">✓</span> Weekly schedule fits on a single printed page
+        </li>
+        <li style="font-family:var(--font-mono); font-size:11px; color:var(--muted); letter-spacing:0.1em; display:flex; gap:12px;">
+          <span style="color:var(--gold);">✓</span> Designed to be shared, copied, distributed freely
+        </li>
+      </ul>
+    </div>
+    <div class="paper-visual reveal reveal-delay-2">
+      <div class="paper-stack">
+        <div class="paper-doc">
+          <div class="paper-line thick"></div>
+          <div class="paper-line short"></div>
+          <div class="paper-line"></div>
+          <div class="paper-line short" style="width:80%"></div>
+          <div class="paper-line"></div>
+          <div class="paper-line gold"></div>
+          <div class="paper-line"></div>
+          <div class="paper-line short"></div>
+          <div class="paper-line"></div>
+          <div class="paper-line"></div>
+          <div class="paper-line short" style="width:65%"></div>
+        </div>
+        <div class="paper-doc">
+          <div class="paper-line thick" style="width:60%"></div>
+          <div class="paper-line"></div>
+          <div class="paper-line short"></div>
+          <div class="paper-line gold" style="width:50%"></div>
+          <div class="paper-line"></div>
+          <div class="paper-line"></div>
+          <div class="paper-line short" style="width:70%"></div>
+          <div class="paper-line"></div>
+          <div class="paper-line short"></div>
+        </div>
+        <div class="paper-doc">
+          <div class="paper-line thick"></div>
+          <div class="paper-line gold" style="width:30%"></div>
+          <div class="paper-line"></div>
+          <div class="paper-line short"></div>
+          <div class="paper-line"></div>
+          <div class="paper-line" style="width:85%"></div>
+          <div class="paper-line short"></div>
+          <div class="paper-line"></div>
+          <div class="paper-line gold" style="width:45%"></div>
+          <div class="paper-stamp">PRINT-READY</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-label reveal">Begin Now</div>
+  <h2 class="cta-title reveal">You already know<br><em>something is coming.</em></h2>
+  <p class="cta-sub reveal reveal-delay-1">
+    The question is not whether you believe the signs.
+    The question is whether you'll be ready — in deen, in body, in preparation —
+    when they arrive at your door.
+  </p>
+  <div class="cta-actions reveal reveal-delay-2">
+    <a href="#protocol" class="btn-primary">Start the Protocol</a>
+    <a href="#signs" class="btn-secondary">Read the Signs</a>
+  </div>
+  <p class="cta-note reveal reveal-delay-3">Free. No account. No email. No conditions. — Sadaqah Jariyah.</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo">MUNTAZIREEN</div>
+      <div class="tagline">منتظرين — Those who wait, watch, and prepare.</div>
+      <p class="mission-stmt">
+        A collective resource for believers who see the signs and want to know what to do.
+        Free. Always. For the ummah.
+      </p>
+    </div>
+    <div>
+      <div class="footer-col-title">Sections</div>
+      <ul class="footer-links">
+        <li><a href="#">The Signs</a></li>
+        <li><a href="#">The Protocol</a></li>
+        <li><a href="#">Reports</a></li>
+        <li><a href="#">Resources</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Protocol</div>
+      <ul class="footer-links">
+        <li><a href="#">Deen Track</a></li>
+        <li><a href="#">Body Track</a></li>
+        <li><a href="#">Blade & Defence</a></li>
+        <li><a href="#">Survival Track</a></li>
+        <li><a href="#">Download PDF</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Resources</div>
+      <ul class="footer-links">
+        <li><a href="#">Gear Lists</a></li>
+        <li><a href="#">Scholar References</a></li>
+        <li><a href="#">Print Guides</a></li>
+        <li><a href="#">Book List</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">MUNTAZIREEN — A Collective Resource. Free Forever. No Rights Reserved.</div>
+    <div class="footer-ayah">"And We have certainly made the Quran easy for remembrance, so is there any who will remember?" — Al-Qamar 54:17</div>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

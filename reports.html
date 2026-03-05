@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muntazireen Reports — منتظرين</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+
+/* ============================================
+   ROOT & RESET
+============================================ */
+
+:root {
+  --void: #080807;
+  --deep: #0e0d0b;
+  --surface: #141310;
+  --panel: #1a1916;
+  --border: #272521;
+  --border-light: #333128;
+  --dim: #4a463e;
+  --muted: #6b6558;
+  --mid: #9a9184;
+  --sand: #c4b89a;
+  --cream: #e8dfc8;
+  --white: #f2ece0;
+  --gold: #b8963c;
+  --gold-bright: #d4a843;
+  --gold-dim: #6b5520;
+  --gold-faint: rgba(184,150,60,0.07);
+
+  --cat-iran: #8b3a3a;
+  --cat-iran-dim: rgba(139,58,58,0.15);
+  --cat-palestine: #2d5a1b;
+  --cat-palestine-dim: rgba(45,90,27,0.15);
+  --cat-signs: #b8963c;
+  --cat-signs-dim: rgba(184,150,60,0.12);
+  --cat-economic: #3a5a7a;
+  --cat-economic-dim: rgba(58,90,122,0.15);
+  --cat-seismic: #5a3a7a;
+  --cat-seismic-dim: rgba(90,58,122,0.15);
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'Courier Prime', 'Courier New', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--sand);
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.6;
+}
+
+::selection { background: var(--gold-dim); color: var(--cream); }
+
+/* ============================================
+   NAV
+============================================ */
+
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 48px;
+  background: rgba(8,8,7,0.96);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+}
+
+.nav-logo {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.nav-logo span {
+  color: var(--muted);
+  font-size: 10px;
+  display: block;
+  letter-spacing: 0.2em;
+  margin-top: 2px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover { color: var(--cream); }
+.nav-links a.active { color: var(--gold); }
+
+/* ============================================
+   MASTHEAD
+============================================ */
+
+.masthead {
+  padding: 120px 48px 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.masthead-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.masthead-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  line-height: 1.9;
+}
+
+.masthead-meta strong {
+  color: var(--gold);
+  font-weight: 400;
+}
+
+.masthead-title-block {
+  text-align: center;
+  flex: 1;
+  padding: 0 40px;
+}
+
+.masthead-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.masthead-eyebrow::before,
+.masthead-eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  max-width: 60px;
+}
+
+.masthead-name {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 9vw, 120px);
+  font-weight: 900;
+  color: var(--white);
+  letter-spacing: 0.04em;
+  line-height: 0.9;
+  margin-bottom: 8px;
+}
+
+.masthead-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.masthead-arabic {
+  font-family: var(--font-body);
+  font-size: 18px;
+  color: var(--muted);
+  direction: rtl;
+}
+
+.masthead-mission {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  line-height: 1.9;
+  text-align: right;
+}
+
+/* Category nav */
+.cat-nav {
+  display: flex;
+  gap: 0;
+  padding: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.cat-nav::-webkit-scrollbar { display: none; }
+
+.cat-btn {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 16px 24px;
+  cursor: pointer;
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+
+.cat-btn:hover { color: var(--cream); }
+.cat-btn.all.active { color: var(--gold); border-bottom-color: var(--gold); }
+.cat-btn.iran.active { color: #c06060; border-bottom-color: #c06060; }
+.cat-btn.palestine.active { color: #6db87f; border-bottom-color: #6db87f; }
+.cat-btn.signs.active { color: var(--gold); border-bottom-color: var(--gold); }
+.cat-btn.economic.active { color: #6a9fcc; border-bottom-color: #6a9fcc; }
+.cat-btn.seismic.active { color: #a87fc4; border-bottom-color: #a87fc4; }
+
+/* ============================================
+   EDITION BAND
+============================================ */
+
+.edition-band {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.edition-left {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+  text-transform: uppercase;
+}
+
+.edition-ticker {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 60%;
+}
+
+.edition-ticker span { color: var(--gold); }
+
+/* ============================================
+   MAIN NEWSPAPER LAYOUT
+============================================ */
+
+main {
+  padding: 0 48px 80px;
+}
+
+/* ============================================
+   LEAD STORY
+============================================ */
+
+.lead-story {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 48px 0;
+}
+
+.lead-left {
+  padding-right: 48px;
+  border-right: 1px solid var(--border);
+}
+
+.lead-right {
+  padding-left: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.story-category {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.story-category .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.cat-iran-style { color: #c06060; }
+.cat-iran-style .dot { background: #c06060; box-shadow: 0 0 6px #c06060; }
+
+.cat-palestine-style { color: #6db87f; }
+.cat-palestine-style .dot { background: #6db87f; }
+
+.cat-signs-style { color: var(--gold); }
+.cat-signs-style .dot { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
+
+.cat-economic-style { color: #6a9fcc; }
+.cat-economic-style .dot { background: #6a9fcc; }
+
+.cat-seismic-style { color: #a87fc4; }
+.cat-seismic-style .dot { background: #a87fc4; }
+
+.lead-headline {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 16px;
+}
+
+.lead-headline em { font-style: italic; font-weight: 400; color: var(--cream); }
+
+.lead-deck {
+  font-size: 18px;
+  color: var(--mid);
+  line-height: 1.7;
+  margin-bottom: 24px;
+  font-style: italic;
+}
+
+.story-body {
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.85;
+  margin-bottom: 20px;
+  column-count: 1;
+}
+
+.story-body p { margin-bottom: 14px; }
+.story-body p:last-child { margin-bottom: 0; }
+
+.story-body strong { color: var(--sand); font-weight: 500; }
+
+.story-meta {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.story-date {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.12em;
+}
+
+.story-source {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.12em;
+}
+
+.story-source a {
+  color: var(--gold-dim);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.story-source a:hover { color: var(--gold); }
+
+.story-type {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border: 1px solid;
+}
+
+.type-analysis { color: var(--gold); border-color: var(--gold-dim); }
+.type-developing { color: #c06060; border-color: #8b3a3a; animation: blink 2s ease infinite; }
+.type-watch { color: var(--gold); border-color: var(--gold-dim); }
+.type-curated { color: var(--muted); border-color: var(--border); }
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Signs hadith pull */
+.hadith-pull {
+  background: var(--gold-faint);
+  border: 1px solid var(--gold-dim);
+  border-left: 3px solid var(--gold);
+  padding: 20px 24px;
+  margin: 24px 0;
+  position: relative;
+}
+
+.hadith-pull::before {
+  content: 'CONNECTED SIGN';
+  position: absolute;
+  top: -1px;
+  left: 16px;
+  background: var(--deep);
+  padding: 0 8px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  color: var(--gold-dim);
+}
+
+.hadith-pull .arabic {
+  font-size: 16px;
+  color: var(--cream);
+  direction: rtl;
+  text-align: right;
+  line-height: 1.8;
+  margin-bottom: 10px;
+}
+
+.hadith-pull .trans {
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.hadith-pull .ref {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--gold-dim);
+  margin-top: 8px;
+  letter-spacing: 0.1em;
+}
+
+/* Secondary stories in lead right */
+.secondary-stories {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.secondary-story {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s;
+  cursor: pointer;
+}
+
+.secondary-story:last-child { border-bottom: none; padding-bottom: 0; }
+.secondary-story:first-child { padding-top: 0; }
+
+.secondary-story:hover .sec-headline { color: var(--gold-bright); }
+
+.sec-headline {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--cream);
+  line-height: 1.25;
+  margin-bottom: 8px;
+  transition: color 0.3s;
+}
+
+.sec-deck {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 12px;
+}
+
+/* ============================================
+   THREE COLUMN SECTION
+============================================ */
+
+.three-col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.col-story {
+  padding: 36px 32px 36px 0;
+  border-right: 1px solid var(--border);
+}
+
+.col-story:last-child {
+  border-right: none;
+  padding-right: 0;
+  padding-left: 32px;
+}
+
+.col-story:nth-child(2) {
+  padding-left: 32px;
+}
+
+.col-headline {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--cream);
+  line-height: 1.2;
+  margin-bottom: 12px;
+  transition: color 0.3s;
+  cursor: pointer;
+}
+
+.col-headline:hover { color: var(--gold-bright); }
+
+.col-body {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+.col-body p { margin-bottom: 10px; }
+
+/* ============================================
+   DIVIDER WITH LABEL
+============================================ */
+
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+}
+
+.divider-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border-right: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.divider-label.iran { color: #c06060; background: var(--cat-iran-dim); }
+.divider-label.palestine { color: #6db87f; background: var(--cat-palestine-dim); }
+.divider-label.signs { color: var(--gold); background: var(--cat-signs-dim); }
+.divider-label.economic { color: #6a9fcc; background: var(--cat-economic-dim); }
+.divider-label.seismic { color: #a87fc4; background: var(--cat-seismic-dim); }
+
+.divider-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.divider-date {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--dim);
+  padding: 12px 20px;
+  border-left: 1px solid var(--border);
+  letter-spacing: 0.1em;
+}
+
+/* ============================================
+   ARCHIVE LIST
+============================================ */
+
+.archive-list {
+  border-bottom: 1px solid var(--border);
+}
+
+.archive-item {
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.25s;
+  cursor: pointer;
+}
+
+.archive-item:last-child { border-bottom: none; }
+.archive-item:hover { background: var(--surface); }
+
+.archive-date {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--dim);
+  padding: 20px 20px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+}
+
+.archive-date .month { color: var(--muted); font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; }
+
+.archive-body {
+  padding: 20px 28px;
+  border-right: 1px solid var(--border);
+}
+
+.archive-headline {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--sand);
+  line-height: 1.3;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.archive-excerpt {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.archive-meta {
+  padding: 20px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+  min-width: 130px;
+}
+
+.archive-cat {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1px solid;
+}
+
+.archive-cat.iran { color: #c06060; border-color: var(--cat-iran); }
+.archive-cat.palestine { color: #6db87f; border-color: var(--cat-palestine); }
+.archive-cat.signs { color: var(--gold); border-color: var(--gold-dim); }
+.archive-cat.economic { color: #6a9fcc; border-color: var(--cat-economic); }
+.archive-cat.seismic { color: #a87fc4; border-color: var(--cat-seismic); }
+
+.archive-read {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+  transition: color 0.3s;
+}
+
+.archive-item:hover .archive-read { color: var(--gold); }
+
+/* ============================================
+   SIGNS WATCH PANEL
+============================================ */
+
+.signs-watch-panel {
+  background: var(--gold-faint);
+  border: 1px solid var(--gold-dim);
+  padding: 40px 48px;
+  margin: 40px 0;
+  position: relative;
+}
+
+.signs-watch-panel::before {
+  content: 'SIGNS WATCH — ACTIVE CONNECTIONS';
+  position: absolute;
+  top: -1px;
+  left: 32px;
+  background: var(--void);
+  padding: 0 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+}
+
+.signs-watch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 24px;
+}
+
+.sign-watch-card {
+  background: var(--deep);
+  padding: 24px;
+}
+
+.swc-event {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.swc-headline {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--cream);
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.swc-arrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--gold-dim);
+  margin-bottom: 8px;
+}
+
+.swc-sign {
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.swc-ref {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+}
+
+/* ============================================
+   BOTTOM PULL QUOTE
+============================================ */
+
+.pull-quote-band {
+  border-top: 2px solid var(--border);
+  border-bottom: 2px solid var(--border);
+  padding: 48px 80px;
+  text-align: center;
+  margin: 40px 0;
+  position: relative;
+}
+
+.pull-quote-band::before,
+.pull-quote-band::after {
+  content: '◆';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold-dim);
+  font-size: 12px;
+}
+
+.pull-quote-band::before { left: 32px; }
+.pull-quote-band::after { right: 32px; }
+
+.pull-quote-arabic {
+  font-size: 24px;
+  color: var(--cream);
+  direction: rtl;
+  margin-bottom: 16px;
+  line-height: 1.8;
+}
+
+.pull-quote-trans {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-style: italic;
+  color: var(--mid);
+  line-height: 1.5;
+  margin-bottom: 12px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pull-quote-ref {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--gold-dim);
+  letter-spacing: 0.15em;
+}
+
+/* ============================================
+   FOOTER
+============================================ */
+
+footer {
+  background: var(--void);
+  border-top: 2px solid var(--border);
+  padding: 48px;
+}
+
+.footer-top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 28px;
+}
+
+.footer-brand .logo {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+
+.footer-brand .tagline {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.footer-brand .stmt {
+  font-size: 14px;
+  color: var(--dim);
+  line-height: 1.7;
+  max-width: 260px;
+}
+
+.footer-col-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-links a { font-size: 14px; color: var(--dim); text-decoration: none; transition: color 0.3s; }
+.footer-links a:hover { color: var(--sand); }
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-copy {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+}
+
+.footer-note {
+  font-size: 13px;
+  color: var(--dim);
+  font-style: italic;
+}
+
+/* ============================================
+   ANIMATIONS & REVEAL
+============================================ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ============================================
+   RESPONSIVE
+============================================ */
+
+@media (max-width: 900px) {
+  nav, .edition-band, .masthead { padding-left: 20px; padding-right: 20px; }
+  main { padding: 0 20px 60px; }
+  footer { padding: 32px 20px; }
+  .masthead-top { flex-direction: column; align-items: center; gap: 20px; text-align: center; }
+  .masthead-mission { text-align: center; }
+  .lead-story { grid-template-columns: 1fr; }
+  .lead-left { padding-right: 0; border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 32px; margin-bottom: 32px; }
+  .lead-right { padding-left: 0; }
+  .three-col { grid-template-columns: 1fr; }
+  .col-story { padding: 28px 0; border-right: none; border-bottom: 1px solid var(--border); }
+  .col-story:last-child { padding-left: 0; border-bottom: none; }
+  .col-story:nth-child(2) { padding-left: 0; }
+  .archive-item { grid-template-columns: 80px 1fr; }
+  .archive-meta { display: none; }
+  .signs-watch-grid { grid-template-columns: 1fr; }
+  .pull-quote-band { padding: 40px 32px; }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+  .footer-bottom { flex-direction: column; gap: 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    MUNTAZIREEN
+    <span>منتظرين — Those who wait, watch, and prepare.</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#signs">The Signs</a></li>
+    <li><a href="index.html#protocol">The Protocol</a></li>
+    <li><a href="reports.html" class="active">Reports</a></li>
+    <li><a href="index.html#mission">Mission</a></li>
+  </ul>
+</nav>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-meta">
+      <strong>Edition</strong><br>
+      March 2026<br>
+      Vol. I — No. 1<br>
+      ——<br>
+      Free. Always.
+    </div>
+
+    <div class="masthead-title-block">
+      <div class="masthead-eyebrow">Muntazireen</div>
+      <div class="masthead-name">REPORTS</div>
+      <div class="masthead-sub">News & Analysis for the Watchful Believer</div>
+      <div class="masthead-arabic">منتظرين — أولئك الذين ينتظرون ويراقبون ويستعدون</div>
+    </div>
+
+    <div class="masthead-mission">
+      All reports sourced.<br>
+      All signs referenced.<br>
+      No speculation<br>
+      presented as fact.<br>
+      ——<br>
+      Sadaqah Jariyah.
+    </div>
+  </div>
+
+  <!-- Category navigation -->
+  <nav class="cat-nav">
+    <button class="cat-btn all active" onclick="filterCat('all', this)">All Reports</button>
+    <button class="cat-btn iran" onclick="filterCat('iran', this)">US / Iran & Middle East</button>
+    <button class="cat-btn palestine" onclick="filterCat('palestine', this)">Palestine</button>
+    <button class="cat-btn signs" onclick="filterCat('signs', this)">Signs Watch</button>
+    <button class="cat-btn economic" onclick="filterCat('economic', this)">Economic</button>
+    <button class="cat-btn seismic" onclick="filterCat('seismic', this)">Natural & Seismic</button>
+  </nav>
+</div>
+
+<!-- EDITION BAND -->
+<div class="edition-band">
+  <div class="edition-left">Muntazireen Reports — March 2026</div>
+  <div class="edition-ticker">
+    <span>ACTIVE:</span> US–Iran tensions at 2020-level threshold &nbsp;·&nbsp;
+    <span>SIGNS WATCH:</span> Earthquake activity up across three regions &nbsp;·&nbsp;
+    <span>DEVELOPING:</span> Ceasefire status — Palestine &nbsp;·&nbsp;
+    <span>ANALYSIS:</span> Dollar instability and what believers must know
+  </div>
+</div>
+
+<main>
+
+  <!-- ==================== LEAD STORY ==================== -->
+  <div class="lead-story reveal" data-cat="iran">
+    <div class="lead-left">
+      <div class="story-category cat-iran-style">
+        <span class="dot"></span> US / Iran & Middle East
+        <span class="story-type type-analysis">Deep Analysis</span>
+      </div>
+
+      <h1 class="lead-headline">
+        The Gathering Storm:<br>
+        <em>What the Iran Standoff Tells Every Believer Right Now</em>
+      </h1>
+
+      <p class="lead-deck">
+        Tensions between Washington and Tehran have reached a threshold not seen since the assassination of Soleimani in 2020. We trace the timeline, the strategic calculus, and — crucially — what was foretold fourteen centuries ago.
+      </p>
+
+      <div class="story-body">
+        <p>
+          The current standoff did not emerge from a vacuum. It is the product of years of accumulated pressure — sanctions that have hollowed Iran's economy, proxy conflicts that have drawn both powers into an increasingly narrow corridor of strategic options, and a regional realignment that has left traditional diplomatic buffers weakened or eliminated.
+        </p>
+        <p>
+          What analysts describe as a "threshold moment" is, to the watchful believer, something more precise. The Prophet ﷺ spoke of a great conflict involving the Romans — understood by scholars as the dominant Western military power of the era — becoming the most numerous people and a dominant force before major end-times events unfold.
+        </p>
+
+        <div class="hadith-pull">
+          <div class="arabic">«لَا تَقُومُ السَّاعَةُ حَتَّى تَنْزِلَ الرُّومُ بِالأَعْمَاقِ أَوْ بِدَابِقٍ»</div>
+          <div class="trans">"The Hour will not come until the Romans descend upon A'maq or Dabiq." — This is among the signs preceding the major trials of the end times.</div>
+          <div class="ref">Sahih Muslim 2897 — Grade: Sahih</div>
+        </div>
+
+        <p>
+          The present escalation — involving naval posturing in the Strait of Hormuz, drone incidents, and the failure of back-channel negotiations — has produced what military analysts are calling a "compressed decision window." The language of geopolitics and the language of prophecy are, for the first time in decades, pointing in the same direction.
+        </p>
+        <p>
+          <strong>What the believer must hold onto:</strong> this is not cause for fear. It is cause for preparation — of iman before all else, then of body and practical capacity. The signs are not a threat. They are the fulfillment of a promise from Allah, and every fulfilled promise is evidence that the rest will follow.
+        </p>
+      </div>
+
+      <div class="story-meta">
+        <span class="story-date">March 2026</span>
+        <span class="story-source">Sources: <a href="#">Reuters</a>, <a href="#">Al Jazeera</a>, <a href="#">AP</a></span>
+        <span class="story-type type-analysis">Analysis</span>
+      </div>
+    </div>
+
+    <!-- Secondary stories -->
+    <div class="lead-right">
+      <div class="secondary-stories">
+
+        <div class="secondary-story" data-cat="palestine">
+          <div class="story-category cat-palestine-style">
+            <span class="dot"></span> Palestine
+            <span class="story-type type-developing">Developing</span>
+          </div>
+          <div class="sec-headline">Ceasefire Collapse — What the Latest Breakdown Means on the Ground</div>
+          <div class="sec-deck">The third ceasefire in six months has broken down. We document what is happening, why it matters, and what believers can do beyond watching.</div>
+          <div class="story-meta">
+            <span class="story-date">March 2026</span>
+            <span class="story-source">Sources: <a href="#">Al Jazeera</a>, <a href="#">Middle East Eye</a></span>
+          </div>
+        </div>
+
+        <div class="secondary-story" data-cat="economic">
+          <div class="story-category cat-economic-style">
+            <span class="dot"></span> Economic
+            <span class="story-type type-analysis">Analysis</span>
+          </div>
+          <div class="sec-headline">Dollar Instability Signals — What Believers in the West Need to Understand Now</div>
+          <div class="sec-deck">A convergence of fiscal stress indicators is flashing warnings that most people aren't paying attention to. Practical steps for the prepared believer.</div>
+          <div class="story-meta">
+            <span class="story-date">February 2026</span>
+            <span class="story-source">Sources: <a href="#">FT</a>, <a href="#">Bloomberg</a></span>
+          </div>
+        </div>
+
+        <div class="secondary-story" data-cat="seismic">
+          <div class="story-category cat-seismic-style">
+            <span class="dot"></span> Natural & Seismic
+            <span class="story-type type-watch">Signs Watch</span>
+          </div>
+          <div class="sec-headline">30 Days, Three Continents — Earthquake Frequency Reaches Documented High</div>
+          <div class="sec-deck">USGS data shows significant seismic events across Asia, the Middle East and the Americas in a single 30-day window. We connect the data to the hadith.</div>
+          <div class="story-meta">
+            <span class="story-date">February 2026</span>
+            <span class="story-source">Sources: <a href="#">USGS</a>, <a href="#">EMSC</a></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SIGNS WATCH PANEL ==================== -->
+  <div class="signs-watch-panel reveal" data-cat="signs">
+    <div style="font-family:var(--font-mono); font-size:11px; color:var(--muted); letter-spacing:0.1em;">
+      Recent events connected to prophetic signs — documented, referenced, updated.
+    </div>
+
+    <div class="signs-watch-grid">
+
+      <div class="sign-watch-card">
+        <div class="swc-event">Current Event</div>
+        <div class="swc-headline">Gulf States continue record skyscraper construction in 2026</div>
+        <div class="swc-arrow">↓ Connected Sign</div>
+        <div class="swc-sign">"The Hour will not come until you see barefoot, naked, destitute shepherds competing in constructing tall buildings."</div>
+        <div class="swc-ref">Sahih Muslim 8a — Grade: Sahih</div>
+      </div>
+
+      <div class="sign-watch-card">
+        <div class="swc-event">Current Event</div>
+        <div class="swc-headline">Scientists document accelerated time perception globally — research ongoing</div>
+        <div class="swc-arrow">↓ Connected Sign</div>
+        <div class="swc-sign">"The Hour will not come until time passes quickly, so that a year is like a month, a month like a week, a week like a day."</div>
+        <div class="swc-ref">Sunan At-Tirmidhi 2332 — Grade: Hasan</div>
+      </div>
+
+      <div class="sign-watch-card">
+        <div class="swc-event">Current Event</div>
+        <div class="swc-headline">Islamic scholarship vacuums widen as senior scholars pass — 2024–2026</div>
+        <div class="swc-arrow">↓ Connected Sign</div>
+        <div class="swc-sign">"Allah does not take away knowledge by snatching it from the people, but He takes it away by taking away the scholars."</div>
+        <div class="swc-ref">Sahih Al-Bukhari 100 — Grade: Sahih</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== SECTION DIVIDER — IRAN ==================== -->
+  <div class="section-divider reveal" data-cat="iran">
+    <div class="divider-label iran">US / Iran & Middle East</div>
+    <div class="divider-rule"></div>
+    <div class="divider-date">March 2026</div>
+  </div>
+
+  <!-- THREE COLUMN — IRAN/MIDDLE EAST -->
+  <div class="three-col">
+
+    <div class="col-story reveal" data-cat="iran">
+      <div class="story-category cat-iran-style" style="margin-bottom:12px;">
+        <span class="dot"></span> US / Iran
+        <span class="story-type type-curated">Curated</span>
+      </div>
+      <div class="col-headline">Strait of Hormuz: Naval Incidents and the Narrowing Window</div>
+      <div class="col-body">
+        <p>Three documented naval incidents in the Strait of Hormuz in 60 days. Shipping insurance rates have risen 40%. The strategic waterway that carries roughly 20% of global oil supply is the pressure point that neither side wants to trigger — yet.</p>
+        <p>What this means practically for the believer: supply chain disruption is a real scenario. Fuel, food, and logistics systems built on cheap oil are fragile in ways most people have not considered.</p>
+      </div>
+      <div class="story-meta">
+        <span class="story-date">March 2026</span>
+        <span class="story-source"><a href="#">Lloyd's of London</a>, <a href="#">Reuters</a></span>
+      </div>
+    </div>
+
+    <div class="col-story reveal reveal-delay-1" data-cat="iran">
+      <div class="story-category cat-iran-style" style="margin-bottom:12px;">
+        <span class="dot"></span> Middle East
+        <span class="story-type type-analysis">Analysis</span>
+      </div>
+      <div class="col-headline">The Abraham Accords at Five Years: What the Normalization Wave Actually Produced</div>
+      <div class="col-body">
+        <p>Five years after the first Abraham Accord signing, the promised stability has not materialised. Instead, a new regional fault line has opened — between states that normalised and those that did not — with consequences that are reshaping Muslim political geography.</p>
+        <p>For the Muntazireen reader: understand the alliances. Know who stands where. The map of the Muslim world is being redrawn in real time.</p>
+      </div>
+      <div class="story-meta">
+        <span class="story-date">February 2026</span>
+        <span class="story-source"><a href="#">Foreign Affairs</a></span>
+      </div>
+    </div>
+
+    <div class="col-story reveal reveal-delay-2" data-cat="iran">
+      <div class="story-category cat-iran-style" style="margin-bottom:12px;">
+        <span class="dot"></span> Iraq / Syria
+        <span class="story-type type-curated">Curated</span>
+      </div>
+      <div class="col-headline">The Euphrates Corridor: Why Iraq and Syria Remain Central to End-Times Geography</div>
+      <div class="col-body">
+        <p>The region between the Euphrates and the Levant appears repeatedly in authentic hadith about the end of times — as a theatre of significant events, as the location of treasures, and as a passage point for major figures.</p>
+        <p>We are not predicting. We are documenting. The Euphrates corridor is experiencing a convergence of geopolitical, environmental, and military pressures simultaneously.</p>
+      </div>
+      <div class="story-meta">
+        <span class="story-date">January 2026</span>
+        <span class="story-source"><a href="#">Al Monitor</a>, <a href="#">Reuters</a></span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== SECTION DIVIDER — PALESTINE ==================== -->
+  <div class="section-divider reveal" data-cat="palestine">
+    <div class="divider-label palestine">Palestine</div>
+    <div class="divider-rule"></div>
+    <div class="divider-date">March 2026</div>
+  </div>
+
+  <!-- ARCHIVE LIST — PALESTINE -->
+  <div class="archive-list">
+
+    <div class="archive-item reveal" data-cat="palestine">
+      <div class="archive-date">
+        <div class="month">Mar</div>
+        2026
+      </div>
+      <div class="archive-body">
+        <div class="archive-headline">Third Ceasefire Collapses — Documented Timeline of Breakdown</div>
+        <div class="archive-excerpt">A factual reconstruction of how the ceasefire agreement deteriorated, who said what, and what the humanitarian situation on the ground looks like as of this edition.</div>
+      </div>
+      <div class="archive-meta">
+        <span class="archive-cat palestine">Palestine</span>
+        <span class="archive-read">Read →</span>
+      </div>
+    </div>
+
+    <div class="archive-item reveal reveal-delay-1" data-cat="palestine">
+      <div class="archive-date">
+        <div class="month">Feb</div>
+        2026
+      </div>
+      <div class="archive-body">
+        <div class="archive-headline">Aid Routes, Blocked Access, and What You Can Still Do — A Practical Guide</div>
+        <div class="archive-excerpt">Which organisations are operational. Which routes are open. What your money actually does and where it goes. Vetted, sourced, updated.</div>
+      </div>
+      <div class="archive-meta">
+        <span class="archive-cat palestine">Palestine</span>
+        <span class="archive-read">Read →</span>
+      </div>
+    </div>
+
+    <div class="archive-item reveal reveal-delay-2" data-cat="palestine">
+      <div class="archive-date">
+        <div class="month">Feb</div>
+        2026
+      </div>
+      <div class="archive-body">
+        <div class="archive-headline">The Prophetic Significance of Al-Quds — What Every Muslim Must Know</div>
+        <div class="archive-excerpt">A referenced explainer on the hadith literature concerning Jerusalem and Palestine in the end times narrative. Not politics — theology, properly sourced.</div>
+      </div>
+      <div class="archive-meta">
+        <span class="archive-cat signs">Signs Watch</span>
+        <span class="archive-read">Read →</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== SECTION DIVIDER — ECONOMIC ==================== -->
+  <div class="section-divider reveal" data-cat="economic">
+    <div class="divider-label economic">Economic Collapse Signals</div>
+    <div class="divider-rule"></div>
+    <div class="divider-date">February 2026</div>
+  </div>
+
+  <!-- THREE COLUMN — ECONOMIC -->
+  <div class="three-col">
+
+    <div class="col-story reveal" data-cat="economic">
+      <div class="story-category cat-economic-style" style="margin-bottom:12px;">
+        <span class="dot"></span> Economic
+        <span class="story-type type-analysis">Analysis</span>
+      </div>
+      <div class="col-headline">The Dollar's Slow Fracture — What It Means for the Believer in the West</div>
+      <div class="col-body">
+        <p>De-dollarisation is no longer a fringe theory. China, Russia, the Gulf, and an expanding BRICS coalition are building alternative settlement systems. The process is slow — but it is real and it is accelerating.</p>
+        <p>Practical implication: systems you depend on — banking, supply chains, government services — are more fragile than they appear. The prepared believer does not wait for the system to fail to think about what comes next.</p>
+      </div>
+      <div class="story-meta">
+        <span class="story-date">February 2026</span>
+        <span class="story-source"><a href="#">FT</a>, <a href="#">IMF Data</a></span>
+      </div>
+    </div>
+
+    <div class="col-story reveal reveal-delay-1" data-cat="economic">
+      <div class="story-category cat-economic-style" style="margin-bottom:12px;">
+        <span class="dot"></span> Food Systems
+        <span class="story-type type-curated">Curated</span>
+      </div>
+      <div class="col-headline">Global Food Supply Stress Points — A Map for the Prepared Household</div>
+      <div class="col-body">
+        <p>Wheat, rice, and cooking oil — the three basics that underpin food security for most Muslim households globally — have all experienced significant price and supply volatility in the last 18 months.</p>
+        <p>We document the specific chokepoints: Ukraine-Russia grain corridor, Red Sea shipping disruption, and El Niño agricultural impact across South and Southeast Asia.</p>
+      </div>
+      <div class="story-meta">
+        <span class="story-date">January 2026</span>
+        <span class="story-source"><a href="#">UN FAO</a>, <a href="#">World Bank</a></span>
+      </div>
+    </div>
+
+    <div class="col-story reveal reveal-delay-2" data-cat="economic">
+      <div class="story-category cat-economic-style" style="margin-bottom:12px;">
+        <span class="dot"></span> Currency
+        <span class="story-type type-watch">Signs Watch</span>
+      </div>
+      <div class="col-headline">The Prophetic Hadith on Gold, Silver, and Economic Collapse — A Reference</div>
+      <div class="col-body">
+        <p>There is authentic narration connecting the end times to a period when gold and silver will be uncovered and people will gather around it. Scholars differ on interpretation — we present the narration, the grades, and the scholarly commentary without speculation.</p>
+      </div>
+      <div class="story-meta">
+        <span class="story-date">January 2026</span>
+        <span class="story-source"><a href="#">Sahih Muslim 2894</a></span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== SECTION DIVIDER — SEISMIC ==================== -->
+  <div class="section-divider reveal" data-cat="seismic">
+    <div class="divider-label seismic">Natural & Seismic</div>
+    <div class="divider-rule"></div>
+    <div class="divider-date">February 2026</div>
+  </div>
+
+  <!-- ARCHIVE LIST — SEISMIC -->
+  <div class="archive-list">
+
+    <div class="archive-item reveal" data-cat="seismic">
+      <div class="archive-date">
+        <div class="month">Mar</div>
+        2026
+      </div>
+      <div class="archive-body">
+        <div class="archive-headline">30 Days, Three Continents — Earthquake Frequency and the Prophetic Timeline</div>
+        <div class="archive-excerpt">USGS records 47 significant seismic events (M5.0+) across Asia, the Middle East, and the Americas in a 30-day window. We present the data alongside Sahih Al-Bukhari 1036.</div>
+      </div>
+      <div class="archive-meta">
+        <span class="archive-cat seismic">Seismic</span>
+        <span class="archive-read">Read →</span>
+      </div>
+    </div>
+
+    <div class="archive-item reveal reveal-delay-1" data-cat="seismic">
+      <div class="archive-date">
+        <div class="month">Feb</div>
+        2026
+      </div>
+      <div class="archive-body">
+        <div class="archive-headline">The Three Great Sinkholes — What Islamic Scholars Say About the Khusuf and Where We Are</div>
+        <div class="archive-excerpt">One of the ten major signs involves three great sinkholes — in the East, West, and Arabian Peninsula. Scholars' explanations, the hadith, and the current state of scholarly opinion.</div>
+      </div>
+      <div class="archive-meta">
+        <span class="archive-cat signs">Signs Watch</span>
+        <span class="archive-read">Read →</span>
+      </div>
+    </div>
+
+    <div class="archive-item reveal reveal-delay-2" data-cat="seismic">
+      <div class="archive-date">
+        <div class="month">Jan</div>
+        2026
+      </div>
+      <div class="archive-body">
+        <div class="archive-headline">Practical Guide: Earthquake Preparedness for the Muslim Household</div>
+        <div class="archive-excerpt">What to have, where to keep it, and what to do in the first 72 hours. Connected to the Muntazireen Protocol Tier 1 survival kit. Printable PDF available.</div>
+      </div>
+      <div class="archive-meta">
+        <span class="archive-cat seismic">Seismic</span>
+        <span class="archive-read">Read →</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== PULL QUOTE ==================== -->
+  <div class="pull-quote-band reveal">
+    <div class="pull-quote-arabic">بَادِرُوا بِالأَعْمَالِ فِتَنًا كَقِطَعِ اللَّيْلِ الْمُظْلِمِ</div>
+    <div class="pull-quote-trans">"Hasten to do good deeds before trials come like pieces of a dark night."</div>
+    <div class="pull-quote-ref">Sahih Muslim 118 — Grade: Sahih — The Prophet ﷺ</div>
+  </div>
+
+  <!-- ==================== METHODOLOGY NOTE ==================== -->
+  <div style="border: 1px solid var(--border); padding: 32px 40px; margin-bottom: 40px; background: var(--surface);" class="reveal">
+    <div style="font-family:var(--font-mono); font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:16px;">Editorial Methodology</div>
+    <div style="font-size:15px; color:var(--muted); line-height:1.85; max-width:720px;">
+      Every report on this page is sourced from named, verifiable outlets. Every hadith is cited with its source collection and scholarly grade (Sahih, Hasan, or Da'if — we do not use weak narrations without explicit labelling). Analysis is labelled as analysis. Curated items are labelled as curated. Signs Watch connections are interpretive and are always presented as such — connecting the observable world to authenticated prophetic narration, not claiming certainty where scholars have differed. If we are wrong, we correct it. This is a collective of believers, not scholars — we follow scholarship, we do not replace it.
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo">MUNTAZIREEN</div>
+      <div class="tagline">منتظرين — Those who wait, watch, and prepare.</div>
+      <p class="stmt">A collective resource for believers who see the signs. Free. Always. For the ummah. No rights reserved.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Sections</div>
+      <ul class="footer-links">
+        <li><a href="index.html#signs">The Signs</a></li>
+        <li><a href="index.html#protocol">The Protocol</a></li>
+        <li><a href="reports.html">Reports</a></li>
+        <li><a href="#">Resources</a></li>
+        <li><a href="index.html#mission">Mission</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Report Categories</div>
+      <ul class="footer-links">
+        <li><a href="#">US / Iran & Middle East</a></li>
+        <li><a href="#">Palestine</a></li>
+        <li><a href="#">Signs Watch</a></li>
+        <li><a href="#">Economic</a></li>
+        <li><a href="#">Natural & Seismic</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Resources</div>
+      <ul class="footer-links">
+        <li><a href="#">Gear Lists</a></li>
+        <li><a href="#">Print Guides</a></li>
+        <li><a href="#">Scholar References</a></li>
+        <li><a href="#">Download Protocol PDF</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">MUNTAZIREEN — Free Forever. No Rights Reserved. Copy. Print. Share. Spread.</div>
+    <div class="footer-note">"And remind, for indeed the reminder benefits the believers." — Al-Dhariyat 51:55</div>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  // Category filter
+  function filterCat(cat, btn) {
+    // Update active button
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Show/hide items
+    const items = document.querySelectorAll('[data-cat]');
+    items.forEach(item => {
+      if (cat === 'all' || item.dataset.cat === cat) {
+        item.style.display = '';
+        item.style.opacity = '1';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    // Show/hide section dividers
+    document.querySelectorAll('.section-divider').forEach(div => {
+      if (cat === 'all') { div.style.display = ''; }
+    });
+  }
+</script>
+
+</body>
+</html>
