@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Protocol — Muntazireen</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:#080807; --deep:#0e0d0b; --surface:#141310; --panel:#1a1916;
+  --border:#272521; --dim:#4a463e; --muted:#6b6558; --sand:#c4b89a;
+  --cream:#e8dfc8; --white:#f2ece0;
+  --gold:#b8963c; --gold-bright:#d4a843; --gold-dim:#6b5520; --gold-faint:rgba(184,150,60,0.07);
+  --deen:#b8963c; --body-col:#6db87f; --blade:#c06060; --survival:#6a9fcc;
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Cormorant Garamond',Georgia,serif;
+  --font-mono:'Courier Prime','Courier New',monospace;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--sand);font-family:var(--font-body);font-size:17px;line-height:1.7;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.5;}
+::selection{background:var(--gold-dim);color:var(--cream);}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:16px 48px;background:rgba(8,8,7,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);}
+.nav-logo{font-family:var(--font-mono);font-size:13px;letter-spacing:0.3em;color:var(--gold);text-decoration:none;}
+.nav-logo span{color:var(--muted);font-size:9px;display:block;letter-spacing:0.15em;margin-top:1px;}
+.nav-links{display:flex;gap:28px;list-style:none;align-items:center;}
+.nav-links a{font-family:var(--font-mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.3s;}
+.nav-links a:hover{color:var(--cream);}
+.nav-links a.active{color:var(--gold);}
+.nav-cta{color:var(--gold)!important;border:1px solid var(--gold-dim);padding:6px 14px!important;transition:all 0.3s!important;}
+.nav-cta:hover{background:var(--gold-faint)!important;}
+
+.page-hero{padding:120px 48px 60px;border-bottom:1px solid var(--border);background:var(--surface);position:relative;overflow:hidden;}
+.page-hero::before{content:'البروتوكول';position:absolute;right:-10px;top:-10px;font-size:150px;color:rgba(184,150,60,0.03);pointer-events:none;line-height:1;}
+.hero-eyebrow{font-family:var(--font-mono);font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+.hero-title{font-family:var(--font-display);font-size:clamp(40px,7vw,88px);font-weight:900;color:var(--white);line-height:0.95;letter-spacing:-0.01em;margin-bottom:24px;}
+.hero-title em{font-style:italic;font-weight:400;color:var(--gold-bright);}
+.hero-body{font-size:18px;color:var(--muted);line-height:1.8;max-width:560px;margin-bottom:32px;}
+.hero-actions{display:flex;gap:16px;flex-wrap:wrap;}
+.btn-primary{font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;background:var(--gold);color:var(--void);border:none;padding:14px 28px;cursor:pointer;text-decoration:none;transition:background 0.3s;display:inline-block;}
+.btn-primary:hover{background:var(--gold-bright);}
+.btn-secondary{font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;background:none;color:var(--sand);border:1px solid var(--border);padding:13px 28px;cursor:pointer;text-decoration:none;transition:all 0.3s;display:inline-block;}
+.btn-secondary:hover{border-color:var(--sand);color:var(--cream);}
+
+main{padding:0 48px 80px;}
+
+.four-pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin:48px 0;}
+.pillar-card{background:var(--panel);padding:36px 28px;position:relative;}
+.pillar-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
+.pillar-card.deen::before{background:var(--deen);}
+.pillar-card.body::before{background:var(--body-col);}
+.pillar-card.blade::before{background:var(--blade);}
+.pillar-card.survival::before{background:var(--survival);}
+.pc-roman{font-family:var(--font-display);font-size:48px;font-weight:900;line-height:1;margin-bottom:12px;}
+.pillar-card.deen .pc-roman{color:var(--deen);}
+.pillar-card.body .pc-roman{color:var(--body-col);}
+.pillar-card.blade .pc-roman{color:var(--blade);}
+.pillar-card.survival .pc-roman{color:var(--survival);}
+.pc-tag{font-family:var(--font-mono);font-size:8px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:16px;}
+.pillar-card.deen .pc-tag{color:var(--deen);}
+.pillar-card.body .pc-tag{color:var(--body-col);}
+.pillar-card.blade .pc-tag{color:var(--blade);}
+.pillar-card.survival .pc-tag{color:var(--survival);}
+.pc-name{font-family:var(--font-display);font-size:24px;color:var(--cream);margin-bottom:12px;font-weight:600;}
+.pc-desc{font-size:14px;color:var(--muted);line-height:1.75;}
+
+.section-heading{padding:48px 0 24px;border-bottom:1px solid var(--border);margin-bottom:0;}
+.sh-eyebrow{font-family:var(--font-mono);font-size:9px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.sh-title{font-family:var(--font-display);font-size:clamp(28px,4vw,48px);color:var(--white);font-weight:400;line-height:1.1;}
+.sh-title em{font-style:italic;color:var(--gold-bright);}
+
+.weeks-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
+.week-block{background:var(--panel);padding:32px 28px;}
+.wb-phase{font-family:var(--font-mono);font-size:8px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.wb-weeks{font-family:var(--font-display);font-size:28px;color:var(--cream);margin-bottom:16px;font-weight:600;}
+.wb-items{display:flex;flex-direction:column;gap:10px;}
+.wb-item{display:flex;gap:12px;align-items:flex-start;}
+.wb-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:6px;}
+.wb-dot.deen{background:var(--deen);}
+.wb-dot.body{background:var(--body-col);}
+.wb-dot.blade{background:var(--blade);}
+.wb-dot.survival{background:var(--survival);}
+.wb-text{font-size:14px;color:var(--muted);line-height:1.6;}
+.wb-text strong{color:var(--sand);font-weight:500;}
+
+.principles-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin:48px 0;}
+.principle-card{background:var(--panel);padding:32px 28px;}
+.prn-num{font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;color:var(--gold-dim);margin-bottom:8px;}
+.prn-title{font-family:var(--font-display);font-size:22px;color:var(--cream);margin-bottom:12px;font-weight:600;}
+.prn-body{font-size:14px;color:var(--muted);line-height:1.75;}
+
+.hadith-anchor{border:1px solid var(--gold-dim);background:var(--gold-faint);padding:40px 48px;margin:48px 0;text-align:center;position:relative;}
+.hadith-anchor::before{content:'—';position:absolute;left:24px;top:50%;transform:translateY(-50%);color:var(--gold-dim);}
+.hadith-anchor::after{content:'—';position:absolute;right:24px;top:50%;transform:translateY(-50%);color:var(--gold-dim);}
+.ha-arabic{font-size:22px;color:var(--cream);direction:rtl;line-height:1.8;margin-bottom:12px;}
+.ha-trans{font-family:var(--font-display);font-size:20px;font-style:italic;color:var(--mid);margin-bottom:10px;}
+.ha-ref{font-family:var(--font-mono);font-size:9px;color:var(--gold-dim);letter-spacing:0.15em;}
+
+.cta-block{text-align:center;padding:60px 0 0;}
+.cb-title{font-family:var(--font-display);font-size:clamp(28px,4vw,48px);color:var(--white);font-weight:400;margin-bottom:16px;line-height:1.2;}
+.cb-title em{font-style:italic;color:var(--gold-bright);}
+.cb-sub{font-size:16px;color:var(--muted);line-height:1.7;max-width:500px;margin:0 auto 32px;}
+.cb-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+
+.reveal{opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:0.1s;}
+.reveal-delay-2{transition-delay:0.2s;}
+.reveal-delay-3{transition-delay:0.3s;}
+
+footer{background:var(--void);border-top:1px solid var(--border);padding:28px 48px;display:flex;justify-content:space-between;align-items:center;margin-top:80px;}
+.footer-mono{font-family:var(--font-mono);font-size:9px;color:var(--dim);letter-spacing:0.1em;}
+.footer-mono a{color:var(--gold-dim);text-decoration:none;margin-left:16px;transition:color 0.3s;}
+.footer-mono a:hover{color:var(--gold);}
+
+@media(max-width:900px){
+  nav{padding:14px 20px;}
+  .page-hero{padding:100px 20px 40px;}
+  main{padding:0 20px 60px;}
+  .four-pillars{grid-template-columns:1fr 1fr;}
+  .weeks-grid{grid-template-columns:1fr;}
+  .principles-grid{grid-template-columns:1fr;}
+  .hadith-anchor{padding:32px 24px;}
+  footer{padding:20px;flex-direction:column;gap:10px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">MUNTAZIREEN<span>منتظرين</span></a>
+  <ul class="nav-links">
+    <li><a href="signs.html">Signs</a></li>
+    <li><a href="protocol.html" class="active">Protocol</a></li>
+    <li><a href="developments.html">Developments</a></li>
+    <li><a href="reports.html">Analysis</a></li>
+    <li><a href="resources.html">Resources</a></li>
+    <li><a href="mission.html">Mission</a></li>
+    <li><a href="tracker.html" onclick="sessionStorage.setItem('mt_open_tab','signup')" class="nav-cta">Begin</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="hero-eyebrow">Muntazireen — The Protocol</div>
+  <h1 class="hero-title">Twelve weeks.<br><em>Four pillars.</em><br>One direction.</h1>
+  <p class="hero-body">A structured system for the believer who is awake and wants to act. Built to be printed. Built to survive without a phone or internet. Deen always first.</p>
+  <div class="hero-actions">
+    <a href="tracker.html" onclick="sessionStorage.setItem('mt_open_tab','signup')" class="btn-primary">Begin the Protocol</a>
+    <a href="resources.html" class="btn-secondary">Download PDF Guide</a>
+  </div>
+</div>
+
+<main>
+
+  <!-- FOUR PILLARS -->
+  <div class="four-pillars">
+    <div class="pillar-card deen reveal">
+      <div class="pc-roman">I</div>
+      <div class="pc-tag">Priority — Foundation</div>
+      <div class="pc-name">Deen</div>
+      <div class="pc-desc">Five prayers protected without exception. Al-Kahf first 10 ayat memorised — protection from Dajjal. Morning and evening adhkar as daily armour. Aqeedah study grounding what you believe and why.</div>
+    </div>
+    <div class="pillar-card body reveal reveal-delay-1">
+      <div class="pc-roman">II</div>
+      <div class="pc-tag">Physical</div>
+      <div class="pc-name">Body</div>
+      <div class="pc-desc">The believer's body is a trust. Strength, conditioning, endurance. Push, pull, core. Sprint intervals for stress inoculation. Weighted carries. Built to move with a loaded bag when required.</div>
+    </div>
+    <div class="pillar-card blade reveal reveal-delay-2">
+      <div class="pc-roman">III</div>
+      <div class="pc-tag">Defence</div>
+      <div class="pc-name">Blade & Defence</div>
+      <div class="pc-desc">4" fixed blade primary. Filipino Kali — five angles of attack. Hammer grip fundamentals. Post-sprint deployment drills under stress. Folder, axe, and 12" utility blade introduced progressively.</div>
+    </div>
+    <div class="pillar-card survival reveal reveal-delay-3">
+      <div class="pc-roman">IV</div>
+      <div class="pc-tag">Practical</div>
+      <div class="pc-name">Survival</div>
+      <div class="pc-desc">Three tiers by urgency. Water purification, tourniquet, first aid, KI tablets, hand crank radio, cash, navigation. Tier-ranked so you build the most critical kit first.</div>
+    </div>
+  </div>
+
+  <!-- 12-WEEK BREAKDOWN -->
+  <div class="section-heading reveal">
+    <div class="sh-eyebrow">The 12-Week Schedule</div>
+    <h2 class="sh-title">Structured. Progressive.<br><em>No guesswork.</em></h2>
+  </div>
+
+  <div class="weeks-grid">
+    <div class="week-block reveal">
+      <div class="wb-phase">Phase One</div>
+      <div class="wb-weeks">Weeks 1–2 — Anchor</div>
+      <div class="wb-items">
+        <div class="wb-item"><span class="wb-dot deen"></span><div class="wb-text"><strong>Deen:</strong> All 5 prayers locked. Morning adhkar established. Al-Kahf Ayat 1–3 memorised.</div></div>
+        <div class="wb-item"><span class="wb-dot body"></span><div class="wb-text"><strong>Body:</strong> Push/pull/core 3x week. Brace before every lift. Knee-safe progressions.</div></div>
+        <div class="wb-item"><span class="wb-dot blade"></span><div class="wb-text"><strong>Blade:</strong> Hammer grip × 20 draws daily. All 5 Kali angles introduced slowly.</div></div>
+        <div class="wb-item"><span class="wb-dot survival"></span><div class="wb-text"><strong>Survival:</strong> Write your Tier 1 list. Order what's missing. Know what you own.</div></div>
+      </div>
+    </div>
+    <div class="week-block reveal reveal-delay-1">
+      <div class="wb-phase">Phase Two</div>
+      <div class="wb-weeks">Weeks 3–4 — Lock In</div>
+      <div class="wb-items">
+        <div class="wb-item"><span class="wb-dot deen"></span><div class="wb-text"><strong>Deen:</strong> Al-Kahf Ayat 1–10 fully memorised by end of Week 4. Adhkar unbroken.</div></div>
+        <div class="wb-item"><span class="wb-dot body"></span><div class="wb-text"><strong>Body:</strong> Intensity increases. Post-sprint drills introduced — stress inoculation begins.</div></div>
+        <div class="wb-item"><span class="wb-dot blade"></span><div class="wb-text"><strong>Blade:</strong> All 5 angles at 60% speed, clean. Folder deployment introduced.</div></div>
+        <div class="wb-item"><span class="wb-dot survival"></span><div class="wb-text"><strong>Survival:</strong> KI tablets and hand crank radio sourced. Tier 1 nearly complete.</div></div>
+      </div>
+    </div>
+    <div class="week-block reveal">
+      <div class="wb-phase">Phase Three</div>
+      <div class="wb-weeks">Weeks 5–8 — Build</div>
+      <div class="wb-items">
+        <div class="wb-item"><span class="wb-dot deen"></span><div class="wb-text"><strong>Deen:</strong> Aqeedah study begins — Kitab at-Tawheed. Understanding deepens beyond habit.</div></div>
+        <div class="wb-item"><span class="wb-dot body"></span><div class="wb-text"><strong>Body:</strong> Heavy sessions. Bag runs introduced. Numbers tracked and improving.</div></div>
+        <div class="wb-item"><span class="wb-dot blade"></span><div class="wb-text"><strong>Blade:</strong> All 5 angles at full speed. Axe and Rambo fundamentals introduced.</div></div>
+        <div class="wb-item"><span class="wb-dot survival"></span><div class="wb-text"><strong>Survival:</strong> Sawyer filter practised. Tier 2 food supply building. Maps and compass sourced.</div></div>
+      </div>
+    </div>
+    <div class="week-block reveal reveal-delay-1">
+      <div class="wb-phase">Phase Four</div>
+      <div class="wb-weeks">Weeks 9–12 — Integration</div>
+      <div class="wb-items">
+        <div class="wb-item"><span class="wb-dot deen"></span><div class="wb-text"><strong>Deen:</strong> Al-Kahf recited every Friday. Dua is personal and specific. Connected to community.</div></div>
+        <div class="wb-item"><span class="wb-dot body"></span><div class="wb-text"><strong>Body:</strong> Peak conditioning. Can carry a loaded bag for 60 minutes. Documented proof of growth.</div></div>
+        <div class="wb-item"><span class="wb-dot blade"></span><div class="wb-text"><strong>Blade:</strong> Full pressure drill — all blades, post-sprint. Kali training with a partner.</div></div>
+        <div class="wb-item"><span class="wb-dot survival"></span><div class="wb-text"><strong>Survival:</strong> Full kit audit. Tier 2 nearly complete. Cat plan updated. First aid course booked.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HADITH ANCHOR -->
+  <div class="hadith-anchor reveal">
+    <div class="ha-arabic">«اعْقِلْهَا وَتَوَكَّلْ»</div>
+    <div class="ha-trans">"Tie your camel, then put your trust in Allah."</div>
+    <div class="ha-ref">Sunan At-Tirmidhi 2517 — Grade: Hasan · The Protocol is tawakkul in action.</div>
+  </div>
+
+  <!-- PRINCIPLES -->
+  <div class="section-heading reveal">
+    <div class="sh-eyebrow">Governing Principles</div>
+    <h2 class="sh-title">What this is built on.<br><em>What it will never compromise.</em></h2>
+  </div>
+
+  <div class="principles-grid">
+    <div class="principle-card reveal">
+      <div class="prn-num">01 —</div>
+      <div class="prn-title">Paper-First</div>
+      <div class="prn-body">Everything is printable. Every schedule, guide, and gear list works without a phone. When the grid goes down, your knowledge doesn't. This is not a contingency — it is the design.</div>
+    </div>
+    <div class="principle-card reveal reveal-delay-1">
+      <div class="prn-num">02 —</div>
+      <div class="prn-title">Referenced & Verified</div>
+      <div class="prn-body">Every hadith is graded. Every claim follows scholarship. Nothing here is speculation presented as fact. Sahih is cited as Sahih. Hasan as Hasan. We follow the scholars — we don't replace them.</div>
+    </div>
+    <div class="principle-card reveal">
+      <div class="prn-num">03 —</div>
+      <div class="prn-title">Certainty, Not Fear</div>
+      <div class="prn-body">The Hour is Allah's promise fulfilled — not a threat. The believer who knows their Lord prepares with calm certainty. We do not panic. We prepare. There is a difference.</div>
+    </div>
+    <div class="principle-card reveal reveal-delay-1">
+      <div class="prn-num">04 —</div>
+      <div class="prn-title">Free. Always.</div>
+      <div class="prn-body">No paywall. No premium tier. No merchandise. No email required. Sadaqah jariyah is the only model. If this helps one believer stand firm when the trials come, that is enough.</div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-block reveal">
+    <h2 class="cb-title">The news is the <em>why.</em><br>The Protocol is the <em>what.</em></h2>
+    <p class="cb-sub">Watching developments without preparation is anxiety, not readiness. The tracker keeps you accountable — daily check-ins, pillar streaks, 12-week progress.</p>
+    <div class="cb-actions">
+      <a href="tracker.html" onclick="sessionStorage.setItem('mt_open_tab','signup')" class="btn-primary">Begin the Protocol</a>
+      <a href="signs.html" class="btn-secondary">Read the Signs</a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-mono">MUNTAZIREEN — Free Forever<a href="index.html">Home</a><a href="tracker.html">Tracker</a><a href="resources.html">Resources</a></div>
+  <div class="footer-mono">"Tie your camel, then trust Allah." — Tirmidhi 2517</div>
+</footer>
+
+<script>
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold:0.08 });
+reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

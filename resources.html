@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resources — Muntazireen</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:#080807; --deep:#0e0d0b; --surface:#141310; --panel:#1a1916;
+  --border:#272521; --dim:#4a463e; --muted:#6b6558; --mid:#9a9184;
+  --sand:#c4b89a; --cream:#e8dfc8; --white:#f2ece0;
+  --gold:#b8963c; --gold-bright:#d4a843; --gold-dim:#6b5520; --gold-faint:rgba(184,150,60,0.07);
+  --deen:#b8963c; --body-col:#6db87f; --blade:#c06060; --survival:#6a9fcc;
+  --t1:#6db87f; --t2:#b8963c; --t3:#6a9fcc;
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Cormorant Garamond',Georgia,serif;
+  --font-mono:'Courier Prime','Courier New',monospace;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--sand);font-family:var(--font-body);font-size:17px;line-height:1.7;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.5;}
+::selection{background:var(--gold-dim);color:var(--cream);}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:16px 48px;background:rgba(8,8,7,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);}
+.nav-logo{font-family:var(--font-mono);font-size:13px;letter-spacing:0.3em;color:var(--gold);text-decoration:none;}
+.nav-logo span{color:var(--muted);font-size:9px;display:block;letter-spacing:0.15em;margin-top:1px;}
+.nav-links{display:flex;gap:28px;list-style:none;align-items:center;}
+.nav-links a{font-family:var(--font-mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.3s;}
+.nav-links a:hover{color:var(--cream);}
+.nav-links a.active{color:var(--gold);}
+.nav-cta{color:var(--gold)!important;border:1px solid var(--gold-dim);padding:6px 14px!important;transition:all 0.3s!important;}
+.nav-cta:hover{background:var(--gold-faint)!important;}
+
+.page-hero{padding:120px 48px 60px;border-bottom:1px solid var(--border);background:var(--surface);position:relative;overflow:hidden;}
+.page-hero::before{content:'العدة';position:absolute;right:-10px;top:-10px;font-size:200px;color:rgba(184,150,60,0.03);pointer-events:none;line-height:1;}
+.hero-eyebrow{font-family:var(--font-mono);font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+.hero-title{font-family:var(--font-display);font-size:clamp(40px,7vw,88px);font-weight:900;color:var(--white);line-height:0.95;letter-spacing:-0.01em;margin-bottom:24px;}
+.hero-title em{font-style:italic;font-weight:400;color:var(--gold-bright);}
+.hero-body{font-size:18px;color:var(--muted);line-height:1.8;max-width:560px;}
+
+.section-nav{display:flex;border-bottom:1px solid var(--border);background:var(--deep);overflow-x:auto;scrollbar-width:none;}
+.section-nav::-webkit-scrollbar{display:none;}
+.snav-btn{font-family:var(--font-mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;padding:14px 20px;cursor:pointer;white-space:nowrap;transition:all 0.25s;text-decoration:none;display:block;}
+.snav-btn:hover{color:var(--cream);}
+.snav-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+main{padding:0 48px 80px;}
+
+/* SECTION BLOCKS */
+.res-section{padding:48px 0;border-bottom:1px solid var(--border);}
+.rs-eyebrow{font-family:var(--font-mono);font-size:9px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.rs-title{font-family:var(--font-display);font-size:clamp(28px,4vw,48px);color:var(--white);font-weight:400;line-height:1.1;margin-bottom:8px;}
+.rs-title em{font-style:italic;color:var(--gold-bright);}
+.rs-sub{font-size:15px;color:var(--muted);line-height:1.7;max-width:600px;margin-bottom:32px;}
+
+/* GEAR TIERS */
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
+.tier-card{background:var(--panel);padding:0;}
+.tc-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.tc-label{font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;}
+.tier-card.t1 .tc-label{color:var(--t1);}
+.tier-card.t2 .tc-label{color:var(--t2);}
+.tier-card.t3 .tc-label{color:var(--t3);}
+.tc-urgency{font-family:var(--font-mono);font-size:8px;color:var(--dim);letter-spacing:0.1em;}
+.tc-body{padding:20px 24px;}
+.tc-intro{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.gear-list{display:flex;flex-direction:column;gap:0;}
+.gear-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.gear-item:last-child{border-bottom:none;}
+.gi-check{font-family:var(--font-mono);font-size:10px;flex-shrink:0;margin-top:1px;}
+.tier-card.t1 .gi-check{color:var(--t1);}
+.tier-card.t2 .gi-check{color:var(--t2);}
+.tier-card.t3 .gi-check{color:var(--t3);}
+.gi-name{font-size:13px;color:var(--sand);line-height:1.4;margin-bottom:2px;}
+.gi-note{font-family:var(--font-mono);font-size:8px;color:var(--dim);letter-spacing:0.05em;}
+
+/* PRINTABLES */
+.printables-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
+.print-card{background:var(--panel);padding:28px 24px;position:relative;overflow:hidden;}
+.print-card::after{content:'PDF';position:absolute;right:16px;top:16px;font-family:var(--font-mono);font-size:8px;letter-spacing:0.15em;color:var(--dim);border:1px solid var(--border);padding:2px 8px;}
+.pc-icon{font-size:28px;margin-bottom:12px;}
+.pc-title{font-family:var(--font-display);font-size:18px;color:var(--cream);margin-bottom:8px;font-weight:600;}
+.pc-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
+.pc-link{font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-dim);text-decoration:none;border:1px solid var(--gold-dim);padding:6px 14px;transition:all 0.3s;display:inline-block;}
+.pc-link:hover{color:var(--gold);border-color:var(--gold);}
+.pc-link.coming{color:var(--dim);border-color:var(--border);cursor:default;pointer-events:none;}
+
+/* SCHOLARS */
+.scholars-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
+.scholar-card{background:var(--panel);padding:28px 24px;}
+.sc-name{font-family:var(--font-display);font-size:20px;color:var(--cream);margin-bottom:4px;font-weight:600;}
+.sc-era{font-family:var(--font-mono);font-size:8px;letter-spacing:0.15em;color:var(--gold-dim);margin-bottom:10px;}
+.sc-works{font-size:13px;color:var(--muted);line-height:1.7;}
+.sc-works strong{color:var(--sand);font-weight:500;}
+
+/* HADITH COLLECTIONS */
+.hadith-table{border:1px solid var(--border);background:var(--panel);}
+.ht-row{display:grid;grid-template-columns:180px 1fr 100px;border-bottom:1px solid var(--border);align-items:center;}
+.ht-row:last-child{border-bottom:none;}
+.ht-row.header{background:var(--surface);}
+.ht-cell{padding:14px 20px;font-size:13px;color:var(--muted);}
+.ht-row.header .ht-cell{font-family:var(--font-mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--dim);}
+.ht-name{font-family:var(--font-display);font-size:15px;color:var(--cream);font-weight:500;}
+.grade-sahih{font-family:var(--font-mono);font-size:8px;letter-spacing:0.1em;color:var(--t1);border:1px solid var(--t1);padding:2px 8px;display:inline-block;}
+.grade-hasan{font-family:var(--font-mono);font-size:8px;letter-spacing:0.1em;color:var(--t2);border:1px solid var(--t2);padding:2px 8px;display:inline-block;}
+
+.paper-note{border:1px solid var(--gold-dim);background:var(--gold-faint);padding:28px 36px;margin-top:32px;display:flex;gap:24px;align-items:flex-start;}
+.pn-icon{font-size:24px;flex-shrink:0;}
+.pn-title{font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.pn-body{font-size:14px;color:var(--muted);line-height:1.7;}
+
+.reveal{opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:0.1s;}
+.reveal-delay-2{transition-delay:0.2s;}
+
+footer{background:var(--void);border-top:1px solid var(--border);padding:28px 48px;display:flex;justify-content:space-between;align-items:center;margin-top:80px;}
+.footer-mono{font-family:var(--font-mono);font-size:9px;color:var(--dim);letter-spacing:0.1em;}
+.footer-mono a{color:var(--gold-dim);text-decoration:none;margin-left:16px;transition:color 0.3s;}
+.footer-mono a:hover{color:var(--gold);}
+
+@media(max-width:900px){
+  nav{padding:14px 20px;}
+  .page-hero{padding:100px 20px 40px;}
+  main{padding:0 20px 60px;}
+  .tier-grid{grid-template-columns:1fr;}
+  .printables-grid{grid-template-columns:1fr 1fr;}
+  .scholars-grid{grid-template-columns:1fr;}
+  .ht-row{grid-template-columns:1fr 1fr;}
+  .ht-row .ht-cell:nth-child(2){display:none;}
+  footer{padding:20px;flex-direction:column;gap:10px;}
+}
+@media(max-width:600px){
+  .printables-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">MUNTAZIREEN<span>منتظرين</span></a>
+  <ul class="nav-links">
+    <li><a href="signs.html">Signs</a></li>
+    <li><a href="protocol.html">Protocol</a></li>
+    <li><a href="developments.html">Developments</a></li>
+    <li><a href="reports.html">Analysis</a></li>
+    <li><a href="resources.html" class="active">Resources</a></li>
+    <li><a href="mission.html">Mission</a></li>
+    <li><a href="tracker.html" onclick="sessionStorage.setItem('mt_open_tab','signup')" class="nav-cta">Begin</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="hero-eyebrow">Muntazireen — Resources</div>
+  <h1 class="hero-title">Everything you need.<br><em>Print it. Keep it.</em></h1>
+  <p class="hero-body">Gear lists ranked by urgency. Printable guides that survive the grid going down. Scholar references for every claim. All of it free. All of it yours.</p>
+</div>
+
+<div class="section-nav">
+  <a href="#gear" class="snav-btn active">Gear Lists</a>
+  <a href="#printables" class="snav-btn">Printables</a>
+  <a href="#scholars" class="snav-btn">Scholar References</a>
+  <a href="#hadith" class="snav-btn">Hadith Collections</a>
+</div>
+
+<main>
+
+  <!-- GEAR LISTS -->
+  <div class="res-section" id="gear">
+    <div class="rs-eyebrow">Survival Gear — Three Tiers</div>
+    <h2 class="rs-title reveal">Build the most critical kit <em>first.</em></h2>
+    <p class="rs-sub reveal reveal-delay-1">Tiered by urgency — not by price. Tier 1 is the minimum viable kit. Build it before moving to Tier 2. Never jump ahead. The basics done well beat the advanced done poorly.</p>
+
+    <div class="tier-grid reveal">
+
+      <div class="tier-card t1">
+        <div class="tc-header">
+          <div class="tc-label">Tier 1 — Critical</div>
+          <div class="tc-urgency">Build first. No exceptions.</div>
+        </div>
+        <div class="tc-body">
+          <div class="tc-intro">The minimum you need to survive 72 hours and beyond. If you own nothing else, own these.</div>
+          <div class="gear-list">
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Water filter — Sawyer Squeeze or Sawyer Mini</div><div class="gi-note">Filters 100,000 gallons. Know how to use it before crisis.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Tourniquet — CAT or SOFTT-W</div><div class="gi-note">Military-grade. Learn application time under 60 seconds.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Potassium Iodide (KI) tablets</div><div class="gi-note">Thyroid protection against radiation. 130mg. One per adult.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Hand crank / solar radio</div><div class="gi-note">Emergency broadcasts when all else fails. No battery dependency.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Cash — small denominations</div><div class="gi-note">£50–£200 minimum. Digital payments die first.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">4" fixed blade knife</div><div class="gi-note">Your primary blade. Quality over cost. Full tang.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Lighter + waterproof matches</div><div class="gi-note">Both. Redundancy is survival.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">72-hour food supply per person</div><div class="gi-note">High-calorie, long-shelf. Dates and oats at minimum.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tier-card t2">
+        <div class="tc-header">
+          <div class="tc-label">Tier 2 — Extended</div>
+          <div class="tc-urgency">After Tier 1 is complete.</div>
+        </div>
+        <div class="tc-body">
+          <div class="tc-intro">Extends your capability from 72 hours to 2–4 weeks. Adds communication, navigation, and medical depth.</div>
+          <div class="gear-list">
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">30-day food supply per person</div><div class="gi-note">Rice, lentils, oats, ghee, honey. Calorie-dense, Halal.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Printed maps — local and regional</div><div class="gi-note">Laminated. Mark your routes before you need them.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Compass — baseplate type</div><div class="gi-note">Silva or Suunto. Practice before crisis.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Full IFAK (Individual First Aid Kit)</div><div class="gi-note">Chest seal, pressure bandage, hemostatic gauze, gloves.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Baofeng UV-5R radio (or equivalent)</div><div class="gi-note">Two-way comms. Learn before you need it.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Bug-out bag — 45–65L</div><div class="gi-note">Carries all Tier 1. Loaded weight under 25% of bodyweight.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Axe — hatchet size</div><div class="gi-note">Fiskars X7 or equivalent. Shelter, fire, defence.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Solar charger — 20W+ panel</div><div class="gi-note">Keeps radio and torch operational indefinitely.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tier-card t3">
+        <div class="tc-header">
+          <div class="tc-label">Tier 3 — Sustained</div>
+          <div class="tc-urgency">Long-term self-sufficiency.</div>
+        </div>
+        <div class="tc-body">
+          <div class="tc-intro">Extended self-sufficiency beyond 30 days. Community-level preparation. Skills as important as gear at this tier.</div>
+          <div class="gear-list">
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">6-month food store per person</div><div class="gi-note">Grain storage, seed bank, preserved protein sources.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Water storage — 50L+ per person</div><div class="gi-note">WaterBOB or dedicated containers. Roof water catchment.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">First aid training — formal course</div><div class="gi-note">Red Cross or equivalent. Tourniquet in the bag means nothing without the skill.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Backup power — battery bank 500Wh+</div><div class="gi-note">Jackery or equivalent. Powers radios, lights, medical devices.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Community network — identified contacts</div><div class="gi-note">Believers you can reach. Skills inventory. Meeting point agreed.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">12" utility blade (Rambo-style)</div><div class="gi-note">Camp tool, brush clearing, last resort. Not for carry.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Gold and silver — physical</div><div class="gi-note">When fiat collapses, precious metals are currency again.</div></div></div>
+            <div class="gear-item"><span class="gi-check">✓</span><div><div class="gi-name">Quran — physical copy, protected</div><div class="gi-note">Waterproof bag. Your most important possession.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="paper-note reveal" style="margin-top:32px;">
+      <div class="pn-icon">◻</div>
+      <div>
+        <div class="pn-title">Print This List</div>
+        <div class="pn-body">This gear list is designed to be printed and stored with your kit. Tick off items as you acquire them. Keep a copy at home and one in your bag. Download the print-ready PDF below.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRINTABLES -->
+  <div class="res-section" id="printables">
+    <div class="rs-eyebrow">Print-Ready Guides</div>
+    <h2 class="rs-title reveal">When the grid goes down,<br><em>your knowledge doesn't.</em></h2>
+    <p class="rs-sub reveal reveal-delay-1">Every guide is formatted to print clean on A4. No images required. No colour ink required. Black and white laser print — fold, laminate, keep.</p>
+
+    <div class="printables-grid reveal">
+
+      <div class="print-card">
+        <div class="pc-icon">◈</div>
+        <div class="pc-title">12-Week Protocol Schedule</div>
+        <div class="pc-desc">Full weekly breakdown across all four pillars. Daily tasks, checkpoints, and milestones. Fits two pages printed double-sided.</div>
+        <a href="#" class="pc-link coming">Coming Soon</a>
+      </div>
+
+      <div class="print-card">
+        <div class="pc-icon">☾</div>
+        <div class="pc-title">Al-Kahf — First 10 Ayat</div>
+        <div class="pc-desc">Arabic text with transliteration and translation. Memorisation prompts. Protection from Dajjal — carry it always.</div>
+        <a href="#" class="pc-link coming">Coming Soon</a>
+      </div>
+
+      <div class="print-card">
+        <div class="pc-icon">◻</div>
+        <div class="pc-title">Tier 1 Gear Checklist</div>
+        <div class="pc-desc">Clean printable checklist. Tick boxes, acquisition notes, cost tracker. Single A4 page.</div>
+        <a href="#" class="pc-link coming">Coming Soon</a>
+      </div>
+
+      <div class="print-card">
+        <div class="pc-icon">⚡</div>
+        <div class="pc-title">Morning & Evening Adhkar</div>
+        <div class="pc-desc">Authenticated morning and evening adhkar set. Arabic, transliteration, and meaning. Print and laminate for daily use.</div>
+        <a href="#" class="pc-link coming">Coming Soon</a>
+      </div>
+
+      <div class="print-card">
+        <div class="pc-icon">⚔</div>
+        <div class="pc-title">Kali Angles Reference Card</div>
+        <div class="pc-desc">All five Kali angles diagrammed. Grip positions, footwork basics. A5 reference card for daily drilling.</div>
+        <a href="#" class="pc-link coming">Coming Soon</a>
+      </div>
+
+      <div class="print-card">
+        <div class="pc-icon">◑</div>
+        <div class="pc-title">Signs of the Hour — Summary</div>
+        <div class="pc-desc">All documented minor signs with hadith grades. All 10 major signs. Wallet-sized folded card.</div>
+        <a href="#" class="pc-link coming">Coming Soon</a>
+      </div>
+
+    </div>
+
+    <div class="paper-note reveal" style="margin-top:32px;">
+      <div class="pn-icon">◻</div>
+      <div>
+        <div class="pn-title">PDFs Are In Production</div>
+        <div class="pn-body">All printables are being formatted and verified before release. Every resource is checked against scholarship before it goes live. Subscribe via the tracker to be notified when they drop.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCHOLARS -->
+  <div class="res-section" id="scholars">
+    <div class="rs-eyebrow">Scholar References</div>
+    <h2 class="rs-title reveal">We follow scholarship.<br><em>We don't replace it.</em></h2>
+    <p class="rs-sub reveal reveal-delay-1">These are the scholars and works we draw from on matters of eschatology, aqeedah, and fiqh. Read them. Don't take our word for anything — verify it yourself.</p>
+
+    <div class="scholars-grid reveal">
+      <div class="scholar-card">
+        <div class="sc-name">Ibn Kathir (رحمه الله)</div>
+        <div class="sc-era">701–774 AH — Damascus</div>
+        <div class="sc-works">Primary work on signs: <strong>Al-Nihaya fi al-Fitan wa al-Malahim</strong> — The most comprehensive classical compilation of end-times narrations. Essential reading on fitna, Dajjal, descent of Isa ﷺ.</div>
+      </div>
+      <div class="scholar-card">
+        <div class="sc-name">Ibn Hajar al-Asqalani (رحمه الله)</div>
+        <div class="sc-era">773–852 AH — Cairo</div>
+        <div class="sc-works">Primary hadith grading authority. <strong>Fath al-Bari</strong> — definitive commentary on Sahih al-Bukhari. When we cite hadith grades, Ibn Hajar's classification is the reference.</div>
+      </div>
+      <div class="scholar-card">
+        <div class="sc-name">Imam al-Nawawi (رحمه الله)</div>
+        <div class="sc-era">631–676 AH — Nawa, Syria</div>
+        <div class="sc-works">Primary work: <strong>Sharh Sahih Muslim</strong> — definitive commentary on Sahih Muslim. All Muslim hadith grades on this platform cross-reference his commentary.</div>
+      </div>
+      <div class="scholar-card">
+        <div class="sc-name">Sheikh al-Islam Ibn Taymiyyah (رحمه الله)</div>
+        <div class="sc-era">661–728 AH — Damascus</div>
+        <div class="sc-works">Aqeedah foundation. <strong>Al-Aqeedah al-Wasitiyyah</strong> — the grounding for our theological framework. His work on Tawheed informs the Deen pillar of the Protocol.</div>
+      </div>
+      <div class="scholar-card">
+        <div class="sc-name">Dr. Yusuf al-Wabil</div>
+        <div class="sc-era">Contemporary — Saudi Arabia</div>
+        <div class="sc-works">Modern compilation: <strong>Ashrat al-Sa'ah</strong> (Signs of the Hour) — the most thorough contemporary academic treatment of the minor and major signs. Fully referenced, scholarly graded.</div>
+      </div>
+      <div class="scholar-card">
+        <div class="sc-name">Sheikh Muhammad al-Arifi</div>
+        <div class="sc-era">Contemporary — Saudi Arabia</div>
+        <div class="sc-works">Contemporary eschatology lectures. His series on <strong>Nihayat al-Alam</strong> (End of the World) provides accessible but rigorous treatment of end-times narrations for a modern audience.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HADITH COLLECTIONS -->
+  <div class="res-section" id="hadith">
+    <div class="rs-eyebrow">Hadith Collections — Grading Reference</div>
+    <h2 class="rs-title reveal">Every hadith on this platform<br><em>is graded and sourced.</em></h2>
+    <p class="rs-sub reveal reveal-delay-1">We only use Sahih (authentic) or Hasan (good) narrations. Here is a reference for the primary collections we draw from and their grading systems.</p>
+
+    <div class="hadith-table reveal">
+      <div class="ht-row header">
+        <div class="ht-cell">Collection</div>
+        <div class="ht-cell">Compiler & Overview</div>
+        <div class="ht-cell">Grade Used</div>
+      </div>
+      <div class="ht-row">
+        <div class="ht-cell"><div class="ht-name">Sahih al-Bukhari</div></div>
+        <div class="ht-cell">Compiled by Imam al-Bukhari (d. 256 AH). Most rigorously authenticated hadith collection in Islam. Every narration verified through multiple chains.</div>
+        <div class="ht-cell"><span class="grade-sahih">Sahih</span></div>
+      </div>
+      <div class="ht-row">
+        <div class="ht-cell"><div class="ht-name">Sahih Muslim</div></div>
+        <div class="ht-cell">Compiled by Imam Muslim ibn al-Hajjaj (d. 261 AH). Second most authoritative collection. Particularly rich in eschatological narrations.</div>
+        <div class="ht-cell"><span class="grade-sahih">Sahih</span></div>
+      </div>
+      <div class="ht-row">
+        <div class="ht-cell"><div class="ht-name">Sunan At-Tirmidhi</div></div>
+        <div class="ht-cell">Compiled by Imam al-Tirmidhi (d. 279 AH). First collection to systematically grade narrations. We use Hasan and above only.</div>
+        <div class="ht-cell"><span class="grade-hasan">Hasan+</span></div>
+      </div>
+      <div class="ht-row">
+        <div class="ht-cell"><div class="ht-name">Sunan Ibn Majah</div></div>
+        <div class="ht-cell">Compiled by Ibn Majah (d. 273 AH). Part of the Kutub al-Sittah. We use graded narrations with cross-referenced chains only.</div>
+        <div class="ht-cell"><span class="grade-hasan">Hasan+</span></div>
+      </div>
+      <div class="ht-row">
+        <div class="ht-cell"><div class="ht-name">Musnad Ahmad</div></div>
+        <div class="ht-cell">Compiled by Imam Ahmad ibn Hanbal (d. 241 AH). Largest hadith collection — 40,000 narrations. Grading varies; we cite with scholarly verification.</div>
+        <div class="ht-cell"><span class="grade-hasan">Verified Only</span></div>
+      </div>
+    </div>
+
+    <div class="paper-note reveal" style="margin-top:32px;">
+      <div class="pn-icon">—</div>
+      <div>
+        <div class="pn-title">On Da'if (Weak) Hadith</div>
+        <div class="pn-body">Weak narrations are not used on this platform to establish beliefs or practices. If a weak narration appears in an article for historical context, it will be explicitly labelled as such. If you find an error in grading, contact us — we will correct it immediately. Accuracy is not optional.</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-mono">MUNTAZIREEN — Free Forever<a href="index.html">Home</a><a href="protocol.html">Protocol</a><a href="tracker.html">Tracker</a></div>
+  <div class="footer-mono">"And prepare against them whatever you are able." — Al-Anfal 8:60</div>
+</footer>
+
+<script>
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold:0.05 });
+reveals.forEach(el => observer.observe(el));
+
+// Highlight active section in section nav
+const sections = document.querySelectorAll('.res-section');
+const navBtns = document.querySelectorAll('.snav-btn');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if(window.scrollY >= s.offsetTop - 100) current = s.id; });
+  navBtns.forEach(b => {
+    b.classList.toggle('active', b.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+</body>
+</html>
