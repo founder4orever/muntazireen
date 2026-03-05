@@ -125,8 +125,22 @@ footer{background:var(--void);border-top:1px solid var(--border);padding:28px 48
   footer{padding:20px;flex-direction:column;gap:10px;}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+<script>
+(function(){
+  const URL="https://ulsbqqsjsssqflydwylm.supabase.co";
+  const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsc2JxcXNqc3NzcWZseWR3eWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTAxNTYsImV4cCI6MjA4ODI2NjE1Nn0.EIJVQBN9bkufyroUDE1Va8zExBKbEH9CegBOIGauRfs";
+  const sb=supabase.createClient(URL,KEY);
+  sb.auth.getSession().then(({data:{session}})=>{
+    if(session&&session.user){window.location.href="tracker.html";}
+  });
+  window._sb=sb;
+  window._signOut=async function(){await sb.auth.signOut();window.location.reload();};
+})();
+</script>
+
 
 <nav>
   <a href="index.html" class="nav-logo">MUNTAZIREEN<span>منتظرين</span></a>
@@ -171,7 +185,7 @@ footer{background:var(--void);border-top:1px solid var(--border);padding:28px 48
       <div class="pc-roman">III</div>
       <div class="pc-tag">Defence</div>
       <div class="pc-name">Blade & Defence</div>
-      <div class="pc-desc">4" fixed blade primary. Filipino Kali — five angles of attack. Hammer grip fundamentals. Post-sprint deployment drills under stress. Folder, axe, and 12" utility blade introduced progressively.</div>
+      <div class="pc-desc">4" fixed blade primary. Hammer grip draws, 5 angles of attack, defensive deflection, post-sprint deployment. Hammer grip fundamentals. Post-sprint deployment drills under stress. Folder, axe, and 12" utility blade introduced progressively.</div>
     </div>
     <div class="pillar-card survival reveal reveal-delay-3">
       <div class="pc-roman">IV</div>
@@ -194,7 +208,7 @@ footer{background:var(--void);border-top:1px solid var(--border);padding:28px 48
       <div class="wb-items">
         <div class="wb-item"><span class="wb-dot deen"></span><div class="wb-text"><strong>Deen:</strong> All 5 prayers locked. Morning adhkar established. Al-Kahf Ayat 1–3 memorised.</div></div>
         <div class="wb-item"><span class="wb-dot body"></span><div class="wb-text"><strong>Body:</strong> Push/pull/core 3x week. Brace before every lift. Knee-safe progressions.</div></div>
-        <div class="wb-item"><span class="wb-dot blade"></span><div class="wb-text"><strong>Blade:</strong> Hammer grip × 20 draws daily. All 5 Kali angles introduced slowly.</div></div>
+        <div class="wb-item"><span class="wb-dot blade"></span><div class="wb-text"><strong>Blade:</strong> Hammer grip × 20 draws daily. All 5 5 angles of attack introduced slowly.</div></div>
         <div class="wb-item"><span class="wb-dot survival"></span><div class="wb-text"><strong>Survival:</strong> Write your Tier 1 list. Order what's missing. Know what you own.</div></div>
       </div>
     </div>
@@ -224,7 +238,7 @@ footer{background:var(--void);border-top:1px solid var(--border);padding:28px 48
       <div class="wb-items">
         <div class="wb-item"><span class="wb-dot deen"></span><div class="wb-text"><strong>Deen:</strong> Al-Kahf recited every Friday. Dua is personal and specific. Connected to community.</div></div>
         <div class="wb-item"><span class="wb-dot body"></span><div class="wb-text"><strong>Body:</strong> Peak conditioning. Can carry a loaded bag for 60 minutes. Documented proof of growth.</div></div>
-        <div class="wb-item"><span class="wb-dot blade"></span><div class="wb-text"><strong>Blade:</strong> Full pressure drill — all blades, post-sprint. Kali training with a partner.</div></div>
+        <div class="wb-item"><span class="wb-dot blade"></span><div class="wb-text"><strong>Blade:</strong> Full pressure drill — all blades, post-sprint. Angle training with a partner — live pressure reps.</div></div>
         <div class="wb-item"><span class="wb-dot survival"></span><div class="wb-text"><strong>Survival:</strong> Full kit audit. Tier 2 nearly complete. Cat plan updated. First aid course booked.</div></div>
       </div>
     </div>

@@ -136,6 +136,7 @@ footer{background:var(--void);border-top:1px solid var(--border);padding:28px 48
   .printables-grid{grid-template-columns:1fr;}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -148,9 +149,13 @@ footer{background:var(--void);border-top:1px solid var(--border);padding:28px 48
     <li><a href="reports.html">Analysis</a></li>
     <li><a href="resources.html" class="active">Resources</a></li>
     <li><a href="mission.html">Mission</a></li>
-    <li><a href="tracker.html" onclick="sessionStorage.setItem('mt_open_tab','signup')" class="nav-cta">Begin</a></li>
+    
+    <li id="nav-user-display" style="font-family:var(--font-mono);font-size:9px;color:var(--gold-dim);letter-spacing:0.12em;"></li>
+    <li><button id="nav-signout-btn" onclick="window._signOut()" style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--border);padding:5px 12px;cursor:pointer;display:none;">Sign Out</button></li>
+    <li id="nav-begin-wrap"><a href="tracker.html" onclick="sessionStorage.setItem('mt_open_tab','signup')" class="nav-cta">Begin</a></li>
   </ul>
 </nav>
+<div id="page-content" style="display:none">
 
 <div class="page-hero">
   <div class="hero-eyebrow">Muntazireen — Resources</div>
@@ -284,8 +289,8 @@ footer{background:var(--void);border-top:1px solid var(--border);padding:28px 48
 
       <div class="print-card">
         <div class="pc-icon">⚔</div>
-        <div class="pc-title">Kali Angles Reference Card</div>
-        <div class="pc-desc">All five Kali angles diagrammed. Grip positions, footwork basics. A5 reference card for daily drilling.</div>
+        <div class="pc-title">5 Angles of Attack — Reference Card</div>
+        <div class="pc-desc">All five angles diagrammed. Grip positions and footwork basics. A5 reference card. Diagonal down-right, diagonal down-left, horizontal right, horizontal left, thrust.</div>
         <a href="#" class="pc-link coming">Coming Soon</a>
       </div>
 
@@ -419,6 +424,28 @@ window.addEventListener('scroll', () => {
     b.classList.toggle('active', b.getAttribute('href') === '#' + current);
   });
 });
+</script>
+</div>
+<script>
+(function(){
+  const URL="https://ulsbqqsjsssqflydwylm.supabase.co";
+  const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsc2JxcXNqc3NzcWZseWR3eWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTAxNTYsImV4cCI6MjA4ODI2NjE1Nn0.EIJVQBN9bkufyroUDE1Va8zExBKbEH9CegBOIGauRfs";
+  const sb=supabase.createClient(URL,KEY);
+  window._sb=sb;
+  window._signOut=async function(){await sb.auth.signOut();sessionStorage.setItem("mt_open_tab","signin");window.location.href="tracker.html";};
+  sb.auth.getSession().then(({data:{session}})=>{
+    if(!session){sessionStorage.setItem("mt_open_tab","signup");window.location.href="tracker.html";}
+    else{
+      document.getElementById("page-content").style.display="block";
+      const ud=document.getElementById("nav-user-display");
+      const so=document.getElementById("nav-signout-btn");
+      const nb=document.getElementById("nav-begin-wrap");
+      if(ud)ud.textContent=session.user.email.split("@")[0];
+      if(so)so.style.display="block";
+      if(nb)nb.style.display="none";
+    }
+  });
+})();
 </script>
 </body>
 </html>
