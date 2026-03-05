@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muntazireen — The Protocol Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+
+<!-- Supabase JS from CDN — no npm needed -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root {
+  --void: #080807;
+  --deep: #0e0d0b;
+  --surface: #141310;
+  --panel: #1a1916;
+  --border: #272521;
+  --border-light: #333128;
+  --dim: #4a463e;
+  --muted: #6b6558;
+  --mid: #9a9184;
+  --sand: #c4b89a;
+  --cream: #e8dfc8;
+  --white: #f2ece0;
+  --gold: #b8963c;
+  --gold-bright: #d4a843;
+  --gold-dim: #6b5520;
+  --gold-faint: rgba(184,150,60,0.07);
+
+  --deen: #b8963c;
+  --deen-dim: rgba(184,150,60,0.1);
+  --body-col: #6db87f;
+  --body-dim: rgba(109,184,127,0.1);
+  --blade: #c06060;
+  --blade-dim: rgba(192,96,96,0.1);
+  --survival: #6a9fcc;
+  --survival-dim: rgba(106,159,204,0.1);
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'Courier Prime', 'Courier New', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--sand);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.7;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.5;
+}
+
+::selection { background: var(--gold-dim); color: var(--cream); }
+
+/* ============ NAV ============ */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 48px;
+  background: rgba(8,8,7,0.97);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+}
+
+.nav-logo {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.nav-logo span {
+  color: var(--muted);
+  font-size: 9px;
+  display: block;
+  letter-spacing: 0.15em;
+  margin-top: 1px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+  align-items: center;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover { color: var(--cream); }
+.nav-links a.active { color: var(--gold); }
+
+#nav-user-display {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--gold-dim);
+  letter-spacing: 0.12em;
+}
+
+#nav-signout-btn {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: 1px solid var(--border);
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: none;
+}
+
+#nav-signout-btn:hover { color: var(--cream); border-color: var(--dim); }
+
+/* ============ AUTH SCREEN ============ */
+#auth-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 440px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  position: relative;
+}
+
+.auth-header {
+  padding: 36px 40px 28px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+.auth-logo {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.35em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.auth-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--white);
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.auth-sub {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.auth-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
+
+.auth-tab {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.auth-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+.auth-body { padding: 32px 40px 40px; }
+
+.auth-field {
+  margin-bottom: 20px;
+}
+
+.auth-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.auth-input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--cream);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  padding: 12px 16px;
+  outline: none;
+  transition: border-color 0.3s;
+  letter-spacing: 0.05em;
+}
+
+.auth-input:focus { border-color: var(--gold-dim); }
+.auth-input::placeholder { color: var(--dim); }
+
+.auth-btn {
+  width: 100%;
+  background: var(--gold);
+  color: var(--void);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  border: none;
+  padding: 14px;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 8px;
+}
+
+.auth-btn:hover { background: var(--gold-bright); }
+.auth-btn:disabled { background: var(--dim); cursor: not-allowed; }
+
+.auth-message {
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-align: center;
+  min-height: 20px;
+}
+
+.auth-message.error { color: var(--blade); }
+.auth-message.success { color: var(--body-col); }
+
+.auth-note {
+  margin-top: 20px;
+  font-size: 12px;
+  color: var(--dim);
+  text-align: center;
+  line-height: 1.6;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+
+/* ============ MAIN APP ============ */
+#app-screen { display: none; padding-top: 65px; }
+
+/* ============ WELCOME HEADER ============ */
+.app-header {
+  padding: 40px 48px 32px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  background: var(--surface);
+  position: relative;
+  overflow: hidden;
+}
+
+.app-header::before {
+  content: 'منتظرين';
+  position: absolute;
+  right: -20px;
+  top: -10px;
+  font-size: 120px;
+  color: rgba(184,150,60,0.04);
+  font-family: var(--font-body);
+  pointer-events: none;
+  line-height: 1;
+}
+
+.welcome-block h1 {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 48px);
+  color: var(--white);
+  font-weight: 400;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+
+.welcome-block h1 em { font-style: italic; color: var(--gold-bright); }
+
+.welcome-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.header-stats {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border);
+}
+
+.hstat {
+  padding: 16px 28px;
+  border-right: 1px solid var(--border);
+  text-align: center;
+}
+
+.hstat:last-child { border-right: none; }
+
+.hstat-num {
+  font-family: var(--font-display);
+  font-size: 36px;
+  color: var(--cream);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.hstat-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ============ 12-WEEK PROGRESS BAR ============ */
+.progress-section {
+  padding: 32px 48px;
+  border-bottom: 1px solid var(--border);
+}
+
+.progress-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress-label span { color: var(--gold); }
+
+.week-track {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.week-pip {
+  height: 8px;
+  border-radius: 1px;
+  background: var(--border);
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.week-pip.complete { background: var(--gold); }
+.week-pip.current { background: var(--gold-dim); border: 1px solid var(--gold); animation: pipPulse 2s ease infinite; }
+.week-pip.partial { background: linear-gradient(to right, var(--gold) 50%, var(--border) 50%); }
+
+@keyframes pipPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.week-pip-labels {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 4px;
+}
+
+.week-pip-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--dim);
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+.week-pip-label.current { color: var(--gold); }
+
+/* Pillar progress bars */
+.pillar-bars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 24px;
+}
+
+.pillar-bar-card {
+  background: var(--panel);
+  padding: 20px 20px;
+}
+
+.pbc-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.pbc-label.deen { color: var(--deen); }
+.pbc-label.body { color: var(--body-col); }
+.pbc-label.blade { color: var(--blade); }
+.pbc-label.survival { color: var(--survival); }
+
+.pbc-bar-track {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.pbc-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+
+.deen .pbc-bar-fill { background: var(--deen); }
+.body-p .pbc-bar-fill { background: var(--body-col); }
+.blade-p .pbc-bar-fill { background: var(--blade); }
+.survival-p .pbc-bar-fill { background: var(--survival); }
+
+.pbc-streak {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+}
+
+/* ============ TODAY'S SCHEDULE ============ */
+.today-section {
+  padding: 0 48px 40px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding: 24px 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.section-eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  max-width: 60px;
+}
+
+.today-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.today-block {
+  background: var(--panel);
+  padding: 24px 20px;
+  position: relative;
+  transition: background 0.25s;
+}
+
+.today-block::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+}
+
+.today-block.deen::before { background: var(--deen); }
+.today-block.body-b::before { background: var(--body-col); }
+.today-block.blade-b::before { background: var(--blade); }
+.today-block.survival-b::before { background: var(--survival); }
+
+.today-block.checked { background: var(--surface); }
+.today-block.checked .tb-title { text-decoration: line-through; color: var(--dim); }
+
+.tb-pillar {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.today-block.deen .tb-pillar { color: var(--deen); }
+.today-block.body-b .tb-pillar { color: var(--body-col); }
+.today-block.blade-b .tb-pillar { color: var(--blade); }
+.today-block.survival-b .tb-pillar { color: var(--survival); }
+
+.tb-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--cream);
+  line-height: 1.3;
+  margin-bottom: 8px;
+  transition: all 0.3s;
+}
+
+.tb-detail {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.tb-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--dim);
+  transition: color 0.3s;
+  background: none;
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  width: 100%;
+  text-align: left;
+}
+
+.tb-check:hover { color: var(--cream); border-color: var(--dim); }
+.tb-check.done { color: var(--body-col); border-color: var(--body-col); }
+
+.check-icon {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+.tb-check.done .check-icon {
+  background: var(--body-col);
+  border-color: var(--body-col);
+  color: var(--void);
+}
+
+/* ============ WEEK CHECKLIST ============ */
+.week-section {
+  padding: 0 48px 40px;
+  border-bottom: 1px solid var(--border);
+}
+
+.week-selector {
+  display: flex;
+  gap: 0;
+  margin-bottom: 24px;
+  border: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.week-selector::-webkit-scrollbar { display: none; }
+
+.wsb {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-right: 1px solid var(--border);
+  padding: 12px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.25s;
+  flex: 1;
+  text-align: center;
+}
+
+.wsb:last-child { border-right: none; }
+.wsb:hover { color: var(--cream); background: var(--surface); }
+.wsb.active { color: var(--gold); background: var(--gold-faint); }
+.wsb.complete { color: var(--body-col); }
+
+/* Checkpoint grid */
+.checkpoint-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.checkpoint-card {
+  background: var(--panel);
+  padding: 24px;
+}
+
+.cp-header {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.cp-header.deen { color: var(--deen); }
+.cp-header.body { color: var(--body-col); }
+.cp-header.blade { color: var(--blade); }
+
+.cp-items { display: flex; flex-direction: column; gap: 8px; }
+
+.cp-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.cp-item:hover { opacity: 0.8; }
+
+.cp-box {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.cp-item.checked .cp-box {
+  border-color: var(--body-col);
+  background: var(--body-col);
+  color: var(--void);
+}
+
+.cp-text {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  transition: all 0.3s;
+}
+
+.cp-item.checked .cp-text {
+  text-decoration: line-through;
+  color: var(--dim);
+}
+
+/* Week pass/fail badge */
+.week-result {
+  margin-top: 20px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.wr-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.wr-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border: 1px solid;
+}
+
+.wr-badge.pass { color: var(--body-col); border-color: var(--body-col); }
+.wr-badge.fail { color: var(--blade); border-color: var(--blade); }
+.wr-badge.incomplete { color: var(--dim); border-color: var(--border); }
+
+/* ============ STREAK COUNTERS ============ */
+.streaks-section {
+  padding: 0 48px 40px;
+}
+
+.streaks-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.streak-card {
+  background: var(--deep);
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.streak-num {
+  font-family: var(--font-display);
+  font-size: 56px;
+  line-height: 1;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.streak-card.deen .streak-num { color: var(--deen); }
+.streak-card.body-s .streak-num { color: var(--body-col); }
+.streak-card.blade-s .streak-num { color: var(--blade); }
+.streak-card.survival-s .streak-num { color: var(--survival); }
+
+.streak-pillar {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.streak-sub {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  color: var(--dim);
+}
+
+.streak-fire {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+/* ============ SAVE INDICATOR ============ */
+#save-indicator {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--dim);
+  z-index: 100;
+  transition: all 0.3s;
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+#save-indicator.saving {
+  opacity: 1;
+  transform: translateY(0);
+  color: var(--gold);
+  border-color: var(--gold-dim);
+}
+
+#save-indicator.saved {
+  opacity: 1;
+  transform: translateY(0);
+  color: var(--body-col);
+  border-color: var(--body-col);
+}
+
+/* ============ FOOTER ============ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--void);
+}
+
+.footer-mono {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+}
+
+.footer-mono a {
+  color: var(--gold-dim);
+  text-decoration: none;
+  margin-left: 16px;
+  transition: color 0.3s;
+}
+
+.footer-mono a:hover { color: var(--gold); }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 900px) {
+  nav { padding: 14px 20px; }
+  .app-header { padding: 24px 20px; flex-direction: column; align-items: flex-start; gap: 20px; }
+  .progress-section { padding: 24px 20px; }
+  .pillar-bars { grid-template-columns: repeat(2, 1fr); }
+  .today-section, .week-section, .streaks-section { padding: 0 20px 32px; }
+  .today-grid { grid-template-columns: 1fr 1fr; }
+  .checkpoint-grid { grid-template-columns: 1fr; }
+  .streaks-grid { grid-template-columns: repeat(2, 1fr); }
+  .header-stats { flex-wrap: wrap; }
+  .week-track { grid-template-columns: repeat(6, 1fr); }
+  .week-pip-labels { grid-template-columns: repeat(6, 1fr); }
+  footer { padding: 20px; flex-direction: column; gap: 10px; }
+  .auth-body { padding: 24px; }
+  .auth-header { padding: 28px 24px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    MUNTAZIREEN
+    <span>منتظرين — Protocol Tracker</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#signs">Signs</a></li>
+    <li><a href="developments.html">Developments</a></li>
+    <li><a href="tracker.html" class="active">Tracker</a></li>
+    <li id="nav-user-display"></li>
+    <li><button id="nav-signout-btn" onclick="signOut()">Sign Out</button></li>
+  </ul>
+</nav>
+
+<!-- SAVE INDICATOR -->
+<div id="save-indicator">Saving...</div>
+
+<!-- ============ AUTH SCREEN ============ -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-header">
+      <div class="auth-logo">Muntazireen — منتظرين</div>
+      <h1 class="auth-title">The Protocol Tracker</h1>
+      <p class="auth-sub">Your progress. Your streak. Your preparation.<br>Free. Always.</p>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-signin" onclick="switchTab('signin')">Sign In</button>
+      <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Join Muntazireen</button>
+    </div>
+
+    <div class="auth-body">
+      <!-- SIGN IN -->
+      <div id="form-signin">
+        <div class="auth-field">
+          <label class="auth-label" for="si-email">Email</label>
+          <input class="auth-input" type="email" id="si-email" placeholder="your@email.com" autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label class="auth-label" for="si-password">Password</label>
+          <input class="auth-input" type="password" id="si-password" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <button class="auth-btn" id="signin-btn" onclick="signIn()">Enter</button>
+        <div class="auth-message" id="signin-msg"></div>
+      </div>
+
+      <!-- SIGN UP -->
+      <div id="form-signup" style="display:none;">
+        <div class="auth-field">
+          <label class="auth-label" for="su-email">Email</label>
+          <input class="auth-input" type="email" id="su-email" placeholder="your@email.com" autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label class="auth-label" for="su-password">Password (min 8 characters)</label>
+          <input class="auth-input" type="password" id="su-password" placeholder="••••••••" autocomplete="new-password">
+        </div>
+        <button class="auth-btn" id="signup-btn" onclick="signUp()">Begin the Protocol</button>
+        <div class="auth-message" id="signup-msg"></div>
+        <div class="auth-note">
+          Free. No credit card. No conditions.<br>
+          Your progress is saved to your account across all devices.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP SCREEN ============ -->
+<div id="app-screen">
+
+  <!-- Welcome Header -->
+  <div class="app-header">
+    <div class="welcome-block">
+      <h1>As-salamu alaykum, <em id="user-name-display">Brother</em></h1>
+      <div class="welcome-sub" id="today-date-display">Loading...</div>
+    </div>
+    <div class="header-stats">
+      <div class="hstat">
+        <div class="hstat-num" id="stat-day">—</div>
+        <div class="hstat-label">Day of Protocol</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num" id="stat-week">—</div>
+        <div class="hstat-label">Current Week</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num" id="stat-complete">—%</div>
+        <div class="hstat-label">Overall Complete</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12-Week Progress -->
+  <div class="progress-section">
+    <div class="progress-label">
+      12-Week Protocol Progress <span id="progress-pct">0%</span>
+    </div>
+    <div class="week-track" id="week-track"></div>
+    <div class="week-pip-labels" id="week-pip-labels"></div>
+
+    <div class="pillar-bars">
+      <div class="pillar-bar-card deen">
+        <div class="pbc-label deen">Deen <span id="deen-pct">0%</span></div>
+        <div class="pbc-bar-track"><div class="pbc-bar-fill" id="deen-bar" style="width:0%"></div></div>
+        <div class="pbc-streak" id="deen-streak">— day streak</div>
+      </div>
+      <div class="pillar-bar-card body-p">
+        <div class="pbc-label body">Body <span id="body-pct">0%</span></div>
+        <div class="pbc-bar-track"><div class="pbc-bar-fill" id="body-bar" style="width:0%"></div></div>
+        <div class="pbc-streak" id="body-streak">— day streak</div>
+      </div>
+      <div class="pillar-bar-card blade-p">
+        <div class="pbc-label blade">Blade <span id="blade-pct">0%</span></div>
+        <div class="pbc-bar-track"><div class="pbc-bar-fill" id="blade-bar" style="width:0%"></div></div>
+        <div class="pbc-streak" id="blade-streak">— day streak</div>
+      </div>
+      <div class="pillar-bar-card survival-p">
+        <div class="pbc-label survival">Survival <span id="survival-pct">0%</span></div>
+        <div class="pbc-bar-track"><div class="pbc-bar-fill" id="survival-bar" style="width:0%"></div></div>
+        <div class="pbc-streak" id="survival-streak">— day streak</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Today's Schedule -->
+  <div class="today-section">
+    <div class="section-eyebrow">Today's Protocol Blocks</div>
+    <div class="today-grid" id="today-grid">
+      <!-- Populated by JS based on current week/day -->
+    </div>
+  </div>
+
+  <!-- Weekly Checkpoints -->
+  <div class="week-section">
+    <div class="section-eyebrow">Weekly Checkpoints</div>
+    <div class="week-selector" id="week-selector"></div>
+    <div class="checkpoint-grid" id="checkpoint-grid"></div>
+    <div class="week-result" id="week-result">
+      <span class="wr-label">Week Status</span>
+      <span class="wr-badge incomplete" id="wr-badge">In Progress</span>
+    </div>
+  </div>
+
+  <!-- Streak Counters -->
+  <div class="streaks-section">
+    <div class="section-eyebrow">Pillar Streaks</div>
+    <div class="streaks-grid">
+      <div class="streak-card deen">
+        <div class="streak-fire">☾</div>
+        <div class="streak-num" id="streak-deen">0</div>
+        <div class="streak-pillar">Deen</div>
+        <div class="streak-sub">consecutive days</div>
+      </div>
+      <div class="streak-card body-s">
+        <div class="streak-fire">⚡</div>
+        <div class="streak-num" id="streak-body">0</div>
+        <div class="streak-pillar">Body</div>
+        <div class="streak-sub">consecutive days</div>
+      </div>
+      <div class="streak-card blade-s">
+        <div class="streak-fire">⚔</div>
+        <div class="streak-num" id="streak-blade">0</div>
+        <div class="streak-pillar">Blade</div>
+        <div class="streak-sub">consecutive days</div>
+      </div>
+      <div class="streak-card survival-s">
+        <div class="streak-fire">◈</div>
+        <div class="streak-num" id="streak-survival">0</div>
+        <div class="streak-pillar">Survival</div>
+        <div class="streak-sub">consecutive days</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-mono">
+      MUNTAZIREEN — Free Forever
+      <a href="index.html">Home</a>
+      <a href="developments.html">Developments</a>
+    </div>
+    <div class="footer-mono">"Hasten to do good deeds before trials come like pieces of a dark night." — Muslim 118</div>
+  </footer>
+
+</div><!-- end app-screen -->
+
+<script>
+// ============================================================
+//  SUPABASE CONFIG
+//  !! REPLACE THESE WITH YOUR ACTUAL KEYS FROM SUPABASE !!
+// ============================================================
+const SUPABASE_URL = 'https://ulsbqqsjsssqflydwylm.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsc2JxcXNqc3NzcWZseWR3eWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTAxNTYsImV4cCI6MjA4ODI2NjE1Nn0.EIJVQBN9bkufyroUDE1Va8zExBKbEH9CegBOIGauRfs';
+
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ============================================================
+//  PROTOCOL DATA — The full 12-week schedule
+// ============================================================
+
+const PROTOCOL = {
+  weeks: [
+    { // Week 1-2: Anchor
+      label: 'Weeks 1–2', phase: 'Anchor',
+      todayBlocks: [
+        { pillar: 'deen', cls: 'deen', title: 'Fajr + Morning Adhkar', detail: 'Ayat al-Kursi after fard. Full morning dhikr set.', id: 'deen_fajr' },
+        { pillar: 'body', cls: 'body-b', title: 'Push + Core', detail: '3 sets push-ups, dips, plank. Brace before every rep. Knee-safe.', id: 'body_push' },
+        { pillar: 'blade', cls: 'blade-b', title: 'Grip Fundamentals', detail: 'Hammer grip × 20 draws. 4" fixed blade only. Slow, deliberate.', id: 'blade_grip' },
+        { pillar: 'survival', cls: 'survival-b', title: 'Gear Audit', detail: 'Write Tier 1 list. Order what you\'re missing. Know what you own.', id: 'survival_gear' },
+      ],
+      checkpoints: {
+        deen: ['All 5 prayers protected — no misses', 'Morning adhkar done daily without fail', 'Al-Kahf Ayat 1–3 memorised and recited in prayer', 'Dua for steadfastness made after every Fajr'],
+        body: ['3 training sessions completed this week', 'Core brace habit built before every lift', 'Right knee — zero deep flexion, zero pain ignored', 'Daily walk minimum on non-training days'],
+        blade: ['Clean hammer grip, consistent every draw', 'All 5 angles drilled with 4" fixed blade', 'Zero rushing — slow is smooth, smooth is fast', 'Rambo knife — utility only this phase'],
+      }
+    },
+    { // Week 3-4: Lock In
+      label: 'Weeks 3–4', phase: 'Lock In',
+      todayBlocks: [
+        { pillar: 'deen', cls: 'deen', title: 'Fajr + Al-Kahf Memorise', detail: 'Ayat 7–8 this week. Link back to 1–6. Full recitation chain.', id: 'deen_kahf' },
+        { pillar: 'body', cls: 'body-b', title: 'Push + Core — Add Weight', detail: 'Weighted push-ups. Plank 60s holds. Brace every rep.', id: 'body_push2' },
+        { pillar: 'blade', cls: 'blade-b', title: 'Speed Drills Begin', detail: 'Angles × 20 each at 60% speed. Still clean. No slop.', id: 'blade_speed' },
+        { pillar: 'survival', cls: 'survival-b', title: 'KI Tablets + Radio', detail: 'Potassium iodide ordered? Hand crank radio sourced? Tick off Tier 1.', id: 'survival_ki' },
+      ],
+      checkpoints: {
+        deen: ['Full 10 ayat of Al-Kahf memorised by Friday', 'Reciting in Sunnah prayers, not just as drill', 'Understand the story — the youth, the cave, the trial', 'Adhkar unbroken for 4 weeks straight'],
+        body: ['Intensity increased from weeks 1–2', 'Post-sprint drills introduced — stress inoculation begun', 'Zero knee pain — if pain, back off immediately', 'Consistency over intensity — every session done'],
+        blade: ['All 5 angles clean at 60% speed', 'Folder deployment smooth, one-handed', 'Post-sprint drills completed — know your shake', 'Rambo still utility only — patience'],
+      }
+    },
+    { // Week 5-8: Build
+      label: 'Weeks 5–8', phase: 'Build',
+      todayBlocks: [
+        { pillar: 'deen', cls: 'deen', title: 'Fajr + Aqeedah Study', detail: 'Begin Kitab at-Tawheed. One chapter. Understand before moving on.', id: 'deen_aqeedah' },
+        { pillar: 'body', cls: 'body-b', title: 'Heavy Push Day', detail: 'Max effort push-ups, dips. Brace. Track your numbers.', id: 'body_heavy' },
+        { pillar: 'blade', cls: 'blade-b', title: 'Kali Angles — Full Speed', detail: 'All 5 angles at full speed. Flow between them. No stopping.', id: 'blade_kali' },
+        { pillar: 'survival', cls: 'survival-b', title: 'Sawyer Filter Practice', detail: 'Actually use your water filter. Know setup before crisis.', id: 'survival_water' },
+      ],
+      checkpoints: {
+        deen: ['Aqeedah study started — Kitab at-Tawheed', 'Understanding deepening, not just memorisation', 'Masjid attendance — Jumu\'ah minimum, ideally more', 'Specific duas, not just general ones'],
+        body: ['Noticeable conditioning improvement', 'Bag runs introduced — functional fitness', 'Knee still managed — no regression', 'Tracking numbers — push-ups, sprint times'],
+        blade: ['All 5 angles at full speed, clean', 'Axe fundamentals introduced safely', 'Rambo basics — grip and diagonal cuts', 'Actively looking for a Kali class nearby'],
+      }
+    },
+    { // Week 9-12: Integration
+      label: 'Weeks 9–12', phase: 'Integration',
+      todayBlocks: [
+        { pillar: 'deen', cls: 'deen', title: 'Fajr + Deep Dua', detail: 'Personal. Specific. Name what you\'re asking for. For yourself, your future.', id: 'deen_dua' },
+        { pillar: 'body', cls: 'body-b', title: 'Peak Conditioning', detail: 'Max effort session. Sprints, pulls, carries. You are not who you were.', id: 'body_peak' },
+        { pillar: 'blade', cls: 'blade-b', title: 'Full Pressure Drill', detail: 'All blades. Full sequence. Post-sprint deployment. This is the test.', id: 'blade_pressure' },
+        { pillar: 'survival', cls: 'survival-b', title: 'Full Gear Review', detail: 'Audit entire kit. What\'s missing from Tier 2? Update cat plan.', id: 'survival_audit' },
+      ],
+      checkpoints: {
+        deen: ['Al-Kahf 1–10 is locked — recited every Friday without exception', 'Aqeedah — you understand what you believe and why', 'Adhkar is a daily anchor, not an occasional habit', 'You are connected to a community of believers'],
+        body: ['Measurably stronger than week 1 — documented proof', 'Knee managed consistently — no training flare-ups', 'Can move with bug-out bag loaded for 60 minutes', 'Brace is automatic — it\'s a reflex now'],
+        blade: ['4" fixed blade — automatic under stress', 'All 5 Kali angles at full speed, clean', 'Axe and Rambo fundamentals solid', 'Attending Kali class or training with a partner'],
+      }
+    }
+  ]
+};
+
+// ============================================================
+//  STATE
+// ============================================================
+
+let currentUser = null;
+let userData = {
+  startDate: null,
+  dailyCheckins: {},   // { 'YYYY-MM-DD': { deen: bool, body: bool, blade: bool, survival: bool } }
+  weeklyCheckpoints: {}, // { 'w1': { deen: [bool,bool,...], body: [...], blade: [...] } }
+  streaks: { deen: 0, body: 0, blade: 0, survival: 0 }
+};
+
+let selectedWeekIdx = 0;
+let saveTimeout = null;
+
+// ============================================================
+//  AUTH
+// ============================================================
+
+function switchTab(tab) {
+  document.getElementById('form-signin').style.display = tab === 'signin' ? 'block' : 'none';
+  document.getElementById('form-signup').style.display = tab === 'signup' ? 'block' : 'none';
+  document.getElementById('tab-signin').classList.toggle('active', tab === 'signin');
+  document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+}
+
+async function signIn() {
+  const email = document.getElementById('si-email').value.trim();
+  const password = document.getElementById('si-password').value;
+  const msg = document.getElementById('signin-msg');
+  const btn = document.getElementById('signin-btn');
+
+  if (!email || !password) { msg.textContent = 'Please enter email and password.'; msg.className = 'auth-message error'; return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Entering...';
+  msg.textContent = '';
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    msg.textContent = error.message;
+    msg.className = 'auth-message error';
+    btn.disabled = false;
+    btn.textContent = 'Enter';
+  }
+  // Session change handled by onAuthStateChange
+}
+
+async function signUp() {
+  const email = document.getElementById('su-email').value.trim();
+  const password = document.getElementById('su-password').value;
+  const msg = document.getElementById('signup-msg');
+  const btn = document.getElementById('signup-btn');
+
+  if (!email || !password) { msg.textContent = 'Please fill in all fields.'; msg.className = 'auth-message error'; return; }
+  if (password.length < 8) { msg.textContent = 'Password must be at least 8 characters.'; msg.className = 'auth-message error'; return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Creating account...';
+  msg.textContent = '';
+
+  const { data, error } = await sb.auth.signUp({ email, password });
+
+  if (error) {
+    msg.textContent = error.message;
+    msg.className = 'auth-message error';
+    btn.disabled = false;
+    btn.textContent = 'Begin the Protocol';
+  } else {
+    msg.textContent = 'Account created. Check your email to confirm, then sign in.';
+    msg.className = 'auth-message success';
+    btn.disabled = false;
+    btn.textContent = 'Begin the Protocol';
+  }
+}
+
+async function signOut() {
+  await sb.auth.signOut();
+  currentUser = null;
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('app-screen').style.display = 'none';
+  document.getElementById('nav-signout-btn').style.display = 'none';
+  document.getElementById('nav-user-display').textContent = '';
+}
+
+// ============================================================
+//  DATA LOAD / SAVE
+// ============================================================
+
+async function loadUserData() {
+  const { data, error } = await sb
+    .from('protocol_progress')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .single();
+
+  if (data) {
+    userData.startDate = data.start_date;
+    userData.dailyCheckins = data.daily_checkins || {};
+    userData.weeklyCheckpoints = data.weekly_checkpoints || {};
+    userData.streaks = data.streaks || { deen: 0, body: 0, blade: 0, survival: 0 };
+  } else {
+    // First time — set start date to today
+    userData.startDate = new Date().toISOString().split('T')[0];
+    await saveUserData(true);
+  }
+}
+
+async function saveUserData(immediate = false) {
+  showSaveIndicator('saving');
+
+  const payload = {
+    user_id: currentUser.id,
+    start_date: userData.startDate,
+    daily_checkins: userData.dailyCheckins,
+    weekly_checkpoints: userData.weeklyCheckpoints,
+    streaks: userData.streaks,
+    updated_at: new Date().toISOString()
+  };
+
+  const { error } = await sb
+    .from('protocol_progress')
+    .upsert(payload, { onConflict: 'user_id' });
+
+  if (!error) showSaveIndicator('saved');
+}
+
+function queueSave() {
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => saveUserData(), 1200);
+}
+
+function showSaveIndicator(state) {
+  const el = document.getElementById('save-indicator');
+  el.className = `${state}`;
+  el.textContent = state === 'saving' ? 'Saving...' : '✓ Saved';
+  if (state === 'saved') setTimeout(() => { el.className = ''; }, 2000);
+}
+
+// ============================================================
+//  DATE / WEEK CALCULATION
+// ============================================================
+
+function getDayOfProtocol() {
+  if (!userData.startDate) return 1;
+  const start = new Date(userData.startDate);
+  const now = new Date();
+  const diff = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+  return Math.max(1, diff + 1);
+}
+
+function getCurrentWeekIdx() {
+  const day = getDayOfProtocol();
+  if (day <= 14) return 0;
+  if (day <= 28) return 1;
+  if (day <= 56) return 2;
+  return 3;
+}
+
+function getTodayKey() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function getWeekKey(idx) {
+  return `w${idx + 1}`;
+}
+
+function getDayName() {
+  return new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+// ============================================================
+//  RENDER
+// ============================================================
+
+function renderApp() {
+  const day = getDayOfProtocol();
+  const weekIdx = getCurrentWeekIdx();
+  const totalWeeks = 12;
+  const currentWeekNum = Math.min(Math.ceil(day / 7), totalWeeks);
+  const overallPct = Math.min(Math.round((day / 84) * 100), 100);
+
+  // Header stats
+  document.getElementById('user-name-display').textContent = currentUser.email.split('@')[0];
+  document.getElementById('today-date-display').textContent = getDayName();
+  document.getElementById('stat-day').textContent = day > 84 ? '✓' : day;
+  document.getElementById('stat-week').textContent = currentWeekNum;
+  document.getElementById('stat-complete').textContent = overallPct + '%';
+
+  // Progress bar
+  renderWeekTrack(currentWeekNum, totalWeeks, overallPct);
+
+  // Pillar bars
+  renderPillarBars();
+
+  // Today's blocks
+  renderTodayBlocks(weekIdx);
+
+  // Week selector
+  renderWeekSelector(weekIdx);
+
+  // Checkpoints for current week
+  renderCheckpoints(selectedWeekIdx);
+
+  // Streaks
+  renderStreaks();
+}
+
+function renderWeekTrack(currentWeekNum, totalWeeks, overallPct) {
+  const track = document.getElementById('week-track');
+  const labels = document.getElementById('week-pip-labels');
+
+  track.innerHTML = '';
+  labels.innerHTML = '';
+
+  document.getElementById('progress-pct').textContent = overallPct + '%';
+
+  for (let w = 1; w <= totalWeeks; w++) {
+    const pip = document.createElement('div');
+    pip.className = 'week-pip';
+    if (w < currentWeekNum) pip.classList.add('complete');
+    else if (w === currentWeekNum) pip.classList.add('current');
+    pip.title = `Week ${w}`;
+    track.appendChild(pip);
+
+    const lbl = document.createElement('div');
+    lbl.className = 'week-pip-label' + (w === currentWeekNum ? ' current' : '');
+    lbl.textContent = w;
+    labels.appendChild(lbl);
+  }
+}
+
+function renderPillarBars() {
+  const pillars = ['deen', 'body', 'blade', 'survival'];
+  const checkins = userData.dailyCheckins;
+  const days = Object.keys(checkins);
+  const total = Math.max(days.length, 1);
+
+  pillars.forEach(p => {
+    const done = days.filter(d => checkins[d] && checkins[d][p]).length;
+    const pct = Math.round((done / total) * 100);
+    document.getElementById(`${p}-pct`).textContent = pct + '%';
+    document.getElementById(`${p}-bar`).style.width = pct + '%';
+    document.getElementById(`${p}-streak`).textContent = `${userData.streaks[p]} day streak`;
+  });
+}
+
+function renderTodayBlocks(weekIdx) {
+  const grid = document.getElementById('today-grid');
+  const todayKey = getTodayKey();
+  const todayData = userData.dailyCheckins[todayKey] || {};
+  const blocks = PROTOCOL.weeks[weekIdx].todayBlocks;
+
+  grid.innerHTML = blocks.map(block => {
+    const done = !!todayData[block.id];
+    return `
+      <div class="today-block ${block.cls}${done ? ' checked' : ''}" id="block-${block.id}">
+        <div class="tb-pillar">${block.pillar}</div>
+        <div class="tb-title">${block.title}</div>
+        <div class="tb-detail">${block.detail}</div>
+        <button class="tb-check${done ? ' done' : ''}" onclick="toggleBlock('${block.id}', '${block.pillar}')">
+          <span class="check-icon">${done ? '✓' : ''}</span>
+          ${done ? 'Completed' : 'Mark Complete'}
+        </button>
+      </div>`;
+  }).join('');
+}
+
+function renderWeekSelector(currentWeekIdx) {
+  const sel = document.getElementById('week-selector');
+  sel.innerHTML = PROTOCOL.weeks.map((w, i) => `
+    <button class="wsb${i === selectedWeekIdx ? ' active' : ''}${isWeekComplete(i) ? ' complete' : ''}"
+      onclick="selectWeek(${i})">${w.label}<br><small style="font-size:7px;opacity:0.6;">${w.phase}</small></button>
+  `).join('');
+}
+
+function isWeekComplete(weekIdx) {
+  const wk = getWeekKey(weekIdx);
+  const cp = userData.weeklyCheckpoints[wk];
+  if (!cp) return false;
+  const all = [...(cp.deen || []), ...(cp.body || []), ...(cp.blade || [])];
+  return all.length > 0 && all.every(Boolean);
+}
+
+function renderCheckpoints(weekIdx) {
+  const grid = document.getElementById('checkpoint-grid');
+  const wk = getWeekKey(weekIdx);
+  const cp = userData.weeklyCheckpoints[wk] || { deen: [], body: [], blade: [] };
+  const week = PROTOCOL.weeks[weekIdx];
+
+  const renderCol = (pillar, cls, items) => `
+    <div class="checkpoint-card">
+      <div class="cp-header ${cls}">${pillar}</div>
+      <div class="cp-items">
+        ${items.map((text, i) => {
+          const checked = !!(cp[pillar.toLowerCase()] && cp[pillar.toLowerCase()][i]);
+          return `
+            <div class="cp-item${checked ? ' checked' : ''}" onclick="toggleCheckpoint('${pillar.toLowerCase()}', ${i}, ${weekIdx})">
+              <div class="cp-box">${checked ? '✓' : ''}</div>
+              <div class="cp-text">${text}</div>
+            </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+
+  grid.innerHTML =
+    renderCol('Deen', 'deen', week.checkpoints.deen) +
+    renderCol('Body', 'body', week.checkpoints.body) +
+    renderCol('Blade', 'blade', week.checkpoints.blade);
+
+  // Week result badge
+  const allItems = [...(cp.deen || []), ...(cp.body || []), ...(cp.blade || [])];
+  const totalItems = week.checkpoints.deen.length + week.checkpoints.body.length + week.checkpoints.blade.length;
+  const completedItems = allItems.filter(Boolean).length;
+  const badge = document.getElementById('wr-badge');
+
+  if (completedItems === 0) {
+    badge.className = 'wr-badge incomplete'; badge.textContent = 'Not Started';
+  } else if (completedItems === totalItems) {
+    badge.className = 'wr-badge pass'; badge.textContent = '✓ Week Complete';
+  } else {
+    badge.className = 'wr-badge incomplete';
+    badge.textContent = `${completedItems}/${totalItems} Done`;
+  }
+}
+
+function renderStreaks() {
+  ['deen', 'body', 'blade', 'survival'].forEach(p => {
+    document.getElementById(`streak-${p}`).textContent = userData.streaks[p] || 0;
+  });
+}
+
+// ============================================================
+//  INTERACTIONS
+// ============================================================
+
+function toggleBlock(blockId, pillar) {
+  const todayKey = getTodayKey();
+  if (!userData.dailyCheckins[todayKey]) {
+    userData.dailyCheckins[todayKey] = {};
+  }
+  userData.dailyCheckins[todayKey][blockId] = !userData.dailyCheckins[todayKey][blockId];
+
+  // Recalculate streaks
+  recalcStreaks();
+
+  // Re-render today blocks
+  const weekIdx = getCurrentWeekIdx();
+  renderTodayBlocks(weekIdx);
+  renderPillarBars();
+  renderStreaks();
+
+  queueSave();
+}
+
+function toggleCheckpoint(pillar, idx, weekIdx) {
+  const wk = getWeekKey(weekIdx);
+  if (!userData.weeklyCheckpoints[wk]) userData.weeklyCheckpoints[wk] = {};
+  if (!userData.weeklyCheckpoints[wk][pillar]) {
+    userData.weeklyCheckpoints[wk][pillar] = [];
+  }
+  userData.weeklyCheckpoints[wk][pillar][idx] = !userData.weeklyCheckpoints[wk][pillar][idx];
+
+  renderCheckpoints(weekIdx);
+  renderWeekSelector(getCurrentWeekIdx());
+  renderWeekTrack(Math.min(Math.ceil(getDayOfProtocol() / 7), 12), 12, Math.min(Math.round((getDayOfProtocol() / 84) * 100), 100));
+
+  queueSave();
+}
+
+function selectWeek(idx) {
+  selectedWeekIdx = idx;
+  renderWeekSelector(getCurrentWeekIdx());
+  renderCheckpoints(idx);
+}
+
+function recalcStreaks() {
+  const pillars = ['deen', 'body', 'blade', 'survival'];
+  const today = new Date();
+
+  pillars.forEach(pillar => {
+    let streak = 0;
+    let d = new Date(today);
+
+    while (true) {
+      const key = d.toISOString().split('T')[0];
+      const dayData = userData.dailyCheckins[key];
+      // Check if any block of this pillar is done for that day
+      const done = dayData && Object.entries(dayData).some(([k, v]) => k.startsWith(pillar) && v);
+      if (!done) break;
+      streak++;
+      d.setDate(d.getDate() - 1);
+      if (streak > 365) break;
+    }
+
+    userData.streaks[pillar] = streak;
+  });
+}
+
+// ============================================================
+//  AUTH STATE — Entry point
+// ============================================================
+
+sb.auth.onAuthStateChange(async (event, session) => {
+  if (session && session.user) {
+    currentUser = session.user;
+
+    // Nav
+    document.getElementById('nav-user-display').textContent = currentUser.email.split('@')[0];
+    document.getElementById('nav-signout-btn').style.display = 'block';
+
+    // Load data then show app
+    await loadUserData();
+
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('app-screen').style.display = 'block';
+
+    renderApp();
+
+  } else {
+    currentUser = null;
+    document.getElementById('auth-screen').style.display = 'flex';
+    document.getElementById('app-screen').style.display = 'none';
+    document.getElementById('nav-signout-btn').style.display = 'none';
+    document.getElementById('nav-user-display').textContent = '';
+  }
+});
+</script>
+</body>
+</html>
