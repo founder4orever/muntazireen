@@ -200,18 +200,17 @@ footer{border-top:1px solid var(--border);padding:36px 48px;display:flex;justify
       <span class="indent">Now what?</span>
     </h1>
     <div class="hero-ayah">
-      <div class="arabic">اقْتَرَبَتِ السَّاعَةُ وَانشَقَّ الْقَمَرُ</div>
-      <div class="translation">"The Hour has drawn near and the moon has split."</div>
-      <div class="ref">Surah Al-Qamar 54:1 — Sahih Al-Bukhari 3636</div>
+      <div class="arabic">قَدْ خَسِرَ الَّذِينَ كَذَّبُوا بِلِقَاءِ اللَّهِ ۖ حَتَّىٰ إِذَا جَاءَتْهُمُ السَّاعَةُ بَغْتَةً قَالُوا يَا حَسْرَتَنَا عَلَىٰ مَا فَرَّطْنَا فِيهَا</div>
+      <div class="translation">"Lost indeed are those who deny the meeting with Allah, until when the Hour comes upon them suddenly, they will say, 'Oh regret for what we neglected regarding it.'"</div>
+      <div class="ref">Surah Al-An'am 6:31</div>
     </div>
     <p class="hero-desc">
       You are not paranoid. You are <strong>paying attention.</strong><br>
       Muntazireen exists for those who see what is unfolding —
       and need to know what to do about it.
     </p>
-    <div class="hero-actions">
-      <a href="tracker.html" onclick="sessionStorage.setItem('mt_open_tab','signup')" class="btn-primary" id="cta-primary">Begin the Protocol</a>
-      <a href="developments.html" class="btn-secondary">Live Developments</a>
+    <div class="hero-actions" id="hero-actions">
+      <a href="tracker.html" class="btn-primary" id="cta-primary">Get Started</a>
     </div>
   </div>
   <div class="scroll-hint"><div class="scroll-line"></div><div class="scroll-txt">Scroll</div></div>
@@ -300,12 +299,12 @@ function setAuthed(user){
   document.getElementById('nav-user').textContent=user.email.split('@')[0];
   document.getElementById('nav-signout').style.display='block';
   document.getElementById('nav-begin-wrap').style.display='none';
-  // Hero CTA
-  const cta=document.getElementById('cta-primary');
-  cta.textContent='Go to Tracker';cta.href='tracker.html';cta.onclick=null;
+  // Hide CTA entirely for signed-in users
+  const heroActions=document.getElementById('hero-actions');
+  if(heroActions)heroActions.style.display='none';
   // Signs bar — show link to full page
   const btn=document.getElementById('signs-gate-btn');
-  btn.textContent='View All Signs →';btn.href='signs.html';btn.onclick=null;btn.className='sgb-btn-authed';
+  if(btn){btn.textContent='View All Signs →';btn.href='signs.html';btn.onclick=null;btn.className='sgb-btn-authed';}
 }
 
 function setUnauthed(){
@@ -361,12 +360,25 @@ function timeAgo(dateStr){
 }
 
 async function fetchFeed(source){
-  const api=`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}&count=4`;
+  // Use allorigins as CORS proxy to fetch RSS directly
+  const proxy=`https://api.allorigins.win/get?url=${encodeURIComponent(source.url)}`;
   try{
-    const r=await fetch(api,{signal:AbortSignal.timeout(6000)});
+    const r=await fetch(proxy,{signal:AbortSignal.timeout(8000)});
     const d=await r.json();
-    return(d.items||[]).map(i=>({title:i.title||'',link:i.link||'#',date:i.pubDate||'',cat:classifyItem(i.title,i.description||''),source:source.label}));
-  }catch{return[];}
+    const xml=new DOMParser().parseFromString(d.contents,'text/xml');
+    const items=Array.from(xml.querySelectorAll('item')).slice(0,4);
+    return items.map(i=>({
+      title:(i.querySelector('title')||{textContent:''}).textContent,
+      link:(i.querySelector('link')||{textContent:'#'}).textContent||
+           (i.getElementsByTagName('link')[0]||{getAttribute:()=>'#'}).getAttribute('href')||'#',
+      date:(i.querySelector('pubDate')||{textContent:''}).textContent,
+      cat:classifyItem(
+        (i.querySelector('title')||{textContent:''}).textContent,
+        (i.querySelector('description')||{textContent:''}).textContent
+      ),
+      source:source.label
+    }));
+  }catch(e){return[];}
 }
 
 async function loadNews(){
