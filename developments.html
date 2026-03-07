@@ -960,7 +960,7 @@ let lastFetchTime = null;
 
 // RSS sources via allorigins CORS proxy (free, no key)
 // Using rss2json.com free API as the RSS->JSON converter
-const RSS_API = 'https://api.rss2json.com/v1/api.json?rss_url=';
+const RSS_PROXY = 'https://api.allorigins.win/get?url=';
 
 const SOURCES = [
   {
@@ -1095,25 +1095,29 @@ async function fetchFeed(source) {
   }
 
   try {
-    const encodedUrl = encodeURIComponent(source.url);
-    const apiUrl = `${RSS_API}${encodedUrl}&count=30`;
-
-    const res = await fetch(apiUrl, { signal: AbortSignal.timeout(12000) });
+    const proxyUrl = `${RSS_PROXY}${encodeURIComponent(source.url)}`;
+    const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(12000) });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-    const data = await res.json();
-    if (data.status !== 'ok' || !data.items) throw new Error('Bad response');
+    const json = await res.json();
+    if (!json.contents) throw new Error('Empty response');
+
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(json.contents, 'text/xml');
+    const items = Array.from(xml.querySelectorAll('item'));
+
+    if (!items.length) throw new Error('No items found');
 
     if (statusEl) {
       statusEl.className = 'source-status ok';
-      statusEl.textContent = `${data.items.length} items`;
+      statusEl.textContent = `${items.length} items`;
     }
 
-    return data.items.map(item => ({
-      title: item.title || '',
-      description: item.description || item.content || '',
-      link: item.link || '#',
-      pubDate: item.pubDate || new Date().toISOString(),
+    return items.slice(0, 30).map(item => ({
+      title: item.querySelector('title')?.textContent || '',
+      description: item.querySelector('description')?.textContent || '',
+      link: item.querySelector('link')?.textContent || item.querySelector('guid')?.textContent || '#',
+      pubDate: item.querySelector('pubDate')?.textContent || new Date().toISOString(),
       source: source.name,
       sourceId: source.id
     }));
