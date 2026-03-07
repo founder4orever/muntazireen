@@ -167,7 +167,7 @@ nav.innerHTML=`
   </div>
 
   <!-- Mobile hamburger -->
-  <button class="n-hamburger" id="nav-hamburger" onclick="mtNavMobile()" aria-label="Menu">
+  <button class="n-hamburger" id="nav-hamburger" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
   <div class="n-mobile-menu" id="nav-mobile-menu"></div>
@@ -204,10 +204,15 @@ window.mtNavToggle = function(id){
 
 window.mtNavMobile = function(){
   const menu=document.getElementById('nav-mobile-menu');
-  // Build menu if empty
   if(!menu.innerHTML.trim()) buildMobileMenu(null);
   menu.classList.toggle('open');
 };
+
+// Attach hamburger listener after DOM injection
+document.addEventListener('DOMContentLoaded', function(){
+  const btn = document.getElementById('nav-hamburger');
+  if(btn) btn.addEventListener('click', window.mtNavMobile);
+});
 
 // Mark active page
 function markActive(){
