@@ -1199,12 +1199,7 @@ function showApp() {
   const params = new URLSearchParams(location.search);
   const tabParam = params.get('tab');
   if (tabParam && ['mind','body','survival','settings'].includes(tabParam)) {
-    document.querySelectorAll('.pillar-tab').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.pillar-panel').forEach(p => p.style.display = 'none');
-    const btn = document.querySelector(`.pillar-tab[data-tab="${tabParam}"]`);
-    const panel = document.getElementById(`tab-${tabParam}`);
-    if (btn) btn.classList.add('active');
-    if (panel) panel.style.display = '';
+    switchPillar(tabParam);
   }
 
   // Admin param: ?week=N — overrides week calculation for vetting
