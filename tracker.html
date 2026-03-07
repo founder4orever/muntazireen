@@ -465,6 +465,7 @@ let _sb;
 function initSB() {
   if (window.supabase) {
     _sb = window.supabase.createClient(SB_URL, SB_KEY);
+    startAuthObserver();
   } else {
     console.error('Supabase SDK not loaded');
   }
@@ -2068,6 +2069,7 @@ function switchSub(pillar, view, btn) {
 // AUTH OBSERVER
 // ════════════════════════════════════════════
 // Auth init - wrapped in try/catch so any error doesn't kill the page
+function startAuthObserver() {
 try {
   _sb.auth.onAuthStateChange(async (event, session) => {
     if (event === 'INITIAL_SESSION') {
@@ -2095,6 +2097,7 @@ try {
 } catch(e) {
   console.error('Auth init error:', e);
 }
+} // end startAuthObserver
 </script>
 <script src="nav.js"></script>
 </body>
