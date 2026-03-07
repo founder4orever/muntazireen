@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — Muntazireen</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☪️</text></svg>">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3"></script>
+  <script src="nav.js"></script>
+  <style>
+    :root {
+      --bg: #080807; --cream: #e8dfc8; --gold: #c8a96e; --muted: #6b6558;
+      --dim: #4a463e; --border: #1e1c18; --card: #0e0d0b;
+      --font-sans: 'Georgia', serif; --font-mono: 'Courier New', monospace;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--bg);color:var(--cream);font-family:var(--font-sans);min-height:100vh;}
+    .wrap{max-width:640px;margin:0 auto;padding:100px 32px 80px;}
+    .page-label{font-family:var(--font-mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+    h1{font-size:32px;font-weight:300;color:var(--cream);margin-bottom:4px;}
+    .page-sub{color:var(--dim);font-size:13px;font-family:var(--font-mono);margin-bottom:48px;}
+    .card{background:var(--card);border:1px solid var(--border);padding:32px;margin-bottom:16px;}
+    .card-label{font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;}
+    .field-label{display:block;font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;}
+    input[type=text]{width:100%;background:#0d0c0a;border:1px solid var(--border);color:var(--cream);font-family:var(--font-mono);font-size:13px;padding:12px 16px;outline:none;margin-bottom:16px;}
+    input[type=text]:focus{border-color:var(--gold);}
+    .wpn-list{display:flex;flex-direction:column;gap:12px;margin-bottom:24px;}
+    .wpn-label{display:flex;align-items:center;gap:12px;cursor:pointer;}
+    .wpn-label input{width:15px;height:15px;accent-color:var(--gold);}
+    .wpn-label span{font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);}
+    .btn-gold{font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;background:var(--gold);border:none;color:#0d0c0a;padding:12px 28px;cursor:pointer;font-weight:700;}
+    .btn-danger{font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;background:none;border:1px solid #8b3030;color:#8b3030;padding:10px 24px;cursor:pointer;}
+    .msg{margin-top:12px;font-size:12px;font-family:var(--font-mono);color:var(--muted);min-height:18px;}
+    .auth-wall{display:flex;align-items:center;justify-content:center;min-height:60vh;flex-direction:column;gap:16px;text-align:center;}
+    .auth-wall p{color:var(--muted);font-family:var(--font-mono);font-size:12px;}
+    .auth-wall a{color:var(--gold);text-decoration:none;font-family:var(--font-mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;border:1px solid var(--gold);padding:10px 24px;}
+  </style>
+</head>
+<body>
+
+<div class="wrap" id="settings-wrap" style="display:none;">
+  <div class="page-label">Account</div>
+  <h1>Settings</h1>
+  <p class="page-sub">Update your name, preferences, and account.</p>
+
+  <!-- Profile & Weaponry -->
+  <div class="card">
+    <div class="card-label">Profile & Preferences</div>
+
+    <label class="field-label">Display Name</label>
+    <input type="text" id="settings-username" placeholder="Enter username">
+
+    <label class="field-label" style="margin-bottom:4px;">Weaponry Preferences</label>
+    <p style="color:var(--muted);font-size:11px;font-family:var(--font-mono);margin-bottom:14px;">Select all that apply — your training drills update accordingly.</p>
+    <div class="wpn-list">
+      <label class="wpn-label"><input type="checkbox" id="wpn-knife" value="knife"><span>Knife / Blade</span></label>
+      <label class="wpn-label"><input type="checkbox" id="wpn-archery" value="archery"><span>Archery / Bow</span></label>
+      <label class="wpn-label"><input type="checkbox" id="wpn-firearm" value="firearm"><span>Firearm</span></label>
+      <label class="wpn-label"><input type="checkbox" id="wpn-hand_combat" value="hand_combat"><span>Hand Combat / Martial Arts</span></label>
+    </div>
+
+    <button class="btn-gold" onclick="saveSettings()">Save Changes</button>
+    <div class="msg" id="settings-msg"></div>
+  </div>
+
+  <!-- Sign Out -->
+  <div class="card">
+    <div class="card-label">Session</div>
+    <button class="btn-danger" onclick="doSignOut()">Sign Out</button>
+  </div>
+</div>
+
+<div class="auth-wall" id="auth-wall" style="display:none;">
+  <p>You need to be signed in to access settings.</p>
+  <a href="tracker.html">Sign In</a>
+</div>
+
+<script>
+const SB_URL = 'https://ulsbuqsjsssqflydwylm.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsc2J1cXNqc3NzcWZseWR3eWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTAxNTYsImV4cCI6MjA4ODI2NjE1Nn0.EIJVQBN9bkufyroUDE1Va8zExBKbEH9CegBOIGauRfs';
+
+let _sb, currentUser, userData;
+
+function initSB() {
+  if (window._sbInstance) {
+    _sb = window._sbInstance;
+  } else {
+    _sb = window.supabase.createClient(SB_URL, SB_KEY);
+    window._sbInstance = _sb;
+    window._mtSb = _sb;
+  }
+  _sb.auth.onAuthStateChange(async (event, session) => {
+    if (session && session.user) {
+      currentUser = session.user;
+      await loadUserData();
+      document.getElementById('settings-wrap').style.display = '';
+      document.getElementById('auth-wall').style.display = 'none';
+    } else {
+      document.getElementById('settings-wrap').style.display = 'none';
+      document.getElementById('auth-wall').style.display = 'flex';
+    }
+  });
+}
+
+async function loadUserData() {
+  const { data } = await _sb.from('protocol_progress').select('*').eq('user_id', currentUser.id).single();
+  userData = data || {};
+  // Populate fields
+  const ob = userData.onboarding || {};
+  document.getElementById('settings-username').value = ob.username || '';
+  const wpns = ob.weaponry || ob.weapons || [];
+  ['knife','archery','firearm','hand_combat'].forEach(w => {
+    const cb = document.getElementById('wpn-' + w);
+    if (cb) cb.checked = wpns.includes(w);
+  });
+}
+
+async function saveSettings() {
+  const msg = document.getElementById('settings-msg');
+  const username = document.getElementById('settings-username').value.trim();
+  const weaponry = ['knife','archery','firearm','hand_combat'].filter(w => document.getElementById('wpn-' + w)?.checked);
+  const onboarding = { ...(userData?.onboarding || {}), username, weaponry };
+  const { error } = await _sb.from('protocol_progress').update({ onboarding }).eq('user_id', currentUser.id);
+  if (error) {
+    msg.style.color = '#8b3030';
+    msg.textContent = 'Failed to save. Try again.';
+  } else {
+    userData.onboarding = onboarding;
+    msg.style.color = 'var(--gold)';
+    msg.textContent = 'Saved successfully.';
+    setTimeout(() => msg.textContent = '', 3000);
+  }
+}
+
+async function doSignOut() {
+  await _sb.auth.signOut();
+  window.location.href = 'tracker.html';
+}
+
+if (window.supabase) {
+  initSB();
+} else {
+  document.addEventListener('DOMContentLoaded', initSB);
+}
+</script>
+</body>
+</html>
