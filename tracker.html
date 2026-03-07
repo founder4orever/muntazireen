@@ -1279,12 +1279,12 @@ async function saveData() {
 function renderAll() {
   // Guard: don't render if userData hasn't loaded
   if (!currentUser) return;
-  renderMindToday();
-  renderMindWeek();
-  renderBodyToday();
-  renderBodyWeek();
-  renderSurvivalToday();
-  renderSurvivalWeek();
+  try { renderMindToday(); } catch(e) { console.error('renderMindToday error:', e); }
+  try { renderMindWeek(); } catch(e) { console.error('renderMindWeek error:', e); }
+  try { renderBodyToday(); } catch(e) { console.error('renderBodyToday error:', e); }
+  try { renderBodyWeek(); } catch(e) { console.error('renderBodyWeek error:', e); }
+  try { renderSurvivalToday(); } catch(e) { console.error('renderSurvivalToday error:', e); }
+  try { renderSurvivalWeek(); } catch(e) { console.error('renderSurvivalWeek error:', e); }
 }
 
 // ════════════════════════════════════════════
