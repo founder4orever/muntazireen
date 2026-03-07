@@ -153,8 +153,7 @@ nav.innerHTML=`
         <a class="n-drop-link" href="tracker.html">Mind</a>
         <a class="n-drop-link" href="tracker.html">Body</a>
         <a class="n-drop-link" href="tracker.html">Survival</a>
-        <div class="n-drop-divider"></div>
-        <a class="n-drop-link" href="tracker.html">Development Phase</a>
+
       </div>
     </li>
     <li class="n-item">
@@ -248,7 +247,6 @@ function buildMobileMenu(user){
     <a class="n-mobile-link" href="tracker.html">Mind</a>
     <a class="n-mobile-link" href="tracker.html">Body</a>
     <a class="n-mobile-link" href="tracker.html">Survival</a>
-    <a class="n-mobile-link" href="tracker.html">Development Phase</a>
   ` : `<a class="n-mobile-link" href="tracker.html">Protocol Tracker</a>`;
 
   const accountLinks = user ? `
