@@ -473,7 +473,9 @@ const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 let _sb;
 function initSB() {
   if (window.supabase) {
-    _sb = window.supabase.createClient(SB_URL, SB_KEY);
+    _sb = window._sbInstance || window.supabase.createClient(SB_URL, SB_KEY);
+    window._sbInstance = _sb;
+    startAuthListener();
   } else {
     console.error('Supabase SDK not loaded');
   }
@@ -2111,15 +2113,14 @@ if (_forceSignIn) {
   document.getElementById('auth-screen').style.display = 'flex';
 }
 
-// Auth init
-_sb.auth.onAuthStateChange(async (event, session) => {
+// Auth init — called from initSB once _sb is ready
+function startAuthListener() {
+  _sb.auth.onAuthStateChange(async (event, session) => {
     if (event === 'INITIAL_SESSION') {
       if (session && session.user) {
-        // Already signed in — go straight to app, no auth screen flash
         currentUser = session.user;
         await loadUserData();
       } else {
-        // No session — show auth screen
         document.getElementById('auth-screen').style.display = 'flex';
       }
     } else if (event === 'SIGNED_IN') {
@@ -2134,7 +2135,8 @@ _sb.auth.onAuthStateChange(async (event, session) => {
       document.getElementById('onboarding-screen').style.display = 'none';
       document.getElementById('app-screen').style.display = 'none';
     }
-});
+  });
+}
 </script>
 <script src="nav.js"></script>
 </body>
