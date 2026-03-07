@@ -1101,38 +1101,26 @@ async function submitOnboarding() {
 // LOAD + ROUTE
 // ════════════════════════════════════════════
 async function loadUserData() {
+  // Show app immediately — don't block on DB
+  userData = {};
+  showApp();
+
+  // Load data in background and re-render when ready
   try {
-    const fetchPromise = _sb.from('protocol_progress').select('*').eq('user_id', currentUser.id).single();
-    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500));
-    
-    const { data, error } = await Promise.race([fetchPromise, timeoutPromise]).catch(() => ({ data: null, error: 'timeout' }));
-
-    if (error || !data) {
-      // Timeout or no record — show app anyway if user is authenticated
-      console.warn('DB fetch failed or timed out — showing app for authenticated user');
-      userData = {};
-      showApp();
-      return;
-    }
-
-    userData = data;
-
-    const effectivelyComplete = userData.onboarding_complete || 
-      (userData.onboarding && userData.onboarding.ayatul_kursi);
-
-    if (effectivelyComplete) {
-      if (!userData.onboarding_complete) {
+    const { data, error } = await _sb.from('protocol_progress').select('*').eq('user_id', currentUser.id).single();
+    if (!error && data) {
+      userData = data;
+      renderAll();
+      // Repair onboarding flag silently if needed
+      if (!userData.onboarding_complete && userData.onboarding && userData.onboarding.ayatul_kursi) {
         userData.onboarding_complete = true;
         _sb.from('protocol_progress').update({ onboarding_complete: true }).eq('user_id', currentUser.id);
       }
-      showApp();
     } else {
-      showOnboarding();
+      await ensureUserRecord();
     }
   } catch(e) {
-    console.error('loadUserData error:', e);
-    userData = {};
-    showApp();
+    console.error('loadUserData background fetch error:', e);
   }
 }
 
