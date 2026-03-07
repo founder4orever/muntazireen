@@ -2155,14 +2155,6 @@ function getMissedSurvTasks(currentWeek) {
 // ════════════════════════════════════════════
 // TAB SWITCHING
 // ════════════════════════════════════════════
-function switchPillar(pillar) {
-  document.querySelectorAll('.pillar-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.pillar-panel').forEach(p => p.classList.remove('active'));
-  const btn = document.querySelector(`.pillar-tab.${pillar === 'survival' ? 'surv' : pillar}`);
-  if (btn) btn.classList.add('active');
-  const panel = document.getElementById(`panel-${pillar}`);
-  if (panel) panel.classList.add('active');
-}
 
 function switchSub(pillar, view, btn) {
   const panel = document.getElementById(`panel-${pillar}`);
