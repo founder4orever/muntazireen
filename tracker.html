@@ -457,8 +457,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 // ════════════════════════════════════════════
 const SB_URL = 'https://ulsbuqsjsssqflydwylm.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsc2J1cXNqc3NzcWZseWR3eWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTAxNTYsImV4cCI6MjA4ODI2NjE1Nn0.EIJVQBN9bkufyroUDE1Va8zExBKbEH9CegBOIGauRfs';
-if (!window._muntSB) { window._muntSB = window.supabase.createClient(SB_URL, SB_KEY); }
-const supabase = window._muntSB;
+const supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
 // ════════════════════════════════════════════
 // STATE
