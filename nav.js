@@ -150,11 +150,11 @@ nav.innerHTML=`
     <li class="n-item" id="nav-protocol">
       <button class="n-link" onclick="mtNavToggle('nav-protocol')">Protocol <span class="n-caret">▾</span></button>
       <div class="n-drop" id="protocol-drop">
-        <a class="n-drop-link" href="tracker.html#mind">Mind</a>
-        <a class="n-drop-link" href="tracker.html#body">Body</a>
-        <a class="n-drop-link" href="tracker.html#survival">Survival</a>
+        <a class="n-drop-link" href="tracker.html">Mind</a>
+        <a class="n-drop-link" href="tracker.html">Body</a>
+        <a class="n-drop-link" href="tracker.html">Survival</a>
         <div class="n-drop-divider"></div>
-        <a class="n-drop-link" href="tracker.html" id="nav-dev-phase">Development Phase</a>
+        <a class="n-drop-link" href="tracker.html">Development Phase</a>
       </div>
     </li>
     <li class="n-item">
@@ -245,9 +245,9 @@ function buildAccountDrop(user){
 function buildMobileMenu(user){
   const menu=document.getElementById('nav-mobile-menu');
   const authedProtocol = user ? `
-    <a class="n-mobile-link" href="tracker.html#mind">Mind</a>
-    <a class="n-mobile-link" href="tracker.html#body">Body</a>
-    <a class="n-mobile-link" href="tracker.html#survival">Survival</a>
+    <a class="n-mobile-link" href="tracker.html">Mind</a>
+    <a class="n-mobile-link" href="tracker.html">Body</a>
+    <a class="n-mobile-link" href="tracker.html">Survival</a>
     <a class="n-mobile-link" href="tracker.html">Development Phase</a>
   ` : `<a class="n-mobile-link" href="tracker.html">Protocol Tracker</a>`;
 
