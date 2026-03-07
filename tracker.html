@@ -456,7 +456,12 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 // ════════════════════════════════════════════
 const SB_URL = 'https://ulsbuqsjsssqflydwylm.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsc2J1cXNqc3NzcWZseWR3eWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTAxNTYsImV4cCI6MjA4ODI2NjE1Nn0.EIJVQBN9bkufyroUDE1Va8zExBKbEH9CegBOIGauRfs';
-const supabase = window.supabase.createClient(SB_URL, SB_KEY);
+let supabase;
+try {
+  supabase = window.supabase.createClient(SB_URL, SB_KEY);
+} catch(e) {
+  console.error('Supabase init failed:', e);
+}
 
 // ════════════════════════════════════════════
 // STATE
@@ -1812,18 +1817,31 @@ function switchSub(pillar, view, btn) {
 // ════════════════════════════════════════════
 // AUTH OBSERVER
 // ════════════════════════════════════════════
-supabase.auth.onAuthStateChange(async (event, session) => {
-  if (event === 'INITIAL_SESSION' && session) {
-    currentUser = session.user;
-    await loadUserData();
-  } else if (event === 'SIGNED_OUT') {
-    currentUser = null;
-    userData = {};
-    document.getElementById('auth-screen').style.display = '';
-    document.getElementById('onboarding-screen').style.display = 'none';
-    document.getElementById('app-screen').style.display = 'none';
-  }
-});
+// Auth init - wrapped in try/catch so any error doesn't kill the page
+try {
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'INITIAL_SESSION') {
+      if (session && session.user) {
+        currentUser = session.user;
+        await loadUserData();
+      }
+      // No session - auth screen already visible, do nothing
+    } else if (event === 'SIGNED_IN') {
+      if (session && session.user) {
+        currentUser = session.user;
+        await loadUserData();
+      }
+    } else if (event === 'SIGNED_OUT') {
+      currentUser = null;
+      userData = {};
+      document.getElementById('auth-screen').style.display = 'flex';
+      document.getElementById('onboarding-screen').style.display = 'none';
+      document.getElementById('app-screen').style.display = 'none';
+    }
+  });
+} catch(e) {
+  console.error('Auth init error:', e);
+}
 </script>
 <script src="nav.js"></script>
 </body>
