@@ -53,7 +53,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .auth-input::placeholder{color:var(--dim);}
 .auth-pw-wrap{position:relative;}
 .auth-pw-wrap .auth-input{padding-right:44px;}
-.pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--dim);cursor:pointer;font-size:14px;padding:4px;transition:color 0.3s;line-height:1;}
+.pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--dim);cursor:pointer;padding:4px;transition:color 0.3s;line-height:0;display:flex;align-items:center;}
 .pw-toggle:hover{color:var(--sand);}
 .auth-btn{width:100%;background:var(--gold);color:var(--void);font-family:var(--font-mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;border:none;padding:14px;cursor:pointer;transition:background 0.3s;margin-top:8px;}
 .auth-btn:hover{background:var(--gold-bright);}
@@ -342,14 +342,14 @@ footer{border-top:1px solid var(--border);padding:22px 48px;display:flex;justify
     <div class="auth-body">
       <div id="form-signin">
         <div class="auth-field"><label class="auth-label">Email</label><input class="auth-input" type="email" id="si-email" placeholder="your@email.com"></div>
-        <div class="auth-field"><label class="auth-label">Password</label><div class="auth-pw-wrap"><input class="auth-input" type="password" id="si-password" placeholder="••••••••"><button class="pw-toggle" onclick="togglePw('si-password',this)" tabindex="-1">👁</button></div></div>
+        <div class="auth-field"><label class="auth-label">Password</label><div class="auth-pw-wrap"><input class="auth-input" type="password" id="si-password" placeholder="••••••••"><button class="pw-toggle" onclick="togglePw('si-password',this)" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
         <button class="auth-btn" id="signin-btn" onclick="signIn()">Enter</button>
         <div class="auth-message" id="signin-msg"></div>
       </div>
       <div id="form-signup" style="display:none;">
         <div class="auth-field"><label class="auth-label">Username</label><input class="auth-input" type="text" id="su-username" placeholder="Choose a username" maxlength="30"></div>
         <div class="auth-field"><label class="auth-label">Email</label><input class="auth-input" type="email" id="su-email" placeholder="your@email.com"></div>
-        <div class="auth-field"><label class="auth-label">Password (min 8 characters)</label><div class="auth-pw-wrap"><input class="auth-input" type="password" id="su-password" placeholder="••••••••"><button class="pw-toggle" onclick="togglePw('su-password',this)" tabindex="-1">👁</button></div></div>
+        <div class="auth-field"><label class="auth-label">Password (min 8 characters)</label><div class="auth-pw-wrap"><input class="auth-input" type="password" id="su-password" placeholder="••••••••"><button class="pw-toggle" onclick="togglePw('su-password',this)" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
         <button class="auth-btn" id="signup-btn" onclick="signUp()">Begin the Protocol</button>
         <div class="auth-message" id="signup-msg"></div>
         <div class="auth-note">Free. No credit card. No conditions.<br>Progress saved across all your devices.</div>
@@ -722,10 +722,12 @@ async function signIn(){
   if(error){msg.textContent=error.message;msg.className='auth-message error';btn.disabled=false;btn.textContent='Enter';}
 }
 
+const EYE_OPEN=`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+const EYE_CLOSED=`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
 function togglePw(id,btn){
   const inp=document.getElementById(id);
-  if(inp.type==='password'){inp.type='text';btn.textContent='🙈';}
-  else{inp.type='password';btn.textContent='👁';}
+  if(inp.type==='password'){inp.type='text';btn.innerHTML=EYE_CLOSED;}
+  else{inp.type='password';btn.innerHTML=EYE_OPEN;}
 }
 
 async function signUp(){
@@ -744,8 +746,19 @@ async function signUp(){
     password:pass,
     options:{data:{username}}
   });
-  if(error){msg.textContent=error.message;msg.className='auth-message error';btn.disabled=false;btn.textContent='Begin the Protocol';}
-  else{msg.textContent='Account created. Check your email to confirm, then sign in.';msg.className='auth-message success';btn.disabled=false;btn.textContent='Begin the Protocol';}
+  if(error){
+    msg.textContent=error.message;msg.className='auth-message error';
+    btn.disabled=false;btn.textContent='Begin the Protocol';
+  } else if(data.session){
+    // Email confirmation disabled — user is immediately signed in
+    // onAuthStateChange will fire and handle the rest
+    msg.textContent='';
+  } else {
+    // Email confirmation enabled — prompt to check email
+    msg.textContent='Account created. Check your email to confirm, then sign in.';
+    msg.className='auth-message success';
+    btn.disabled=false;btn.textContent='Begin the Protocol';
+  }
 }
 
 async function signOut(){
