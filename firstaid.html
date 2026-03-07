@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>First Aid Course — Muntazireen</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☪️</text></svg>">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3"></script>
+  <script src="nav.js"></script>
+  <style>
+    :root {
+      --bg: #080807; --cream: #e8dfc8; --gold: #c8a96e; --muted: #6b6558;
+      --dim: #4a463e; --border: #1e1c18; --card: #0e0d0b; --red: #8b3030;
+      --green: #3a6b3a; --font-sans: 'Georgia', serif; --font-mono: 'Courier New', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--cream); font-family: var(--font-sans); min-height: 100vh; }
+
+    /* AUTH WALL */
+    .auth-wall { display: flex; align-items: center; justify-content: center; min-height: 80vh; flex-direction: column; gap: 16px; text-align: center; }
+    .auth-wall p { color: var(--muted); font-family: var(--font-mono); font-size: 12px; }
+    .auth-wall a { color: var(--gold); text-decoration: none; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; border: 1px solid var(--gold); padding: 10px 24px; }
+
+    /* LAYOUT */
+    .course-wrap { max-width: 860px; margin: 0 auto; padding: 90px 32px 120px; }
+    .course-header { margin-bottom: 56px; }
+    .course-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .course-title { font-size: 48px; font-weight: 300; color: var(--cream); line-height: 1.1; margin-bottom: 8px; }
+    .course-title em { color: var(--gold); font-style: italic; }
+    .course-sub { color: var(--muted); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; margin-bottom: 32px; }
+    .course-progress-bar { height: 2px; background: var(--border); margin-bottom: 8px; }
+    .course-progress-fill { height: 100%; background: var(--gold); transition: width 0.5s; }
+    .course-progress-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); letter-spacing: 0.15em; }
+
+    /* SESSION LIST */
+    .session-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 48px; }
+    .session-row { display: flex; align-items: center; gap: 16px; padding: 16px 20px; border: 1px solid var(--border); background: var(--card); cursor: pointer; transition: border-color 0.2s; }
+    .session-row:hover:not(.locked) { border-color: var(--dim); }
+    .session-row.locked { opacity: 0.4; cursor: not-allowed; }
+    .session-row.completed { border-color: var(--green); }
+    .session-row.active { border-color: var(--gold); }
+    .session-num { font-family: var(--font-mono); font-size: 9px; color: var(--muted); letter-spacing: 0.2em; min-width: 28px; }
+    .session-info { flex: 1; }
+    .session-name { font-size: 13px; color: var(--cream); margin-bottom: 3px; }
+    .session-week { font-family: var(--font-mono); font-size: 9px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .session-status { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; }
+    .session-status.done { color: var(--green); }
+    .session-status.locked { color: var(--dim); }
+    .session-status.available { color: var(--gold); }
+    .session-status.lockout { color: var(--red); }
+
+    /* SESSION CONTENT */
+    .session-content { display: none; }
+    .session-content.active { display: block; }
+    .back-btn { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 32px; display: flex; align-items: center; gap: 8px; }
+    .back-btn:hover { color: var(--cream); }
+    .s-header { margin-bottom: 40px; }
+    .s-week-tag { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .s-title { font-size: 36px; font-weight: 300; color: var(--cream); margin-bottom: 6px; }
+    .s-desc { color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+    /* CONTENT CARDS */
+    .content-section { margin-bottom: 40px; }
+    .content-section-head { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .content-card { background: var(--card); border: 1px solid var(--border); padding: 24px 28px; margin-bottom: 12px; }
+    .content-card h3 { font-size: 14px; font-weight: normal; color: var(--gold); margin-bottom: 12px; font-family: var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; font-size: 10px; }
+    .content-card p { color: var(--cream); font-size: 14px; line-height: 1.8; margin-bottom: 10px; }
+    .content-card p:last-child { margin-bottom: 0; }
+    .content-card ul { padding-left: 20px; }
+    .content-card ul li { color: var(--cream); font-size: 14px; line-height: 1.8; margin-bottom: 6px; }
+    .warning-card { background: rgba(139,48,48,0.08); border-color: rgba(139,48,48,0.3); }
+    .warning-card h3 { color: var(--red); }
+    .drill-card { background: rgba(200,169,110,0.05); border-color: rgba(200,169,110,0.2); }
+    .drill-card h3 { color: var(--gold); }
+
+    /* QUIZ */
+    .quiz-section { margin-top: 48px; }
+    .quiz-head { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+    .quiz-intro { color: var(--muted); font-size: 12px; font-family: var(--font-mono); margin-bottom: 28px; }
+    .quiz-intro span { color: var(--gold); }
+    .question-block { background: var(--card); border: 1px solid var(--border); padding: 24px 28px; margin-bottom: 12px; }
+    .q-text { font-size: 14px; color: var(--cream); margin-bottom: 18px; line-height: 1.6; }
+    .q-num { font-family: var(--font-mono); font-size: 9px; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 8px; }
+    .options { display: flex; flex-direction: column; gap: 8px; }
+    .option { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; padding: 10px 14px; border: 1px solid var(--border); transition: border-color 0.15s; }
+    .option:hover { border-color: var(--dim); }
+    .option.selected { border-color: var(--gold); }
+    .option.correct { border-color: var(--green); background: rgba(58,107,58,0.08); }
+    .option.wrong { border-color: var(--red); background: rgba(139,48,48,0.08); }
+    .option-marker { font-family: var(--font-mono); font-size: 10px; color: var(--muted); min-width: 20px; padding-top: 1px; }
+    .option-text { font-size: 13px; color: var(--cream); line-height: 1.5; }
+    .tf-options { display: flex; gap: 12px; }
+    .tf-btn { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; padding: 10px 28px; border: 1px solid var(--border); background: none; color: var(--cream); cursor: pointer; transition: border-color 0.15s; }
+    .tf-btn:hover { border-color: var(--dim); }
+    .tf-btn.selected { border-color: var(--gold); color: var(--gold); }
+    .tf-btn.correct { border-color: var(--green); color: var(--green); }
+    .tf-btn.wrong { border-color: var(--red); color: var(--red); }
+
+    .quiz-submit { margin-top: 28px; }
+    .btn-gold { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; background: var(--gold); border: none; color: #0d0c0a; padding: 14px 36px; cursor: pointer; font-weight: 700; }
+    .btn-gold:disabled { opacity: 0.4; cursor: not-allowed; }
+    .quiz-result { margin-top: 24px; padding: 20px 24px; border: 1px solid var(--border); font-family: var(--font-mono); font-size: 12px; display: none; }
+    .quiz-result.pass { border-color: var(--green); color: var(--green); }
+    .quiz-result.fail { border-color: var(--red); color: var(--red); }
+    .quiz-result.lockout { border-color: var(--red); color: var(--red); }
+
+    .complete-banner { background: rgba(58,107,58,0.1); border: 1px solid var(--green); padding: 20px 24px; margin-top: 32px; font-family: var(--font-mono); font-size: 11px; color: var(--green); letter-spacing: 0.1em; display: none; }
+
+    .lockout-banner { background: rgba(139,48,48,0.08); border: 1px solid var(--red); padding: 20px 24px; font-family: var(--font-mono); font-size: 11px; color: var(--red); letter-spacing: 0.05em; margin-bottom: 24px; display: none; }
+  </style>
+</head>
+<body>
+
+<div id="auth-wall" class="auth-wall" style="display:none;">
+  <p>You must be signed in to access the First Aid Course.</p>
+  <a href="tracker.html">Sign In</a>
+</div>
+
+<div id="course-wrap" class="course-wrap" style="display:none;">
+
+  <!-- COURSE INDEX -->
+  <div id="course-index">
+    <div class="course-header">
+      <div class="course-label">Survival — Training</div>
+      <h1 class="course-title">Field First Aid<br><em>Course</em></h1>
+      <p class="course-sub">6 sessions · Weeks 3–5 · Pass 80% to advance · 24hr lockout on failure</p>
+      <div class="course-progress-bar"><div class="course-progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="course-progress-label" id="progress-label">0 / 6 sessions complete</div>
+    </div>
+    <div class="session-list" id="session-list"></div>
+  </div>
+
+  <!-- SESSION VIEW (injected dynamically) -->
+  <div id="session-view" class="session-content"></div>
+
+</div>
+
+<script>
+const SB_URL = 'https://ulsbuqsjsssqflydwylm.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsc2J1cXNqc3NzcWZseWR3eWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTAxNTYsImV4cCI6MjA4ODI2NjE1Nn0.EIJVQBN9bkufyroUDE1Va8zExBKbEH9CegBOIGauRfs';
+
+let _sb, currentUser, faProgress = {};
+
+// ═══════════════════════════════════════════
+// COURSE DATA
+// ═══════════════════════════════════════════
+const SESSIONS = [
+  {
+    id: 's1',
+    title: 'Bleeding Control',
+    week: 'Week 3',
+    desc: 'Uncontrolled bleeding is the leading preventable cause of death in trauma. This session covers wound assessment, direct pressure, wound packing, and tourniquet application — the skills most likely to save a life.',
+    content: [
+      {
+        type: 'standard',
+        heading: 'Understanding Blood Loss',
+        body: `<p>The human body contains approximately 4.7–5.5 litres of blood. Losing 20% (around 1 litre) triggers hemorrhagic shock. Losing 40% is fatal without immediate intervention.</p>
+        <p>You have minutes — sometimes seconds — to act. Your job is not to diagnose. Your job is to stop the bleeding.</p>
+        <ul>
+          <li><strong>Arterial bleeding</strong> — bright red, spurting with heartbeat. Most dangerous. Requires tourniquet or aggressive packing.</li>
+          <li><strong>Venous bleeding</strong> — dark red, steady flow. Controlled with firm direct pressure.</li>
+          <li><strong>Capillary bleeding</strong> — slow ooze. Minor. Clean and dress the wound.</li>
+        </ul>`
+      },
+      {
+        type: 'standard',
+        heading: 'Direct Pressure',
+        body: `<p>For all wounds that are not on a limb — chest, neck, abdomen, groin, armpit — direct pressure is your primary tool.</p>
+        <ul>
+          <li>Apply firm, continuous pressure with a clean cloth, dressing, or your bare hands if nothing else is available.</li>
+          <li>Do not remove the dressing to check the wound — this disrupts clotting. Add more material on top.</li>
+          <li>Maintain pressure for a minimum of <strong>10 minutes</strong> without releasing. Set a timer if needed.</li>
+          <li>Elevate the limb above heart level if possible and no fracture is suspected.</li>
+        </ul>`
+      },
+      {
+        type: 'standard',
+        heading: 'Wound Packing',
+        body: `<p>Deep wounds that cannot be controlled with surface pressure require packing. This is used for gunshot wounds, stab wounds, and blast injuries — especially in the groin, armpit, and neck where tourniquets cannot be applied.</p>
+        <ul>
+          <li>Use hemostatic gauze (QuikClot, Combat Gauze) if available. Standard gauze if not.</li>
+          <li>Pack the gauze <strong>directly into the wound cavity</strong> — do not drape it over the surface.</li>
+          <li>Use your fingers or a tool to push the gauze deep, filling the space completely.</li>
+          <li>Apply firm direct pressure over the packed wound for 3 minutes minimum (10 minutes for standard gauze).</li>
+          <li>Do not remove packing in the field. Get the casualty to medical care.</li>
+        </ul>`
+      },
+      {
+        type: 'standard',
+        heading: 'Tourniquet Application',
+        body: `<p>A tourniquet stops life-threatening limb bleeding by cutting off blood flow entirely. It is painful. It may cause tissue damage if left too long. Use it when direct pressure fails or the wound is too severe for pressure alone.</p>
+        <ul>
+          <li>Apply 5–7 cm above the wound — never over a joint.</li>
+          <li>Tighten the windlass until bleeding stops. This will cause pain. Do not stop tightening because of the casualty's reaction.</li>
+          <li>Secure the windlass rod. Note the time of application on the tourniquet or the casualty's forehead with a marker.</li>
+          <li><strong>A tourniquet in place for under 2 hours rarely causes permanent damage.</strong> Do not loosen it in the field.</li>
+          <li>If one tourniquet does not stop bleeding, apply a second one proximal (closer to the body) to the first.</li>
+        </ul>`
+      },
+      {
+        type: 'warning',
+        heading: 'Critical Rules — Never Forget',
+        body: `<ul>
+          <li>Never remove a tourniquet once applied. Only trained medical personnel should remove it.</li>
+          <li>Never pack a wound in the chest — this can cause tension pneumothorax. Cover chest wounds with a chest seal.</li>
+          <li>Improvised tourniquets (belts, shoelaces) are a last resort. They often fail and damage tissue without stopping bleeding. Use a proper CAT or SOFT-T.</li>
+        </ul>`
+      },
+      {
+        type: 'drill',
+        heading: 'Practical Drill',
+        body: `<p><strong>Tourniquet speed drill.</strong> Required: your CAT or SOFT-T tourniquet.</p>
+        <ul>
+          <li>Practice applying the tourniquet to your own thigh.</li>
+          <li>Target: application in under 60 seconds, one-handed.</li>
+          <li>Perform 5 repetitions. Rest between each.</li>
+          <li>You should be able to apply it in the dark, under stress, with one hand.</li>
+        </ul>`
+      }
+    ],
+    quiz: [
+      { type: 'mcq', q: 'At what percentage of blood loss does hemorrhagic shock typically begin?', options: ['10%', '20%', '35%', '50%'], answer: 1 },
+      { type: 'mcq', q: 'When applying direct pressure to a wound, you should:', options: ['Remove the dressing every 2 minutes to check clotting progress', 'Apply pressure for at least 10 minutes without releasing', 'Use only sterile medical gauze — never bare hands', 'Apply light pressure to avoid disturbing the clot'], answer: 1 },
+      { type: 'tf', q: 'A tourniquet applied for under 2 hours rarely causes permanent tissue damage.', answer: true },
+      { type: 'mcq', q: 'Where should a tourniquet be applied on a bleeding limb?', options: ['Directly over the wound', '5–7 cm below the wound', '5–7 cm above the wound', 'Over the nearest joint'], answer: 2 },
+      { type: 'tf', q: 'If one tourniquet does not stop bleeding, you should remove it and apply firmer pressure instead.', answer: false },
+      { type: 'mcq', q: 'Wound packing is most appropriate for wounds in which locations?', options: ['Chest wounds — any depth', 'Groin, armpit, and neck where tourniquets cannot be applied', 'Shallow lacerations on the forearm', 'Head wounds only'], answer: 1 },
+      { type: 'tf', q: 'You should pack a chest wound with gauze to control bleeding.', answer: false },
+      { type: 'mcq', q: 'What distinguishes arterial bleeding from venous bleeding?', options: ['Arterial blood is dark red and flows steadily', 'Arterial bleeding produces a slow ooze from the surface', 'Arterial blood is bright red and spurts with each heartbeat', 'There is no meaningful difference in the field'], answer: 2 }
+    ]
+  },
+  {
+    id: 's2',
+    title: 'Airway & Breathing',
+    week: 'Week 3',
+    desc: 'A blocked airway kills in minutes. An unconscious person can die from their own tongue. This session covers airway management, choking response, the recovery position, and recognising respiratory failure.',
+    content: [
+      {
+        type: 'standard',
+        heading: 'Airway Anatomy — What You Need to Know',
+        body: `<p>The airway is the path air takes from the mouth and nose to the lungs. In an unconscious person, the muscles of the throat relax, causing the tongue to fall back and block the airway. This is the most common airway emergency you will face.</p>
+        <p>Signs of an obstructed airway: no chest rise, no breath sounds, bluish colour to lips and fingertips (cyanosis), gurgling or snoring sounds (partial block), silent struggling.</p>`
+      },
+      {
+        type: 'standard',
+        heading: 'Opening the Airway — Head Tilt / Chin Lift',
+        body: `<p>For an unconscious casualty with no suspected spinal injury:</p>
+        <ul>
+          <li>Place one hand on the forehead and tilt the head back.</li>
+          <li>Place two fingers under the bony part of the chin and lift.</li>
+          <li>This moves the tongue forward and opens the airway.</li>
+          <li>Look, listen, and feel for breathing for no more than 10 seconds.</li>
+        </ul>
+        <p>If spinal injury is suspected, use the <strong>jaw thrust</strong> instead: place fingers behind the angle of the jaw and push the jaw forward without moving the head.</p>`
+      },
+      {
+        type: 'standard',
+        heading: 'Choking — Conscious Adult',
+        body: `<ul>
+          <li>Ask: "Are you choking?" If they cannot speak, cough, or breathe, act immediately.</li>
+          <li>Give 5 firm back blows between the shoulder blades with the heel of your hand. Lean them forward first.</li>
+          <li>If back blows fail: 5 abdominal thrusts (Heimlich manoeuvre). Stand behind, hands clasped below the ribcage, thrust inward and upward.</li>
+          <li>Alternate 5 back blows and 5 abdominal thrusts until the object clears or the person loses consciousness.</li>
+          <li>If they lose consciousness, begin CPR — chest compressions may dislodge the object.</li>
+        </ul>`
+      },
+      {
+        type: 'standard',
+        heading: 'Recovery Position',
+        body: `<p>Use for any unconscious person who is breathing but does not need CPR. It prevents the airway from being blocked by the tongue or vomit.</p>
+        <ul>
+          <li>Kneel beside the casualty. Extend the arm nearest to you at a right angle, elbow bent, palm facing up.</li>
+          <li>Bring the far arm across the chest and hold the back of the hand against the near cheek.</li>
+          <li>With your other hand, pull up the far knee so the foot is flat on the ground.</li>
+          <li>Keeping the hand against the cheek, pull the far knee toward you to roll them onto their side.</li>
+          <li>Tilt the head back slightly to keep the airway open. The top knee should prevent them from rolling forward.</li>
+          <li>Monitor breathing constantly. If breathing stops, begin CPR.</li>
+        </ul>`
+      },
+      {
+        type: 'standard',
+        heading: 'Basic CPR',
+        body: `<p>CPR keeps oxygenated blood circulating when the heart has stopped. It does not restart the heart — it buys time.</p>
+        <ul>
+          <li>Ensure the scene is safe. Call for help.</li>
+          <li>Check for responsiveness. If no response and not breathing normally: begin CPR.</li>
+          <li><strong>30 chest compressions</strong>: heel of hand on centre of chest, arms straight, compress 5–6 cm, rate of 100–120 per minute.</li>
+          <li><strong>2 rescue breaths</strong>: head tilt-chin lift, pinch the nose, seal your lips over their mouth, breathe for 1 second and watch the chest rise. If you are unwilling or unable to give rescue breaths, continue compressions only — this is still effective.</li>
+          <li>Continue 30:2 until the person recovers, professional help arrives, or you are physically unable to continue.</li>
+        </ul>`
+      },
+      {
+        type: 'warning',
+        heading: 'Critical Rules',
+        body: `<ul>
+          <li>Never perform abdominal thrusts on infants under 1 year or pregnant women — use back blows and chest thrusts.</li>
+          <li>Do not stop CPR to check for a pulse more than every 2 minutes.</li>
+          <li>Agonal breathing (infrequent, gasping breaths) after cardiac arrest is NOT normal breathing. Begin CPR.</li>
+        </ul>`
+      },
+      {
+        type: 'drill',
+        heading: 'Practical Drill',
+        body: `<p><strong>Recovery position drill.</strong> No equipment needed — practice on a willing person or a floor mat.</p>
+        <ul>
+          <li>Practice placing a person in the recovery position from scratch.</li>
+          <li>Perform 3 repetitions on each side.</li>
+          <li>Verbally narrate each step as you do it — this builds muscle memory and ensures you remember the sequence under stress.</li>
+        </ul>`
+      }
+    ],
+    quiz: [
+      { type: 'mcq', q: 'In an unconscious person, what most commonly blocks the airway?', options: ['Vomit', 'The tongue falling back', 'Swelling of the throat', 'Foreign objects'], answer: 1 },
+      { type: 'tf', q: 'You should check for a pulse for at least 30 seconds before deciding to begin CPR.', answer: false },
+      { type: 'mcq', q: 'What is the correct compression-to-breath ratio for adult CPR?', options: ['15 compressions : 1 breath', '30 compressions : 2 breaths', '5 compressions : 1 breath', '20 compressions : 2 breaths'], answer: 1 },
+      { type: 'mcq', q: 'When performing chest compressions, what is the correct depth?', options: ['1–2 cm', '3–4 cm', '5–6 cm', '7–8 cm'], answer: 2 },
+      { type: 'tf', q: 'Agonal breathing — infrequent, gasping breaths — after cardiac arrest means the person is breathing adequately and CPR is not needed.', answer: false },
+      { type: 'mcq', q: 'If abdominal thrusts (Heimlich) fail to clear a choking adult, you should:', options: ['Attempt to reach into the mouth and sweep the object out blindly', 'Continue alternating 5 back blows and 5 abdominal thrusts', 'Lay them flat and press on the abdomen', 'Begin rescue breathing immediately'], answer: 1 },
+      { type: 'tf', q: 'Compression-only CPR (no rescue breaths) is still effective and acceptable if the rescuer is unable to give breaths.', answer: true },
+      { type: 'mcq', q: 'The recovery position is used for:', options: ['Conscious casualties with severe chest pain', 'Unconscious casualties who are breathing normally', 'Casualties in cardiac arrest', 'Casualties with suspected spinal injury only'], answer: 1 }
+    ]
+  },
+  {
+    id: 's3',
+    title: 'Shock & Burns',
+    week: 'Week 4',
+    desc: 'Shock is a life-threatening state where the body fails to deliver enough oxygen to vital organs. Burns cause rapid fluid loss, infection, and systemic shock. Both require immediate recognition and intervention.',
+    content: [
+      {
+        type: 'standard',
+        heading: 'Recognising Shock',
+        body: `<p>Shock is not just low blood pressure — it is the body's failing attempt to compensate for inadequate circulation. By the time blood pressure drops significantly, the patient is already critically compromised.</p>
+        <p><strong>Early signs (compensated shock):</strong></p>
+        <ul>
+          <li>Rapid, weak pulse (over 100 bpm)</li>
+          <li>Pale, cool, clammy skin</li>
+          <li>Rapid breathing</li>
+          <li>Anxiety, restlessness, confusion</li>
+          <li>Thirst</li>
+        </ul>
+        <p><strong>Late signs (decompensated — critical):</strong></p>
+        <ul>
+          <li>Falling blood pressure</li>
+          <li>Grey or bluish skin</li>
+          <li>Loss of consciousness</li>
+          <li>Absent radial pulse</li>
+        </ul>`
+      },
+      {
+        type: 'standard',
+        heading: 'Managing Hypovolemic Shock',
+        body: `<p>Hypovolemic shock is caused by blood or fluid loss — the most common type you will encounter in a trauma scenario.</p>
+        <ul>
+          <li><strong>Stop the bleeding first.</strong> All other interventions are secondary until haemorrhage is controlled.</li>
+          <li>Lay the casualty flat. Elevate the legs 15–30 cm if no spinal injury is suspected — this returns blood to the core organs.</li>
+          <li>Keep the casualty warm. Hypothermia worsens coagulopathy (the ability of blood to clot).</li>
+          <li>Do not give fluids by mouth — they may vomit and aspirate. The body needs blood volume, not water volume.</li>
+          <li>Monitor and reassure. Panic increases heart rate and accelerates blood loss.</li>
+        </ul>`
+      },
+      {
+        type: 'standard',
+        heading: 'Burns — Classification',
+        body: `<p>Burn severity is classified by depth and total body surface area (TBSA) affected.</p>
+        <ul>
+          <li><strong>Superficial (1st degree)</strong> — red, painful, dry skin. No blistering. Sunburn. Treat with cool water and monitor.</li>
+          <li><strong>Partial thickness (2nd degree)</strong> — blistered, wet, intensely painful. Risk of infection. Requires proper wound care.</li>
+          <li><strong>Full thickness (3rd degree)</strong> — white, leathery, or charred. Often painless because nerve endings are destroyed. Always requires hospital care.</li>
+        </ul>
+        <p><strong>Rule of Nines</strong> (estimating TBSA): head = 9%, each arm = 9%, each leg = 18%, chest front = 18%, chest back = 18%, genitals = 1%. Burns over 20% TBSA in adults require IV fluids and hospitalisation.</p>`
+      },
+      {
+        type: 'standard',
+        heading: 'Burns — Treatment',
+        body: `<ul>
+          <li>Remove the casualty from the source. Remove burning or chemically contaminated clothing — cut it off, do not pull over the head.</li>
+          <li>Cool the burn with cool (not cold/ice) running water for a minimum of 20 minutes. This reduces tissue damage and pain.</li>
+          <li>Do not apply ice, butter, toothpaste, or any home remedies — they cause further damage and increase infection risk.</li>
+          <li>Cover with a clean, non-fluffy, non-stick dressing or cling film. Do not burst blisters.</li>
+          <li>Treat for shock: lay flat, keep warm (except the burned area), monitor breathing.</li>
+          <li>Chemical burns: remove contaminated clothing, irrigate with large volumes of water for 20+ minutes. Do not try to neutralise acid with alkali.</li>
+        </ul>`
+      },
+      {
+        type: 'warning',
+        heading: 'Critical Rules',
+        body: `<ul>
+          <li>Never elevate legs in a casualty with chest injuries, breathing difficulty, or suspected spinal injury.</li>
+          <li>Do not give anything by mouth to a casualty in shock.</li>
+          <li>Burns to the face, hands, feet, genitals, or crossing joints are high-priority — always require medical care.</li>
+          <li>Inhalation injury (breathing smoke or hot gases) is life-threatening — hoarse voice, singed nasal hair, or sooty sputum are warning signs. Airway can swell shut within hours.</li>
+        </ul>`
+      },
+      {
+        type: 'drill',
+        heading: 'Practical Drill',
+        body: `<p><strong>Shock assessment drill.</strong> Practice on a training partner or family member.</p>
+        <ul>
+          <li>Check pulse rate and quality at the wrist (radial) and neck (carotid) — note difference.</li>
+          <li>Assess skin colour, temperature, and moisture.</li>
+          <li>Practice the shock position: lay flat, elevate legs.</li>
+          <li>Practice insulating a casualty with available materials (blanket, sleeping bag, clothing layers).</li>
+        </ul>`
+      }
+    ],
+    quiz: [
+      { type: 'mcq', q: 'What is the first priority when treating a casualty in hypovolemic shock?', options: ['Elevate the legs immediately', 'Give oral fluids to replace lost blood volume', 'Stop the bleeding', 'Keep them warm'], answer: 2 },
+      { type: 'tf', q: 'You should apply ice directly to a burn to cool it as quickly as possible.', answer: false },
+      { type: 'mcq', q: 'Early signs of shock include:', options: ['Falling blood pressure and grey skin', 'Rapid weak pulse, pale clammy skin, anxiety', 'Loss of consciousness and absent radial pulse', 'Slow breathing and flushed warm skin'], answer: 1 },
+      { type: 'mcq', q: 'How long should a burn be cooled with running water?', options: ['2 minutes', '5 minutes', '10 minutes', 'Minimum 20 minutes'], answer: 3 },
+      { type: 'tf', q: 'A full thickness (3rd degree) burn is often painless because nerve endings have been destroyed.', answer: true },
+      { type: 'mcq', q: 'Using the Rule of Nines, what percentage of Total Body Surface Area (TBSA) does each leg represent?', options: ['9%', '18%', '27%', '36%'], answer: 1 },
+      { type: 'tf', q: 'You should neutralise an acid chemical burn by applying an alkali (such as baking soda) to the skin.', answer: false },
+      { type: 'mcq', q: 'Which of the following is a warning sign of inhalation injury?', options: ['Redness around the mouth', 'Hoarse voice and singed nasal hair', 'Rapid blinking', 'Muscle cramps in the legs'], answer: 1 }
+    ]
+  },
+  {
+    id: 's4',
+    title: 'Fractures & Extrication',
+    week: 'Week 4',
+    desc: 'Bone injuries are painful, reduce mobility, and can cause life-threatening blood loss or nerve damage if mishandled. This session covers fracture recognition, field splinting, and how to safely move a compromised casualty.',
+    content: [
+      {
+        type: 'standard',
+        heading: 'Recognising Fractures',
+        body: `<p>You cannot confirm a fracture without imaging. In the field, treat suspected fractures as confirmed ones.</p>
+        <p><strong>Signs of a fracture:</strong></p>
+        <ul>
+          <li>Deformity — the limb looks wrong, shortened, or angulated</li>
+          <li>Swelling and bruising at the injury site</li>
+          <li>Crepitus — a grinding sensation or sound when the area is moved</li>
+          <li>Point tenderness — pain specifically at the fracture site, not just generally</li>
+          <li>Loss of function — inability or unwillingness to use the limb</li>
+          <li>Numbness or tingling — suggests nerve or vascular involvement (urgent)</li>
+        </ul>`
+      },
+      {
+        type: 'standard',
+        heading: 'Open vs Closed Fractures',
+        body: `<p><strong>Closed fracture:</strong> bone broken but skin intact. Less immediate risk of infection. Immobilise and monitor.</p>
+        <p><strong>Open (compound) fracture:</strong> bone breaks through the skin. High infection risk. Life-threatening blood loss possible.</p>
+        <ul>
+          <li>Control bleeding with gentle pressure around (not over) the wound — do not push the bone back in.</li>
+          <li>Cover the wound with a clean, moist dressing to prevent the bone from drying out.</li>
+          <li>Immobilise the limb. Get to medical care as rapidly as possible.</li>
+        </ul>`
+      },
+      {
+        type: 'standard',
+        heading: 'Splinting Principles',
+        body: `<p>A splint immobilises a fracture to prevent further injury, reduce pain, and minimise blood loss from bone ends cutting tissue.</p>
+        <ul>
+          <li><strong>Immobilise the joint above and below the fracture.</strong> For a mid-shaft femur fracture: immobilise the hip and the knee.</li>
+          <li>Pad all bony prominences before applying the splint — this prevents pressure sores and additional pain.</li>
+          <li>Apply firm but not tight — you should be able to slip a finger underneath.</li>
+          <li>Check circulation, sensation, and movement (CSM) before and after splinting. If the limb is numb, cold, or pulseless after splinting, loosen immediately.</li>
+          <li>Improvised splints: branches, tent poles, rolled sleeping mats, magazines, any rigid object. Tie with strips of clothing, belts, or paracord.</li>
+        </ul>`
+      },
+      {
+        type: 'standard',
+        heading: 'Femur Fractures — Special Case',
+        body: `<p>A fractured femur (thigh bone) can bleed 1–2 litres into the thigh tissue without any external wound. This alone can cause hemorrhagic shock.</p>
+        <ul>
+          <li>Apply a traction splint if available. If not, pad and immobilise the leg in the position found.</li>
+          <li>Treat aggressively for shock: lay flat, keep warm, monitor pulse.</li>
+          <li>Do not allow the casualty to walk on a suspected femur fracture under any circumstances.</li>
+        </ul>`
+      },
+      {
+        type: 'standard',
+        heading: 'Moving a Casualty',
+        body: `<p>Only move a casualty if the environment is dangerous (fire, structural collapse, ongoing attack) or to access necessary treatment.</p>
+        <ul>
+          <li><strong>Drag rescue</strong>: grab under the armpits and drag straight backwards. Keeps the spine aligned. One person can move an adult this way.</li>
+          <li><strong>Two-person carry</strong>: one supports the head and torso, one supports the legs. Move together, at the same pace.</li>
+          <li><strong>Log roll</strong>: used to move a casualty onto their side while maintaining spinal alignment — requires 3 people minimum, ideally 4.</li>
+          <li>If spinal injury is possible: minimise movement, support the head in neutral position, do not flex or rotate the neck.</li>
+        </ul>`
+      },
+      {
+        type: 'drill',
+        heading: 'Practical Drill',
+        body: `<p><strong>Improvised splinting drill.</strong> Required: two rigid objects (sticks, rolled magazine), strips of cloth or paracord.</p>
+        <ul>
+          <li>Practice splinting a forearm fracture on yourself or a partner.</li>
+          <li>Ensure the splint immobilises the wrist and the elbow.</li>
+          <li>Check CSM before and after: can they feel the fingertips? Is the hand warm? Can they move the fingers slightly?</li>
+          <li>Practice the drag rescue: move a partner 5 metres from a lying position.</li>
+        </ul>`
+      }
+    ],
+    quiz: [
+      { type: 'mcq', q: 'What joints must a splint immobilise when applied to a mid-shaft forearm fracture?', options: ['Only the wrist', 'Only the elbow', 'Both the wrist and the elbow', 'The shoulder and the elbow'], answer: 2 },
+      { type: 'tf', q: 'If a bone is visible through an open fracture wound, you should attempt to push it back under the skin to reduce infection risk.', answer: false },
+      { type: 'mcq', q: 'A fractured femur can cause internal blood loss of:', options: ['100–200 ml', '250–500 ml', '1–2 litres', '4–5 litres'], answer: 2 },
+      { type: 'mcq', q: 'After applying a splint, you should check for:', options: ['Skin colour changes only', 'Circulation, sensation, and movement (CSM)', 'Temperature of the splint material', 'The casualty\'s blood pressure'], answer: 1 },
+      { type: 'tf', q: 'Crepitus — a grinding sensation when a limb is moved — is a sign of a fracture.', answer: true },
+      { type: 'mcq', q: 'When is it appropriate to move a casualty who may have a spinal injury?', options: ['Any time it is more comfortable for the casualty', 'Only if the environment is immediately dangerous (fire, collapse, active threat)', 'Whenever the rescuer thinks it will be easier to treat them elsewhere', 'Never — all spinal injury casualties must stay in place'], answer: 1 },
+      { type: 'tf', q: 'A closed fracture carries a higher risk of infection than an open fracture because the wound is hidden.', answer: false },
+      { type: 'mcq', q: 'Which drag technique maintains spinal alignment when one person must move a casualty?', options: ['Pull by the ankles', 'Grab under the armpits and drag straight backwards', 'Roll the casualty onto their front first', 'Lift by the belt'], answer: 1 }
+    ]
+  },
+  {
+    id: 's5',
+    title: 'Chest Wounds & Trauma',
+    week: 'Week 5',
+    desc: 'Penetrating chest injuries — gunshot wounds, blast fragmentation, stab wounds — are among the most rapidly fatal injuries in conflict environments. This session covers chest seals, tension pneumothorax recognition, and Tactical Combat Casualty Care (TCCC) priorities.',
+    content: [
+      {
+        type: 'standard',
+        heading: 'Chest Anatomy — What You Are Protecting',
+        body: `<p>The chest contains the heart, lungs, and great vessels. Any penetrating injury that breaches the chest wall creates a sucking chest wound — air enters the chest cavity and collapses the lung. Without intervention, this progresses to tension pneumothorax, which is fatal.</p>
+        <p><strong>Signs of a sucking chest wound:</strong></p>
+        <ul>
+          <li>Bubbling or sucking sound from the wound on breathing</li>
+          <li>Bloody froth at the wound site</li>
+          <li>Breathing difficulty, rapid breathing</li>
+          <li>Decreased or absent breath sounds on the injured side</li>
+        </ul>`
+      },
+      {
+        type: 'standard',
+        heading: 'Chest Seals',
+        body: `<p>A chest seal covers a sucking chest wound and prevents air from entering the chest cavity on inhalation, while allowing air to escape on exhalation (vented seal) or preventing all airflow (non-vented seal).</p>
+        <ul>
+          <li><strong>Always use a vented chest seal if available</strong> — it prevents tension pneumothorax by allowing trapped air to escape through the valve.</li>
+          <li>If only a non-vented seal is available, monitor closely for signs of tension pneumothorax (see below).</li>
+          <li>Seal the wound on <strong>3 sides</strong> if no proper seal is available (improvised from plastic packaging) — this creates a flutter valve.</li>
+          <li>Seal both entry and exit wounds. A through-and-through wound has two holes requiring two seals.</li>
+          <li>Do not remove a chest seal in the field without reason.</li>
+        </ul>`
+      },
+      {
+        type: 'standard',
+        heading: 'Tension Pneumothorax',
+        body: `<p>If air continues to build in the chest cavity (from a non-vented seal or a sealed wound that allows continued air leak), pressure builds until the lung fully collapses and the heart is pushed toward the opposite side. This is tension pneumothorax — rapidly fatal.</p>
+        <p><strong>Signs (in order of appearance):</strong></p>
+        <ul>
+          <li>Increasing breathing difficulty, rapid shallow breaths</li>
+          <li>Tracheal deviation toward the uninjured side (late sign)</li>
+          <li>Absent breath sounds on the injured side</li>
+          <li>Distended neck veins</li>
+          <li>Hypoxia, confusion, deteriorating consciousness</li>
+          <li>Cardiovascular collapse</li>
+        </ul>
+        <p>Treatment requires needle decompression — inserting a large needle into the 2nd intercostal space, midclavicular line to release trapped air. This is a life-saving skill that you should learn with proper hands-on training, but knowing the signs is critical even if you cannot perform it.</p>`
+      },
+      {
+        type: 'standard',
+        heading: 'TCCC — Tactical Combat Casualty Care Priorities',
+        body: `<p>TCCC is the evidence-based framework for managing trauma casualties in hostile environments. The priorities in order:</p>
+        <ul>
+          <li><strong>1. Care Under Fire:</strong> Return fire, take cover. Only move the casualty if they cannot move themselves. Apply tourniquet to life-threatening limb bleeding.</li>
+          <li><strong>2. Tactical Field Care (out of immediate threat):</strong> M-A-R-C-H
+            <ul>
+              <li><strong>M</strong> — Massive haemorrhage: control all bleeding</li>
+              <li><strong>A</strong> — Airway: open and maintain</li>
+              <li><strong>R</strong> — Respiration: seal chest wounds, treat pneumothorax</li>
+              <li><strong>C</strong> — Circulation: treat for shock</li>
+              <li><strong>H</strong> — Hypothermia: prevent heat loss</li>
+            </ul>
+          </li>
+          <li><strong>3. Tactical Evacuation Care:</strong> Prepare the casualty for transport. Reassess all interventions. Document injuries and treatments.</li>
+        </ul>`
+      },
+      {
+        type: 'warning',
+        heading: 'Critical Rules',
+        body: `<ul>
+          <li>Never pack a chest wound — it prevents the chest seal from working and can force air into the cavity.</li>
+          <li>A casualty with a non-vented seal who deteriorates despite treatment — lift the seal briefly to release trapped air (burp the seal), then re-seal.</li>
+          <li>In TCCC, the order is: stop catastrophic bleeding first, then airway, then chest injuries. Haemorrhage kills faster than airway.</li>
+        </ul>`
+      },
+      {
+        type: 'drill',
+        heading: 'Practical Drill',
+        body: `<p><strong>Chest seal application drill.</strong> Required: your vented chest seal (or improvised from clean plastic packaging).</p>
+        <ul>
+          <li>Practice locating the correct seal position on a training partner: the wound site, not a fixed anatomical location.</li>
+          <li>Practice applying the seal with one hand while maintaining pressure with the other.</li>
+          <li>Verbally run through the MARCH sequence from memory 3 times.</li>
+          <li>Time yourself — you should be able to recite MARCH in under 15 seconds.</li>
+        </ul>`
+      }
+    ],
+    quiz: [
+      { type: 'mcq', q: 'What creates a sucking chest wound?', options: ['Blunt force to the chest wall', 'A penetrating injury that breaches the chest wall, allowing air in', 'Broken ribs puncturing the lung from inside', 'Fluid accumulation around the heart'], answer: 1 },
+      { type: 'tf', q: 'A vented chest seal is preferable to a non-vented seal because it prevents tension pneumothorax.', answer: true },
+      { type: 'mcq', q: 'In TCCC, what does the "R" in MARCH stand for?', options: ['Reassessment', 'Respiration — seal chest wounds, treat pneumothorax', 'Rescue — move the casualty to safety', 'Radial pulse check'], answer: 1 },
+      { type: 'mcq', q: 'A through-and-through chest wound (entry and exit) requires:', options: ['One chest seal over the entry wound only', 'Two chest seals — one for each wound', 'Wound packing through the exit wound', 'Chest compression to seal the wound'], answer: 1 },
+      { type: 'tf', q: 'In TCCC, airway management takes priority over controlling catastrophic haemorrhage.', answer: false },
+      { type: 'mcq', q: 'Signs of tension pneumothorax include:', options: ['Slow heart rate and flushed skin', 'Increasing breathing difficulty, absent breath sounds on injured side, deteriorating consciousness', 'Gurgling breath sounds and fever', 'Stable vitals with increasing pain'], answer: 1 },
+      { type: 'tf', q: 'If a non-vented chest seal casualty deteriorates, you should briefly lift the seal to release trapped air, then re-seal.', answer: true },
+      { type: 'mcq', q: 'What is the FIRST priority under TCCC Care Under Fire?', options: ['Open the airway', 'Apply tourniquet to life-threatening limb bleeding and return fire / seek cover', 'Seal any chest wounds', 'Check for spinal injuries'], answer: 1 }
+    ]
+  },
+  {
+    id: 's6',
+    title: 'Mass Casualty & Triage',
+    week: 'Week 5',
+    desc: 'When multiple casualties exceed available resources, triage determines who receives care first — and who must wait. This session covers START triage, field decision-making, and family emergency protocols.',
+    content: [
+      {
+        type: 'standard',
+        heading: 'What is Triage',
+        body: `<p>Triage — from the French "to sort" — is the process of prioritising casualties based on the severity of their injuries and the likelihood of survival with available treatment. The goal is to do the most good for the most people.</p>
+        <p>In a mass casualty incident (MCI), you may face more casualties than you can help simultaneously. Triage forces difficult decisions. Understand this before you are in the situation.</p>`
+      },
+      {
+        type: 'standard',
+        heading: 'START Triage',
+        body: `<p>START (Simple Triage and Rapid Treatment) can be performed by a single trained individual in under 60 seconds per casualty.</p>
+        <p><strong>Step 1 — Walking wounded:</strong> Tell all casualties who can walk to move to a designated area. Tag them GREEN (minor). Do not treat them now.</p>
+        <p><strong>Step 2 — Assess remaining casualties in order:</strong></p>
+        <ul>
+          <li><strong>Breathing?</strong> Open the airway (head tilt/chin lift). If they still do not breathe: tag BLACK (deceased/expectant). If they breathe only after repositioning: tag RED (immediate).</li>
+          <li><strong>Respiratory rate:</strong> over 30 breaths/min or under 10 → tag RED. Normal (10–29) → continue.</li>
+          <li><strong>Radial pulse / perfusion:</strong> No radial pulse, or capillary refill over 2 seconds → tag RED. Present → continue.</li>
+          <li><strong>Mental status:</strong> Cannot follow simple commands → tag RED. Can follow commands → tag YELLOW (delayed).</li>
+        </ul>`
+      },
+      {
+        type: 'standard',
+        heading: 'Triage Categories',
+        body: `<ul>
+          <li><strong>RED — Immediate:</strong> Life-threatening injuries. Will die without immediate treatment. Treat first.</li>
+          <li><strong>YELLOW — Delayed:</strong> Serious injuries, stable. Can wait 30–60 minutes for treatment without death.</li>
+          <li><strong>GREEN — Minor:</strong> Walking wounded. Minor injuries. Can wait hours or self-treat.</li>
+          <li><strong>BLACK — Deceased/Expectant:</strong> Dead, or injuries so severe that survival is unlikely even with maximum intervention. Do not use resources on expectant casualties when RED casualties remain untreated.</li>
+        </ul>
+        <p>Triage is not permanent. Reassess regularly — a YELLOW casualty can deteriorate to RED. A GREEN casualty in shock may need to be upgraded.</p>`
+      },
+      {
+        type: 'standard',
+        heading: 'Family Emergency Protocol',
+        body: `<p>For a household or small group, establish these protocols in advance:</p>
+        <ul>
+          <li><strong>Rally point:</strong> A predetermined location where all family members meet after an emergency. Have a primary and secondary point.</li>
+          <li><strong>Communication plan:</strong> Designate an out-of-area contact everyone calls. Local lines jam in emergencies — out-of-area calls often still connect.</li>
+          <li><strong>Medical responsibilities:</strong> Identify who in the group has first aid training. Distribute IFAK components — every person capable should carry their own tourniquet.</li>
+          <li><strong>Priority list:</strong> Agree in advance on triage priorities for your family. Children, elderly, and medically vulnerable are typically highest priority.</li>
+          <li><strong>Go / stay decision:</strong> Establish criteria for when you evacuate vs shelter in place. Do not make this decision under stress without a pre-agreed framework.</li>
+        </ul>`
+      },
+      {
+        type: 'standard',
+        heading: 'Post-Incident — What Comes Next',
+        body: `<p>After a mass casualty event, survivors face secondary dangers:</p>
+        <ul>
+          <li>Secondary devices or attacks — clear the area before establishing treatment zones.</li>
+          <li>Secondary triage — reassess all casualties before committing to prolonged treatment.</li>
+          <li>Responder safety — rescuers who become casualties help no one. Protect yourself.</li>
+          <li>Documentation — note injuries, treatments given, and times. This information is critical for hospital care.</li>
+          <li>Mental health — exposure to mass casualties causes acute stress reactions. This is normal. Seek support.</li>
+        </ul>`
+      },
+      {
+        type: 'drill',
+        heading: 'Practical Drill',
+        body: `<p><strong>START triage walkthrough.</strong> Practice on 4 family members or friends playing casualty roles.</p>
+        <ul>
+          <li>Assign each "casualty" one scenario: walking wounded, unconscious breathing, not breathing, conscious but confused.</li>
+          <li>Walk through START triage on all four in sequence — verbally assign each a colour category.</li>
+          <li>Time yourself: target under 4 minutes for all four.</li>
+          <li>Discuss your family rally point, out-of-area contact, and go/stay criteria.</li>
+        </ul>`
+      }
+    ],
+    quiz: [
+      { type: 'mcq', q: 'What does START stand for?', options: ['Systematic Triage and Rapid Transport', 'Simple Triage and Rapid Treatment', 'Structured Trauma Assessment and Response Team', 'Standard Treatment and Retrieval Technique'], answer: 1 },
+      { type: 'mcq', q: 'In START triage, a casualty who is not breathing even after airway repositioning is tagged:', options: ['RED — Immediate', 'YELLOW — Delayed', 'GREEN — Minor', 'BLACK — Deceased/Expectant'], answer: 3 },
+      { type: 'tf', q: 'A BLACK triage tag means the casualty should receive maximum resources because their injuries are the most severe.', answer: false },
+      { type: 'mcq', q: 'A casualty with a respiratory rate of 35 breaths per minute in START triage is tagged:', options: ['GREEN', 'YELLOW', 'RED', 'BLACK'], answer: 2 },
+      { type: 'tf', q: 'Triage categories are permanent — once a casualty is tagged YELLOW they remain YELLOW regardless of how their condition changes.', answer: false },
+      { type: 'mcq', q: 'Why should the designated out-of-area contact be outside the local area?', options: ['They are safer and can send help directly', 'Local phone lines often jam in emergencies while out-of-area calls may still connect', 'Emergency services can track calls more easily if they come from outside', 'It is cheaper to call long distance in an emergency'], answer: 1 },
+      { type: 'tf', q: 'In a mass casualty incident, you should treat all BLACK-tagged casualties first since their injuries are the worst.', answer: false },
+      { type: 'mcq', q: 'What is the FIRST step in START triage?', options: ['Check all casualties for a radial pulse', 'Tell all walking casualties to move to a designated area and tag them GREEN', 'Begin CPR on the first unresponsive casualty found', 'Assess respiratory rate on all casualties before doing anything else'], answer: 1 }
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════
+// SUPABASE INIT
+// ═══════════════════════════════════════════
+async function initSB() {
+  if (window._sbInstance) {
+    _sb = window._sbInstance;
+  } else {
+    _sb = window.supabase.createClient(SB_URL, SB_KEY);
+    window._sbInstance = _sb;
+    window._mtSb = _sb;
+  }
+  const { data: { session } } = await _sb.auth.getSession();
+  if (session && session.user) {
+    currentUser = session.user;
+    await loadProgress();
+    document.getElementById('auth-wall').style.display = 'none';
+    document.getElementById('course-wrap').style.display = 'block';
+    renderIndex();
+  } else {
+    document.getElementById('auth-wall').style.display = 'flex';
+    document.getElementById('course-wrap').style.display = 'none';
+  }
+  _sb.auth.onAuthStateChange(async (event, session) => {
+    if (session && session.user) {
+      currentUser = session.user;
+      await loadProgress();
+      document.getElementById('auth-wall').style.display = 'none';
+      document.getElementById('course-wrap').style.display = 'block';
+      renderIndex();
+    } else {
+      document.getElementById('auth-wall').style.display = 'flex';
+      document.getElementById('course-wrap').style.display = 'none';
+    }
+  });
+}
+
+async function loadProgress() {
+  const { data } = await _sb.from('protocol_progress').select('first_aid_progress').eq('user_id', currentUser.id).single();
+  faProgress = (data && data.first_aid_progress) ? data.first_aid_progress : {};
+}
+
+async function saveProgress() {
+  await _sb.from('protocol_progress').update({ first_aid_progress: faProgress }).eq('user_id', currentUser.id);
+}
+
+// ═══════════════════════════════════════════
+// PROGRESS HELPERS
+// ═══════════════════════════════════════════
+function isCompleted(sessionId) { return faProgress[sessionId]?.completed === true; }
+function isLocked(sessionId) {
+  // First session always available
+  const idx = SESSIONS.findIndex(s => s.id === sessionId);
+  if (idx === 0) return false;
+  // Locked if previous session not completed
+  return !isCompleted(SESSIONS[idx - 1].id);
+}
+function isInLockout(sessionId) {
+  const lockoutUntil = faProgress[sessionId]?.lockout_until;
+  if (!lockoutUntil) return false;
+  return new Date(lockoutUntil) > new Date();
+}
+function lockoutRemaining(sessionId) {
+  const lockoutUntil = faProgress[sessionId]?.lockout_until;
+  if (!lockoutUntil) return '';
+  const diff = new Date(lockoutUntil) - new Date();
+  if (diff <= 0) return '';
+  const hrs = Math.floor(diff / 3600000);
+  const mins = Math.ceil((diff % 3600000) / 60000);
+  return hrs > 0 ? `${hrs}h ${mins}m remaining` : `${mins}m remaining`;
+}
+function completedCount() { return SESSIONS.filter(s => isCompleted(s.id)).length; }
+
+// ═══════════════════════════════════════════
+// RENDER INDEX
+// ═══════════════════════════════════════════
+function renderIndex() {
+  document.getElementById('course-index').style.display = 'block';
+  document.getElementById('session-view').style.display = 'none';
+  document.getElementById('session-view').className = 'session-content';
+
+  const done = completedCount();
+  const pct = Math.round((done / SESSIONS.length) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${done} / ${SESSIONS.length} sessions complete`;
+
+  const list = document.getElementById('session-list');
+  list.innerHTML = SESSIONS.map((s, i) => {
+    const completed = isCompleted(s.id);
+    const locked = isLocked(s.id);
+    const lockout = isInLockout(s.id);
+    let cls = 'session-row';
+    if (locked) cls += ' locked';
+    else if (completed) cls += ' completed';
+    let statusTxt = '', statusCls = '';
+    if (completed) { statusTxt = '✓ Complete'; statusCls = 'done'; }
+    else if (locked) { statusTxt = 'Locked'; statusCls = 'locked'; }
+    else if (lockout) { statusTxt = lockoutRemaining(s.id); statusCls = 'lockout'; }
+    else { statusTxt = 'Available'; statusCls = 'available'; }
+    const clickable = !locked && !lockout;
+    return `<div class="${cls}" ${clickable ? `onclick="openSession('${s.id}')"` : ''}>
+      <div class="session-num">0${i+1}</div>
+      <div class="session-info">
+        <div class="session-name">${s.title}</div>
+        <div class="session-week">${s.week}</div>
+      </div>
+      <div class="session-status ${statusCls}">${statusTxt}</div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+// RENDER SESSION
+// ═══════════════════════════════════════════
+function openSession(id) {
+  const s = SESSIONS.find(x => x.id === id);
+  if (!s) return;
+  document.getElementById('course-index').style.display = 'none';
+  const view = document.getElementById('session-view');
+  view.style.display = 'block';
+  view.className = 'session-content active';
+
+  const completed = isCompleted(id);
+  const lockout = isInLockout(id);
+
+  const contentHtml = s.content.map(c => {
+    let cls = 'content-card';
+    if (c.type === 'warning') cls += ' warning-card';
+    if (c.type === 'drill') cls += ' drill-card';
+    return `<div class="${cls}"><h3>${c.heading}</h3>${c.body}</div>`;
+  }).join('');
+
+  const quizHtml = s.quiz.map((q, qi) => {
+    const label = String.fromCharCode(65 + qi);
+    if (q.type === 'tf') {
+      return `<div class="question-block" id="qblock-${id}-${qi}">
+        <div class="q-num">Question ${qi+1} of ${s.quiz.length} — True / False</div>
+        <div class="q-text">${q.q}</div>
+        <div class="tf-options">
+          <button class="tf-btn" onclick="selectTF('${id}',${qi},true)" id="tf-${id}-${qi}-true">True</button>
+          <button class="tf-btn" onclick="selectTF('${id}',${qi},false)" id="tf-${id}-${qi}-false">False</button>
+        </div>
+      </div>`;
+    } else {
+      const optHtml = q.options.map((opt, oi) => {
+        return `<div class="option" onclick="selectMCQ('${id}',${qi},${oi})" id="opt-${id}-${qi}-${oi}">
+          <div class="option-marker">${String.fromCharCode(65+oi)}</div>
+          <div class="option-text">${opt}</div>
+        </div>`;
+      }).join('');
+      return `<div class="question-block" id="qblock-${id}-${qi}">
+        <div class="q-num">Question ${qi+1} of ${s.quiz.length} — Multiple Choice</div>
+        <div class="q-text">${q.q}</div>
+        <div class="options">${optHtml}</div>
+      </div>`;
+    }
+  }).join('');
+
+  view.innerHTML = `
+    <button class="back-btn" onclick="renderIndex()">← Back to Course</button>
+    <div class="s-header">
+      <div class="s-week-tag">${s.week} · Session ${SESSIONS.indexOf(s)+1} of ${SESSIONS.length}</div>
+      <h2 class="s-title">${s.title}</h2>
+      <p class="s-desc">${s.desc}</p>
+    </div>
+    <div class="content-section">
+      <div class="content-section-head">Study Material</div>
+      ${contentHtml}
+    </div>
+    <div class="quiz-section">
+      <div class="quiz-head">Assessment</div>
+      <p class="quiz-intro">Answer all questions. You need <span>80% or higher</span> to pass and unlock the next session. Failure triggers a <span>24-hour lockout</span>.</p>
+      ${lockout ? `<div class="lockout-banner" style="display:block;">⚠ You are in a 24-hour lockout period. ${lockoutRemaining(id)}. Study the material and return.</div>` : ''}
+      ${completed ? `<div class="complete-banner" style="display:block;">✓ You have passed this session. Review the material above at any time.</div>` : ''}
+      <div id="quiz-questions-${id}">${quizHtml}</div>
+      ${!completed && !lockout ? `
+        <div class="quiz-submit">
+          <button class="btn-gold" onclick="submitQuiz('${id}')" id="submit-${id}">Submit Assessment</button>
+        </div>
+        <div class="quiz-result" id="quiz-result-${id}"></div>
+      ` : ''}
+    </div>`;
+
+  if (completed) {
+    // Show answers in review mode
+    s.quiz.forEach((q, qi) => {
+      if (q.type === 'tf') {
+        const btn = document.getElementById(`tf-${id}-${qi}-${q.answer}`);
+        if (btn) { btn.classList.add('correct'); btn.disabled = true; }
+        const other = document.getElementById(`tf-${id}-${qi}-${!q.answer}`);
+        if (other) other.disabled = true;
+      } else {
+        const opt = document.getElementById(`opt-${id}-${qi}-${q.answer}`);
+        if (opt) opt.classList.add('correct');
+      }
+    });
+  }
+
+  // Track answers
+  window._quizAnswers = window._quizAnswers || {};
+  window._quizAnswers[id] = {};
+}
+
+// ═══════════════════════════════════════════
+// QUIZ INTERACTION
+// ═══════════════════════════════════════════
+function selectMCQ(sessionId, qi, oi) {
+  if (isCompleted(sessionId)) return;
+  const s = SESSIONS.find(x => x.id === sessionId);
+  const numOpts = s.quiz[qi].options.length;
+  for (let i = 0; i < numOpts; i++) {
+    const el = document.getElementById(`opt-${sessionId}-${qi}-${i}`);
+    if (el) el.classList.remove('selected');
+  }
+  const chosen = document.getElementById(`opt-${sessionId}-${qi}-${oi}`);
+  if (chosen) chosen.classList.add('selected');
+  if (!window._quizAnswers) window._quizAnswers = {};
+  if (!window._quizAnswers[sessionId]) window._quizAnswers[sessionId] = {};
+  window._quizAnswers[sessionId][qi] = oi;
+}
+
+function selectTF(sessionId, qi, val) {
+  if (isCompleted(sessionId)) return;
+  const trueBtn = document.getElementById(`tf-${sessionId}-${qi}-true`);
+  const falseBtn = document.getElementById(`tf-${sessionId}-${qi}-false`);
+  if (trueBtn) trueBtn.classList.remove('selected');
+  if (falseBtn) falseBtn.classList.remove('selected');
+  const btn = document.getElementById(`tf-${sessionId}-${qi}-${val}`);
+  if (btn) btn.classList.add('selected');
+  if (!window._quizAnswers) window._quizAnswers = {};
+  if (!window._quizAnswers[sessionId]) window._quizAnswers[sessionId] = {};
+  window._quizAnswers[sessionId][qi] = val;
+}
+
+async function submitQuiz(sessionId) {
+  const s = SESSIONS.find(x => x.id === sessionId);
+  const answers = (window._quizAnswers || {})[sessionId] || {};
+  const total = s.quiz.length;
+
+  // Check all answered
+  if (Object.keys(answers).length < total) {
+    const result = document.getElementById(`quiz-result-${sessionId}`);
+    result.style.display = 'block';
+    result.className = 'quiz-result fail';
+    result.textContent = `Please answer all ${total} questions before submitting.`;
+    return;
+  }
+
+  // Score
+  let correct = 0;
+  s.quiz.forEach((q, qi) => {
+    if (answers[qi] === q.answer) correct++;
+  });
+  const pct = Math.round((correct / total) * 100);
+  const passed = pct >= 80;
+
+  // Show per-question feedback
+  s.quiz.forEach((q, qi) => {
+    const userAns = answers[qi];
+    if (q.type === 'tf') {
+      const correctBtn = document.getElementById(`tf-${sessionId}-${qi}-${q.answer}`);
+      const wrongBtn = document.getElementById(`tf-${sessionId}-${qi}-${!q.answer}`);
+      if (correctBtn) { correctBtn.classList.remove('selected'); correctBtn.classList.add('correct'); correctBtn.disabled = true; }
+      if (wrongBtn) { wrongBtn.disabled = true; if (userAns !== q.answer) wrongBtn.classList.add('wrong'); }
+    } else {
+      for (let i = 0; i < q.options.length; i++) {
+        const el = document.getElementById(`opt-${sessionId}-${qi}-${i}`);
+        if (!el) continue;
+        el.style.pointerEvents = 'none';
+        el.classList.remove('selected');
+        if (i === q.answer) el.classList.add('correct');
+        else if (i === userAns && userAns !== q.answer) el.classList.add('wrong');
+      }
+    }
+  });
+
+  const submitBtn = document.getElementById(`submit-${sessionId}`);
+  if (submitBtn) submitBtn.disabled = true;
+
+  const result = document.getElementById(`quiz-result-${sessionId}`);
+  result.style.display = 'block';
+
+  if (passed) {
+    result.className = 'quiz-result pass';
+    result.textContent = `✓ Passed — ${correct}/${total} correct (${pct}%). Session complete. Return to the course to continue.`;
+    if (!faProgress[sessionId]) faProgress[sessionId] = {};
+    faProgress[sessionId].completed = true;
+    faProgress[sessionId].completed_at = new Date().toISOString();
+    delete faProgress[sessionId].lockout_until;
+    await saveProgress();
+  } else {
+    result.className = 'quiz-result fail';
+    const lockoutUntil = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    result.textContent = `✗ Failed — ${correct}/${total} correct (${pct}%). Required: 80%. 24-hour lockout applied. Review the material and return.`;
+    if (!faProgress[sessionId]) faProgress[sessionId] = {};
+    faProgress[sessionId].lockout_until = lockoutUntil;
+    await saveProgress();
+  }
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSB);
+} else {
+  initSB();
+}
+</script>
+</body>
+</html>
