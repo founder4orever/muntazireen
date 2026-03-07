@@ -204,6 +204,8 @@ window.mtNavToggle = function(id){
 
 window.mtNavMobile = function(){
   const menu=document.getElementById('nav-mobile-menu');
+  // Build menu if empty
+  if(!menu.innerHTML.trim()) buildMobileMenu(null);
   menu.classList.toggle('open');
 };
 
