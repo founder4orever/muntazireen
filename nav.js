@@ -306,13 +306,10 @@ function initNavAuth(){
 }
 
 // Wait for supabase SDK if needed
-// Skip nav auth on tracker page — tracker manages its own Supabase client
-if(!window.location.pathname.includes('tracker')){
-  if(window.supabase){
-    initNavAuth();
-  } else {
-    window.addEventListener('load', initNavAuth);
-  }
+if(window.supabase){
+  initNavAuth();
+} else {
+  window.addEventListener('load', initNavAuth);
 }
 
 })();
