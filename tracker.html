@@ -464,7 +464,13 @@ const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 let _sb;
 function initSB() {
   if (window.supabase) {
-    _sb = window.supabase.createClient(SB_URL, SB_KEY);
+    // Reuse nav.js client if available, otherwise create one
+    if (window._mtSb) {
+      _sb = window._mtSb;
+    } else {
+      _sb = window.supabase.createClient(SB_URL, SB_KEY);
+      window._mtSb = _sb;
+    }
     startAuthObserver();
   } else {
     console.error('Supabase SDK not loaded');
