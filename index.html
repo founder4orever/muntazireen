@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☪️</text></svg>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Muntazireen — Those who wait, watch, and prepare.</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -263,6 +264,8 @@ const{createClient}=supabase;
 const sb=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
 // ── AUTH STATE ──
+function setAuthed(user){
+  ['signs','tracker','mind','body','survival'].forEach(id=>{
     const l=document.getElementById('lock-'+id);
     if(l)l.style.display='none';
   });
