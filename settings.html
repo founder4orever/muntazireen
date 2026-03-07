@@ -48,7 +48,7 @@
     <div class="card-label">Profile & Preferences</div>
 
     <label class="field-label">Display Name</label>
-    <input type="text" id="settings-username" placeholder="Enter username">
+    <input type="text" id="settings-username" placeholder="Enter name">
 
     <label class="field-label" style="margin-bottom:4px;">Weaponry Preferences</label>
     <p style="color:var(--muted);font-size:11px;font-family:var(--font-mono);margin-bottom:14px;">Select all that apply — your training drills update accordingly.</p>
@@ -149,6 +149,19 @@ async function saveSettings() {
 async function doSignOut() {
   await _sb.auth.signOut();
   window.location.href = 'tracker.html';
+}
+
+function setAuthed(user) {
+  const els = document.querySelectorAll('.n-authed');
+  const unels = document.querySelectorAll('.n-unauthed');
+  els.forEach(e => e.style.display = '');
+  unels.forEach(e => e.style.display = 'none');
+}
+function setUnauthed() {
+  const els = document.querySelectorAll('.n-authed');
+  const unels = document.querySelectorAll('.n-unauthed');
+  els.forEach(e => e.style.display = 'none');
+  unels.forEach(e => e.style.display = '');
 }
 
 if (document.readyState === 'loading') {
