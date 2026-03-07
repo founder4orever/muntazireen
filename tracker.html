@@ -1103,7 +1103,7 @@ async function submitOnboarding() {
 async function loadUserData() {
   try {
     const fetchPromise = _sb.from('protocol_progress').select('*').eq('user_id', currentUser.id).single();
-    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 4000));
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500));
     
     const { data, error } = await Promise.race([fetchPromise, timeoutPromise]).catch(() => ({ data: null, error: 'timeout' }));
 

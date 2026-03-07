@@ -280,12 +280,12 @@ window.mtNavSignOut = async function(){
 function initNavAuth(){
   if(!window.supabase) return; // supabase SDK not loaded yet — will retry
   if(!window._mtSb){
-    // Only create client if not already created (e.g. by tracker.html)
-    if(!window._sbInstance) {
+    // Reuse tracker's client if it exists to avoid lock conflicts
+    if(window._sbInstance) {
+      window._mtSb = window._sbInstance;
+    } else {
       window._mtSb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       window._sbInstance = window._mtSb;
-    } else {
-      window._mtSb = window._sbInstance;
     }
   }
   const sb=window._mtSb;
