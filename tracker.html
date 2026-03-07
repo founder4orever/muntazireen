@@ -1093,16 +1093,30 @@ async function submitOnboarding() {
 // ════════════════════════════════════════════
 async function loadUserData() {
   const { data, error } = await _sb.from('protocol_progress').select('*').eq('user_id', currentUser.id).single();
+
   if (error || !data) {
+    // No record yet — create it, then show onboarding
     await ensureUserRecord();
-    userData = {};
+    // Re-fetch after insert
+    const { data: fresh } = await _sb.from('protocol_progress').select('*').eq('user_id', currentUser.id).single();
+    userData = fresh || {};
   } else {
     userData = data;
   }
-  if (!userData.onboarding_complete) {
-    showOnboarding();
-  } else {
+
+  // Safety net: if onboarding answers exist, treat as complete even if flag is wrong
+  const effectivelyComplete = userData.onboarding_complete || 
+    (userData.onboarding && userData.onboarding.ayatul_kursi);
+
+  if (effectivelyComplete) {
+    // Repair the flag silently if it was wrong
+    if (!userData.onboarding_complete) {
+      userData.onboarding_complete = true;
+      _sb.from('protocol_progress').update({ onboarding_complete: true }).eq('user_id', currentUser.id);
+    }
     showApp();
+  } else {
+    showOnboarding();
   }
 }
 
@@ -1262,6 +1276,8 @@ async function saveData() {
 // RENDER ALL
 // ════════════════════════════════════════════
 function renderAll() {
+  // Guard: don't render if userData hasn't loaded
+  if (!currentUser) return;
   renderMindToday();
   renderMindWeek();
   renderBodyToday();
