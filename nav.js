@@ -230,8 +230,8 @@ function buildAccountDrop(user){
   if(user){
     drop.innerHTML=`
       <a class="n-drop-link" href="settings.html">Settings</a>
-      <a class="n-drop-link" href="tracker.html#account">Change Username</a>
-      <a class="n-drop-link" href="tracker.html#account">Weaponry Preferences</a>
+      <a class="n-drop-link" href="settings.html">Change Username</a>
+      <a class="n-drop-link" href="settings.html">Weaponry Preferences</a>
       <div class="n-drop-divider"></div>
       <a class="n-drop-link danger" href="#" onclick="mtNavSignOut();return false;">Sign Out</a>
     `;

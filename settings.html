@@ -81,7 +81,7 @@ const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 
 let _sb, currentUser, userData;
 
-function initSB() {
+async function initSB() {
   if (window._sbInstance) {
     _sb = window._sbInstance;
   } else {
@@ -89,6 +89,20 @@ function initSB() {
     window._sbInstance = _sb;
     window._mtSb = _sb;
   }
+
+  // Try to get existing session immediately
+  const { data: { session } } = await _sb.auth.getSession();
+  if (session && session.user) {
+    currentUser = session.user;
+    await loadUserData();
+    document.getElementById('settings-wrap').style.display = '';
+    document.getElementById('auth-wall').style.display = 'none';
+  } else {
+    document.getElementById('settings-wrap').style.display = 'none';
+    document.getElementById('auth-wall').style.display = 'flex';
+  }
+
+  // Also watch for future changes
   _sb.auth.onAuthStateChange(async (event, session) => {
     if (session && session.user) {
       currentUser = session.user;
@@ -137,10 +151,10 @@ async function doSignOut() {
   window.location.href = 'tracker.html';
 }
 
-if (window.supabase) {
-  initSB();
-} else {
+if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initSB);
+} else {
+  initSB();
 }
 </script>
 </body>
