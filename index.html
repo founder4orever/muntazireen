@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Muntazireen — Those who wait, watch, and prepare.</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --void:#080807;--deep:#0e0d0b;--surface:#141310;--panel:#1a1916;
@@ -23,21 +22,6 @@ body{background:var(--void);color:var(--sand);font-family:var(--font-body);font-
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.6;}
 ::selection{background:var(--gold-dim);color:var(--cream);}
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:20px 48px;border-bottom:1px solid var(--border);background:rgba(8,8,7,0.97);backdrop-filter:blur(12px);}
-.nav-logo{font-family:var(--font-mono);font-size:13px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);text-decoration:none;}
-.nav-logo span{color:var(--muted);font-size:10px;display:block;letter-spacing:0.2em;margin-top:2px;}
-.nav-links{display:flex;gap:28px;list-style:none;align-items:center;}
-.nav-links a{font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.3s;display:flex;align-items:center;gap:5px;}
-.nav-links a:hover{color:var(--cream);}
-.nav-links a.active{color:var(--gold);}
-.nav-lock{font-size:9px;opacity:0.5;}
-.nav-links a.gated{opacity:0.45;pointer-events:none;}
-.nav-cta{color:var(--gold)!important;border:1px solid var(--gold-dim);padding:8px 20px!important;transition:all 0.3s!important;}
-.nav-cta:hover{background:var(--gold-faint)!important;border-color:var(--gold)!important;}
-#nav-user{font-family:var(--font-mono);font-size:9px;color:var(--gold-dim);letter-spacing:0.12em;}
-#nav-signout{font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--border);padding:5px 12px;cursor:pointer;transition:all 0.3s;display:none;}
-#nav-signout:hover{color:var(--cream);}
 
 /* HERO */
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;padding:120px 48px 80px;overflow:hidden;}
@@ -148,8 +132,8 @@ footer{border-top:1px solid var(--border);padding:36px 48px;display:flex;justify
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
 
 @media(max-width:900px){
-  nav{padding:16px 20px;}
-  .nav-links{gap:14px;}
+  
+  
   .hero{padding:100px 20px 60px;}
   .hero::before{left:20px;}
   .hero-inner{padding-left:20px;}
@@ -167,26 +151,17 @@ footer{border-top:1px solid var(--border);padding:36px 48px;display:flex;justify
   .scroll-hint{display:none;}
 }
 @media(max-width:600px){
-  .nav-links li:not(:last-child):not(:nth-last-child(2)){display:none;}
+  
 }
 </style>
 </head>
 <body>
+<!-- SHARED NAV -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="nav.js"></script>
 
-<nav>
-  <a href="index.html" class="nav-logo">MUNTAZIREEN<span>منتظرين — Those who wait, watch, and prepare.</span></a>
-  <ul class="nav-links">
-    <li><a href="signs.html" id="nav-signs" class="gated">Signs <span class="nav-lock" id="lock-signs">⌒</span></a></li>
-    <li><a href="protocol.html">Protocol</a></li>
-    <li><a href="developments.html">Developments</a></li>
-    <li><a href="reports.html" id="nav-reports" class="gated">Analysis <span class="nav-lock" id="lock-reports">⌒</span></a></li>
-    <li><a href="resources.html" id="nav-resources" class="gated">Resources <span class="nav-lock" id="lock-resources">⌒</span></a></li>
-    <li><a href="mission.html">Mission</a></li>
-    <li id="nav-user-wrap" style="display:none"><span id="nav-user"></span></li>
-    <li><button id="nav-signout" onclick="doSignOut()">Sign Out</button></li>
-    <li id="nav-begin-wrap"><a href="tracker.html" onclick="sessionStorage.setItem('mt_open_tab','signup')" class="nav-cta" id="nav-begin">Begin</a></li>
-  </ul>
-</nav>
+
+
 
 <!-- ══ HERO ══ -->
 <section class="hero">
@@ -288,10 +263,6 @@ const{createClient}=supabase;
 const sb=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
 // ── AUTH STATE ──
-function setAuthed(user){
-  ['signs','reports','resources'].forEach(id=>{
-    const a=document.getElementById('nav-'+id);
-    if(a){a.classList.remove('gated');a.style.opacity='';a.style.pointerEvents='';}
     const l=document.getElementById('lock-'+id);
     if(l)l.style.display='none';
   });
@@ -306,20 +277,6 @@ function setAuthed(user){
   const btn=document.getElementById('signs-gate-btn');
   if(btn){btn.textContent='View All Signs →';btn.href='signs.html';btn.onclick=null;btn.className='sgb-btn-authed';}
 }
-
-function setUnauthed(){
-  ['signs','reports','resources'].forEach(id=>{
-    const a=document.getElementById('nav-'+id);
-    if(a)a.classList.add('gated');
-    const l=document.getElementById('lock-'+id);
-    if(l)l.style.display='';
-  });
-  document.getElementById('nav-user-wrap').style.display='none';
-  document.getElementById('nav-signout').style.display='none';
-  document.getElementById('nav-begin-wrap').style.display='';
-}
-
-async function doSignOut(){await sb.auth.signOut();}
 
 sb.auth.onAuthStateChange((e,session)=>{
   if(session&&session.user)setAuthed(session.user);

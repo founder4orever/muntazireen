@@ -21,15 +21,15 @@ html{scroll-behavior:smooth;}
 body{background:var(--void);color:var(--sand);font-family:var(--font-body);font-size:17px;line-height:1.7;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.5;}
 ::selection{background:var(--gold-dim);color:var(--cream);}
-nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:16px 48px;background:rgba(8,8,7,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);}
-.nav-logo{font-family:var(--font-mono);font-size:13px;letter-spacing:0.3em;color:var(--gold);text-decoration:none;}
+
+
 .nav-logo span{color:var(--muted);font-size:9px;display:block;letter-spacing:0.15em;margin-top:1px;}
-.nav-links{display:flex;gap:28px;list-style:none;align-items:center;}
-.nav-links a{font-family:var(--font-mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.3s;}
-.nav-links a:hover{color:var(--cream);}
-.nav-links a.active{color:var(--gold);}
-.nav-cta{color:var(--gold)!important;border:1px solid var(--gold-dim);padding:6px 14px!important;transition:all 0.3s!important;}
-.nav-cta:hover{background:var(--gold-faint)!important;}
+
+
+
+
+
+
 
 .page-hero{padding:120px 48px 60px;border-bottom:1px solid var(--border);background:var(--surface);position:relative;overflow:hidden;}
 .page-hero::before{content:'البروتوكول';position:absolute;right:-10px;top:-10px;font-size:150px;color:rgba(184,150,60,0.03);pointer-events:none;line-height:1;}
@@ -115,7 +115,7 @@ footer{background:var(--void);border-top:1px solid var(--border);padding:28px 48
 .footer-mono a:hover{color:var(--gold);}
 
 @media(max-width:900px){
-  nav{padding:14px 20px;}
+  
   .page-hero{padding:100px 20px 40px;}
   main{padding:0 20px 60px;}
   .four-pillars{grid-template-columns:1fr 1fr;}
@@ -125,9 +125,12 @@ footer{background:var(--void);border-top:1px solid var(--border);padding:28px 48
   footer{padding:20px;flex-direction:column;gap:10px;}
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+<!-- SHARED NAV -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="nav.js"></script>
+
 <script>
 (function(){
   const URL="https://ulsbuqsjsssqflydwylm.supabase.co";
@@ -170,18 +173,7 @@ footer{background:var(--void);border-top:1px solid var(--border);padding:28px 48
 </script>
 
 
-<nav>
-  <a href="index.html" class="nav-logo">MUNTAZIREEN<span>منتظرين</span></a>
-  <ul class="nav-links">
-    <li><a href="signs.html">Signs</a></li>
-    <li><a href="protocol.html" class="active">Protocol</a></li>
-    <li><a href="developments.html">Developments</a></li>
-    <li><a href="reports.html">Analysis</a></li>
-    <li><a href="resources.html">Resources</a></li>
-    <li><a href="mission.html">Mission</a></li>
-    <li><a href="tracker.html" class="nav-cta">Begin</a></li>
-  </ul>
-</nav>
+
 
 <div class="page-hero">
   <div class="hero-eyebrow">Muntazireen — The Protocol</div>

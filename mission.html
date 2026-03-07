@@ -20,15 +20,15 @@ html{scroll-behavior:smooth;}
 body{background:var(--void);color:var(--sand);font-family:var(--font-body);font-size:17px;line-height:1.7;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.5;}
 ::selection{background:var(--gold-dim);color:var(--cream);}
-nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:16px 48px;background:rgba(8,8,7,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);}
-.nav-logo{font-family:var(--font-mono);font-size:13px;letter-spacing:0.3em;color:var(--gold);text-decoration:none;}
+
+
 .nav-logo span{color:var(--muted);font-size:9px;display:block;letter-spacing:0.15em;margin-top:1px;}
-.nav-links{display:flex;gap:28px;list-style:none;align-items:center;}
-.nav-links a{font-family:var(--font-mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.3s;}
-.nav-links a:hover{color:var(--cream);}
-.nav-links a.active{color:var(--gold);}
-.nav-cta{color:var(--gold)!important;border:1px solid var(--gold-dim);padding:6px 14px!important;transition:all 0.3s!important;}
-.nav-cta:hover{background:var(--gold-faint)!important;}
+
+
+
+
+
+
 
 .mission-hero{min-height:80vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 48px 80px;position:relative;border-bottom:1px solid var(--border);}
 .mission-hero::before{content:'منتظرين';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:280px;color:rgba(184,150,60,0.025);pointer-events:none;white-space:nowrap;line-height:1;}
@@ -82,7 +82,7 @@ footer{background:var(--void);border-top:1px solid var(--border);padding:28px 48
 .footer-mono a:hover{color:var(--gold);}
 
 @media(max-width:900px){
-  nav{padding:14px 20px;}
+  
   .mission-hero{padding:100px 20px 60px;min-height:60vh;}
   main{padding:0 20px 60px;}
   .three-pillars{grid-template-columns:1fr;}
@@ -92,19 +92,12 @@ footer{background:var(--void);border-top:1px solid var(--border);padding:28px 48
 </style>
 </head>
 <body>
+<!-- SHARED NAV -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="nav.js"></script>
 
-<nav>
-  <a href="index.html" class="nav-logo">MUNTAZIREEN<span>منتظرين</span></a>
-  <ul class="nav-links">
-    <li><a href="signs.html">Signs</a></li>
-    <li><a href="protocol.html">Protocol</a></li>
-    <li><a href="developments.html">Developments</a></li>
-    <li><a href="reports.html">Analysis</a></li>
-    <li><a href="resources.html">Resources</a></li>
-    <li><a href="mission.html" class="active">Mission</a></li>
-    <li><a href="tracker.html" onclick="sessionStorage.setItem('mt_open_tab','signup')" class="nav-cta">Begin</a></li>
-  </ul>
-</nav>
+
+
 
 <div class="mission-hero">
   <div>

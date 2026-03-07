@@ -74,27 +74,9 @@ body::before {
    NAV
 ============================================ */
 
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 48px;
-  background: rgba(8,8,7,0.96);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(12px);
-}
 
-.nav-logo {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--gold);
-  text-decoration: none;
-}
+
+
 
 .nav-logo span {
   color: var(--muted);
@@ -104,24 +86,12 @@ nav {
   margin-top: 2px;
 }
 
-.nav-links {
-  display: flex;
-  gap: 36px;
-  list-style: none;
-}
 
-.nav-links a {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color 0.3s;
-}
 
-.nav-links a:hover { color: var(--cream); }
-.nav-links a.active { color: var(--gold); }
+
+
+
+
 
 /* ============================================
    MASTHEAD
@@ -220,13 +190,7 @@ nav {
 }
 
 /* Category nav */
-.cat-nav {
-  display: flex;
-  gap: 0;
-  padding: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
+.cat-
 
 .cat-nav::-webkit-scrollbar { display: none; }
 
@@ -942,23 +906,15 @@ footer {
   .footer-bottom { flex-direction: column; gap: 12px; }
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+<!-- SHARED NAV -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="nav.js"></script>
+
 
 <!-- NAV -->
-<nav>
-  <a href="index.html" class="nav-logo">
-    MUNTAZIREEN
-    <span>منتظرين — Those who wait, watch, and prepare.</span>
-  </a>
-  <ul class="nav-links">
-    <li><a href="signs.html">Signs</a></li>
-    <li><a href="protocol.html">Protocol</a></li>
-    <li><a href="reports.html" class="active">Reports</a></li>
-    <li><a href="mission.html">Mission</a></li><li><a href="resources.html">Resources</a></li>
-  </ul>
-</nav>
+
 
 <!-- MASTHEAD -->
 <div class="masthead">

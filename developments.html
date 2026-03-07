@@ -65,26 +65,9 @@ body::before {
 
 /* ============ NAV ============ */
 
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 200;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 48px;
-  background: rgba(8,8,7,0.97);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(16px);
-}
 
-.nav-logo {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.3em;
-  color: var(--gold);
-  text-decoration: none;
-}
+
+
 
 .nav-logo span {
   color: var(--muted);
@@ -94,24 +77,12 @@ nav {
   margin-top: 1px;
 }
 
-.nav-links {
-  display: flex;
-  gap: 32px;
-  list-style: none;
-}
 
-.nav-links a {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color 0.3s;
-}
 
-.nav-links a:hover { color: var(--cream); }
-.nav-links a.active { color: var(--gold); }
+
+
+
+
 
 /* ============ LIVE TICKER ============ */
 
@@ -743,7 +714,7 @@ footer {
 /* ============ RESPONSIVE ============ */
 
 @media (max-width: 900px) {
-  nav { padding: 14px 20px; }
+  
   .masthead { padding: 110px 20px 0; }
   .page-body { grid-template-columns: 1fr; }
   .feed-main { border-right: none; }
@@ -756,20 +727,13 @@ footer {
 </style>
 </head>
 <body>
+<!-- SHARED NAV -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="nav.js"></script>
+
 
 <!-- NAV -->
-<nav>
-  <a href="index.html" class="nav-logo">
-    MUNTAZIREEN
-    <span>منتظرين</span>
-  </a>
-  <ul class="nav-links">
-    <li><a href="signs.html">Signs</a></li>
-    <li><a href="protocol.html">Protocol</a></li>
-    <li><a href="developments.html" class="active">Developments</a></li>
-    <li><a href="reports.html">Analysis</a></li>
-  </ul>
-</nav>
+
 
 <!-- LIVE TICKER -->
 <div class="ticker-bar">
