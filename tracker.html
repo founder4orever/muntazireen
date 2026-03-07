@@ -465,11 +465,13 @@ let _sb;
 function initSB() {
   if (window.supabase) {
     // Reuse nav.js client if available, otherwise create one
-    if (window._mtSb) {
-      _sb = window._mtSb;
+    if (window._sbInstance) {
+      _sb = window._sbInstance;
+      window._mtSb = _sb;
     } else {
       _sb = window.supabase.createClient(SB_URL, SB_KEY);
       window._mtSb = _sb;
+      window._sbInstance = _sb;
     }
     startAuthObserver();
   } else {
