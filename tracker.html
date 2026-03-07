@@ -105,6 +105,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .pillar-tab.mind.active{color:var(--mind);}
 .pillar-tab.body.active{color:var(--sand);}
 .pillar-tab.surv.active{color:var(--surv);}
+.pillar-tab.sett{flex:0;}
+.pillar-tab.sett.active{color:var(--gold);}
 
 /* Sub-tabs */
 .sub-tabs{display:flex;gap:0;padding:0 32px;border-bottom:1px solid var(--border);background:var(--deep);}
@@ -417,6 +419,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <button class="pillar-tab mind active" data-tab="mind" onclick="switchPillar('mind')">Mind</button>
     <button class="pillar-tab body" data-tab="body" onclick="switchPillar('body')">Body</button>
     <button class="pillar-tab surv" data-tab="survival" onclick="switchPillar('survival')">Survival</button>
+    <button class="pillar-tab sett" data-tab="settings" onclick="switchPillar('settings')" style="max-width:60px;">⚙</button>
   </div>
 
   <!-- MIND PANEL -->
@@ -449,6 +452,64 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     </div>
     <div id="survival-today" style="padding-top:28px;"></div>
     <div id="survival-week" style="display:none;padding-top:28px;"></div>
+  </div>
+  <!-- SETTINGS PANEL -->
+  <div class="pillar-panel" id="panel-settings">
+    <div style="margin-bottom:40px;">
+      <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Account</div>
+      <h2 style="font-size:28px;font-weight:300;color:var(--cream);margin:0 0 4px;">Settings</h2>
+      <p style="color:var(--dim);font-size:13px;margin:0;">Update your name, preferences, and account.</p>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--border);padding:28px;margin-bottom:16px;">
+      <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;">Profile & Preferences</div>
+
+      <!-- Username -->
+      <div style="margin-bottom:24px;">
+        <label style="display:block;font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;">Display Name</label>
+        <input id="settings-username" type="text" placeholder="Enter username"
+          style="width:100%;background:#0d0c0a;border:1px solid var(--border);color:var(--cream);font-family:var(--font-mono);font-size:13px;padding:12px 16px;box-sizing:border-box;outline:none;">
+      </div>
+
+      <!-- Weaponry -->
+      <div style="margin-bottom:28px;">
+        <label style="display:block;font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--dim);margin-bottom:4px;">Weaponry Preferences</label>
+        <p style="color:var(--muted);font-size:11px;font-family:var(--font-mono);margin:0 0 14px;">Select all that apply — your training drills update accordingly.</p>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
+            <input type="checkbox" id="wpn-knife" value="knife" style="width:15px;height:15px;accent-color:var(--gold);">
+            <span style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);">Knife / Blade</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
+            <input type="checkbox" id="wpn-archery" value="archery" style="width:15px;height:15px;accent-color:var(--gold);">
+            <span style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);">Archery / Bow</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
+            <input type="checkbox" id="wpn-firearm" value="firearm" style="width:15px;height:15px;accent-color:var(--gold);">
+            <span style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);">Firearm</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
+            <input type="checkbox" id="wpn-hand_combat" value="hand_combat" style="width:15px;height:15px;accent-color:var(--gold);">
+            <span style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);">Hand Combat / Martial Arts</span>
+          </label>
+        </div>
+      </div>
+
+      <button onclick="saveSettings()"
+        style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;background:var(--gold);border:none;color:#0d0c0a;padding:12px 28px;cursor:pointer;font-weight:600;">
+        Save Changes
+      </button>
+      <div id="settings-msg" style="margin-top:12px;font-size:12px;font-family:var(--font-mono);color:var(--muted);"></div>
+    </div>
+
+    <!-- Sign Out -->
+    <div style="background:var(--card);border:1px solid var(--border);padding:28px;">
+      <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Session</div>
+      <button onclick="doSignOut()"
+        style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;background:none;border:1px solid #8b3030;color:#8b3030;padding:10px 24px;cursor:pointer;">
+        Sign Out
+      </button>
+    </div>
   </div>
 </div>
 
@@ -1137,7 +1198,7 @@ function showApp() {
   // URL param: ?tab=mind|body|survival
   const params = new URLSearchParams(location.search);
   const tabParam = params.get('tab');
-  if (tabParam && ['mind','body','survival'].includes(tabParam)) {
+  if (tabParam && ['mind','body','survival','settings'].includes(tabParam)) {
     document.querySelectorAll('.pillar-tab').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.pillar-panel').forEach(p => p.style.display = 'none');
     const btn = document.querySelector(`.pillar-tab[data-tab="${tabParam}"]`);
@@ -1280,6 +1341,50 @@ async function saveData() {
 // ════════════════════════════════════════════
 // RENDER ALL
 // ════════════════════════════════════════════
+function switchPillar(tab) {
+  document.querySelectorAll('.pillar-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.pillar-panel').forEach(p => p.style.display = 'none');
+  const btn = document.querySelector(`.pillar-tab[data-tab="${tab}"]`);
+  const panel = document.getElementById(`panel-${tab}`);
+  if (btn) btn.classList.add('active');
+  if (panel) panel.style.display = '';
+  if (tab === 'settings') populateSettingsPanel();
+}
+
+function populateSettingsPanel() {
+  const ob = userData?.onboarding || {};
+  const un = document.getElementById('settings-username');
+  if (un) un.value = ob.username || '';
+  const wpns = ob.weaponry || [];
+  ['knife','archery','firearm','hand_combat'].forEach(w => {
+    const cb = document.getElementById('wpn-' + w);
+    if (cb) cb.checked = wpns.includes(w);
+  });
+}
+
+async function saveSettings() {
+  const msg = document.getElementById('settings-msg');
+  const username = document.getElementById('settings-username').value.trim();
+  const weaponry = ['knife','archery','firearm','hand_combat'].filter(w => document.getElementById('wpn-' + w)?.checked);
+  const onboarding = { ...(userData.onboarding || {}), username, weaponry };
+  const { error } = await _sb.from('protocol_progress').update({ onboarding }).eq('user_id', currentUser.id);
+  if (error) {
+    msg.style.color = '#8b3030';
+    msg.textContent = 'Failed to save. Try again.';
+  } else {
+    userData.onboarding = onboarding;
+    msg.style.color = 'var(--gold)';
+    msg.textContent = 'Saved successfully.';
+    setTimeout(() => msg.textContent = '', 3000);
+    renderAll();
+  }
+}
+
+async function doSignOut() {
+  await _sb.auth.signOut();
+  window.location.reload();
+}
+
 function renderAll() {
   // Guard: don't render if userData hasn't loaded
   if (!currentUser) return;

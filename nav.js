@@ -229,7 +229,7 @@ function buildAccountDrop(user){
   const drop=document.getElementById('nav-account-drop');
   if(user){
     drop.innerHTML=`
-      <a class="n-drop-link" href="tracker.html#account">Settings</a>
+      <a class="n-drop-link" href="tracker.html?tab=settings">Settings</a>
       <a class="n-drop-link" href="tracker.html#account">Change Username</a>
       <a class="n-drop-link" href="tracker.html#account">Weaponry Preferences</a>
       <div class="n-drop-divider"></div>
@@ -248,7 +248,7 @@ function buildMobileMenu(user){
   const authedProtocol = `<a class="n-mobile-link" href="tracker.html">Tracker</a>`;
 
   const accountLinks = user ? `
-    <a class="n-mobile-link" href="tracker.html#account">Settings</a>
+    <a class="n-mobile-link" href="tracker.html?tab=settings">Settings</a>
     <a class="n-mobile-link danger" href="#" onclick="mtNavSignOut();return false;">Sign Out</a>
   ` : `
     <a class="n-mobile-link" href="tracker.html">Sign In</a>
