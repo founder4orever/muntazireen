@@ -1106,8 +1106,17 @@ async function fetchFeed(source) {
     let xmlText = json.contents;
     if (typeof xmlText === 'string' && xmlText.startsWith('data:')) {
       const base64 = xmlText.split(',')[1];
-      xmlText = atob(base64);
+      // Decode as UTF-8 properly (atob gives binary string, TextDecoder fixes encoding)
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      xmlText = new TextDecoder('utf-8').decode(bytes);
     }
+    // Fix any remaining mojibake from latin1/windows-1252 misread as UTF-8
+    xmlText = xmlText
+      .replace(/â€™/g, "'").replace(/â€œ/g, '“').replace(/â€/g, '”')
+      .replace(/â€"/g, '–').replace(/â€"/g, '—').replace(/â€¦/g, '…')
+      .replace(/Ã©/g, 'é').replace(/Ã¨/g, 'è').replace(/Ã /g, 'à');
 
     const parser = new DOMParser();
     const xml = parser.parseFromString(xmlText, 'text/xml');
