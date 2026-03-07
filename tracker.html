@@ -3,51 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Muntazireen — The Protocol Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<title>Protocol Tracker — Muntazireen</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root {
+:root{
   --void:#080807;--deep:#0e0d0b;--surface:#141310;--panel:#1a1916;
   --border:#272521;--dim:#4a463e;--muted:#6b6558;--mid:#9a9184;
   --sand:#c4b89a;--cream:#e8dfc8;--white:#f2ece0;
-  --gold:#b8963c;--gold-bright:#d4a843;--gold-dim:#6b5520;--gold-faint:rgba(184,150,60,0.07);
-  --deen:#b8963c;--body-col:#6db87f;--blade:#c06060;--survival:#6a9fcc;
+  --gold:#b8963c;--gold-bright:#d4a843;--gold-dim:#6b5520;--gold-faint:rgba(184,150,60,0.08);
+  --mind:#4a7a8a;--mind-dim:rgba(74,122,138,0.15);
+  --body:#6a5a3a;--body-dim:rgba(106,90,58,0.15);
+  --surv:#3a6a4a;--surv-dim:rgba(58,106,74,0.15);
   --font-display:'Playfair Display',Georgia,serif;
   --font-body:'Cormorant Garamond',Georgia,serif;
   --font-mono:'Courier Prime','Courier New',monospace;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{background:var(--void);color:var(--sand);font-family:var(--font-body);font-size:17px;line-height:1.7;overflow-x:hidden;min-height:100vh;}
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.5;}
+html,body{min-height:100%;background:var(--void);color:var(--sand);font-family:var(--font-body);font-size:17px;font-weight:300;line-height:1.7;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.6;}
 ::selection{background:var(--gold-dim);color:var(--cream);}
 
-
-
-.nav-logo span{color:var(--muted);font-size:9px;display:block;letter-spacing:0.15em;margin-top:1px;}
-
-
-.nav-links a:hover{color:var(--cream);}
-.nav-links a.active{color:var(--gold);}
-
-#nav-user-display{font-family:var(--font-mono);font-size:9px;color:var(--gold-dim);letter-spacing:0.12em;}
-#nav-signout-btn{font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--border);padding:5px 12px;cursor:pointer;transition:all 0.3s;display:none;}
-#nav-signout-btn:hover{color:var(--cream);}
-
-/* AUTH */
-#auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 24px;}
-.auth-box{width:100%;max-width:440px;border:1px solid var(--border);background:var(--panel);}
-.auth-header{padding:36px 40px 28px;border-bottom:1px solid var(--border);text-align:center;}
-.auth-logo{font-family:var(--font-mono);font-size:11px;letter-spacing:0.35em;color:var(--gold);margin-bottom:16px;}
-.auth-title{font-family:var(--font-display);font-size:28px;color:var(--white);font-weight:400;margin-bottom:8px;}
-.auth-sub{font-size:14px;color:var(--muted);line-height:1.6;}
-.auth-tabs{display:flex;border-bottom:1px solid var(--border);}
-.auth-tab{flex:1;font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;padding:14px;cursor:pointer;transition:all 0.25s;}
+/* ── AUTH SCREEN ── */
+#auth-screen{display:flex;min-height:100vh;align-items:center;justify-content:center;padding:80px 20px 40px;}
+.auth-wrap{width:100%;max-width:440px;}
+.auth-logo{font-family:var(--font-mono);font-size:13px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.auth-logo-sub{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:0.2em;margin-bottom:40px;}
+.auth-title{font-family:var(--font-display);font-size:36px;color:var(--white);font-weight:400;margin-bottom:8px;}
+.auth-sub{font-size:15px;color:var(--muted);margin-bottom:32px;line-height:1.6;}
+.auth-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:28px;}
+.auth-tab{font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);background:none;border:none;padding:10px 20px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.25s;}
 .auth-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
-.auth-body{padding:32px 40px 40px;}
-.auth-field{margin-bottom:20px;}
-.auth-label{font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;}
+.auth-field{margin-bottom:16px;}
+.auth-label{font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;}
 .auth-input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--cream);font-family:var(--font-mono);font-size:14px;padding:12px 16px;outline:none;transition:border-color 0.3s;}
 .auth-input:focus{border-color:var(--gold-dim);}
 .auth-input::placeholder{color:var(--dim);}
@@ -55,1071 +43,1786 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .auth-pw-wrap .auth-input{padding-right:44px;}
 .pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--dim);cursor:pointer;padding:4px;transition:color 0.3s;line-height:0;display:flex;align-items:center;}
 .pw-toggle:hover{color:var(--sand);}
-.auth-btn{width:100%;background:var(--gold);color:var(--void);font-family:var(--font-mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;border:none;padding:14px;cursor:pointer;transition:background 0.3s;margin-top:8px;}
+.auth-btn{width:100%;font-family:var(--font-mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--void);background:var(--gold);border:none;padding:14px;cursor:pointer;transition:background 0.3s;margin-top:4px;}
 .auth-btn:hover{background:var(--gold-bright);}
-.auth-btn:disabled{background:var(--dim);cursor:not-allowed;}
-.auth-message{margin-top:16px;font-family:var(--font-mono);font-size:11px;text-align:center;min-height:20px;}
-.auth-message.error{color:var(--blade);}
-.auth-message.success{color:var(--body-col);}
-.auth-note{margin-top:20px;font-size:12px;color:var(--dim);text-align:center;line-height:1.6;border-top:1px solid var(--border);padding-top:20px;}
+.auth-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.auth-message{font-family:var(--font-mono);font-size:11px;margin-top:12px;padding:10px 14px;min-height:20px;}
+.auth-message.error{color:#c04040;background:rgba(110,42,42,0.15);border:1px solid #3a1515;}
+.auth-message.success{color:#3d7a56;background:rgba(61,110,82,0.12);border:1px solid #1a3a28;}
+.auth-note{font-family:var(--font-mono);font-size:9px;color:var(--dim);margin-top:16px;text-align:center;letter-spacing:0.08em;line-height:1.6;}
 
-/* ONBOARDING */
-#onboarding-screen{display:none;min-height:100vh;padding:80px 24px 60px;justify-content:center;}
-.ob-wrap{width:100%;max-width:700px;margin:0 auto;}
-.ob-hero{text-align:center;padding:40px 0 36px;border-bottom:1px solid var(--border);margin-bottom:36px;}
-.ob-eyebrow{font-family:var(--font-mono);font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
-.ob-title{font-family:var(--font-display);font-size:clamp(28px,5vw,52px);color:var(--white);font-weight:400;line-height:1.05;margin-bottom:12px;}
-.ob-title em{font-style:italic;color:var(--gold-bright);}
-.ob-sub{font-size:15px;color:var(--muted);line-height:1.75;max-width:500px;margin:0 auto;}
+/* ── ONBOARDING ── */
+#onboarding-screen{display:none;min-height:100vh;padding:80px 20px 60px;align-items:flex-start;justify-content:center;}
+.ob-wrap{width:100%;max-width:680px;}
 
-.ob-section{border:1px solid var(--border);background:var(--panel);margin-bottom:20px;}
-.ob-sec-hd{padding:14px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
-.ob-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.ob-dot.deen{background:var(--deen);}
-.ob-dot.body{background:var(--body-col);}
-.ob-dot.blade{background:var(--blade);}
-.ob-dot.surv{background:var(--survival);}
-.ob-sec-name{font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;}
-.ob-dot.deen~.ob-sec-name{color:var(--deen);}
-.ob-dot.body~.ob-sec-name{color:var(--body-col);}
-.ob-dot.blade~.ob-sec-name{color:var(--blade);}
-.ob-dot.surv~.ob-sec-name{color:var(--survival);}
-.ob-sec-hint{font-family:var(--font-mono);font-size:8px;color:var(--dim);margin-left:auto;letter-spacing:0.08em;}
+/* Carousel */
+.ob-carousel{position:relative;overflow:hidden;margin-bottom:0;}
+.ob-slides{display:flex;transition:transform 0.4s ease;}
+.ob-slide{min-width:100%;padding:0;}
+.ob-slide-inner{background:var(--deep);border:1px solid var(--border);padding:48px 40px;}
+.ob-slide-num{font-family:var(--font-mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--dim);margin-bottom:20px;}
+.ob-slide-icon{font-size:32px;margin-bottom:16px;display:block;}
+.ob-slide-title{font-family:var(--font-display);font-size:36px;color:var(--white);font-weight:400;margin-bottom:16px;line-height:1.1;}
+.ob-slide-title em{font-style:italic;color:var(--gold-bright);}
+.ob-slide-body{font-size:16px;color:var(--mid);line-height:1.75;max-width:540px;}
+.ob-slide-body strong{color:var(--sand);font-weight:400;}
 
-.ob-row{display:flex;align-items:center;justify-content:space-between;padding:13px 22px;border-bottom:1px solid var(--border);}
-.ob-row:last-child{border-bottom:none;}
-.ob-row-text{flex:1;padding-right:24px;}
-.ob-row-label{font-size:14px;color:var(--sand);line-height:1.4;}
-.ob-row-sub{font-family:var(--font-mono);font-size:8px;color:var(--dim);margin-top:3px;letter-spacing:0.06em;}
-.ob-yesno{display:flex;border:1px solid var(--border);}
-.ob-yn-btn{font-family:var(--font-mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;background:none;border:none;padding:7px 13px;cursor:pointer;color:var(--dim);transition:all 0.2s;}
-.ob-yn-sep{width:1px;background:var(--border);}
-.ob-yn-btn.yes.on{background:var(--body-col);color:var(--void);}
-.ob-yn-btn.no.on{background:var(--border);color:var(--sand);}
-.ob-yn-btn:not(.on):hover{color:var(--sand);}
+/* Carousel nav */
+.ob-carousel-nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-top:1px solid var(--border);margin-top:0;}
+.ob-dots{display:flex;gap:8px;align-items:center;}
+.ob-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:all 0.3s;cursor:pointer;}
+.ob-dot.active{background:var(--gold);width:20px;border-radius:3px;}
+.ob-nav-btn{font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--border);padding:10px 24px;cursor:pointer;transition:all 0.3s;}
+.ob-nav-btn:hover{color:var(--cream);border-color:var(--dim);}
+.ob-nav-btn.primary{color:var(--void);background:var(--gold);border-color:var(--gold);}
+.ob-nav-btn.primary:hover{background:var(--gold-bright);}
 
-.ob-cta{text-align:center;padding:8px 0 40px;}
-.ob-submit{background:var(--gold);color:var(--void);font-family:var(--font-mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;border:none;padding:16px 52px;cursor:pointer;transition:background 0.3s;}
+/* Onboarding questions */
+#ob-questions{display:none;padding:0;}
+.ob-q-title{font-family:var(--font-display);font-size:28px;color:var(--white);font-weight:400;margin-bottom:8px;}
+.ob-q-sub{font-size:15px;color:var(--muted);margin-bottom:36px;line-height:1.6;}
+.ob-question{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+.ob-question:last-child{border-bottom:none;}
+.ob-q-label{font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--sand);margin-bottom:14px;display:block;}
+.ob-q-sub-text{font-size:14px;color:var(--dim);margin-top:-8px;margin-bottom:14px;}
+.ob-options{display:flex;gap:10px;flex-wrap:wrap;}
+.ob-opt{font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--border);padding:10px 20px;cursor:pointer;transition:all 0.25s;}
+.ob-opt:hover{color:var(--cream);border-color:var(--dim);}
+.ob-opt.selected{color:var(--void);background:var(--gold);border-color:var(--gold);}
+.ob-multi-note{font-family:var(--font-mono);font-size:9px;color:var(--dim);margin-bottom:10px;letter-spacing:0.1em;}
+.ob-submit{width:100%;font-family:var(--font-mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--void);background:var(--gold);border:none;padding:16px;cursor:pointer;transition:background 0.3s;margin-top:28px;}
 .ob-submit:hover{background:var(--gold-bright);}
-.ob-cta-note{font-family:var(--font-mono);font-size:8px;color:var(--dim);margin-top:12px;letter-spacing:0.1em;}
 
-/* APP */
-#app-screen{display:none;padding-top:65px;}
+/* ── APP SCREEN ── */
+#app-screen{display:none;min-height:100vh;padding-top:60px;}
 
-.app-header{padding:32px 48px 24px;border-bottom:1px solid var(--border);background:var(--surface);position:relative;overflow:hidden;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;}
-.app-header::before{content:'منتظرين';position:absolute;right:-20px;top:-10px;font-size:120px;color:rgba(184,150,60,0.04);pointer-events:none;line-height:1;}
-.welcome-block h1{font-family:var(--font-display);font-size:clamp(22px,3vw,36px);color:var(--white);font-weight:400;line-height:1.1;margin-bottom:5px;}
-.welcome-block h1 em{font-style:italic;color:var(--gold-bright);}
-.welcome-sub{font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;}
-.hstats{display:flex;border:1px solid var(--border);flex-shrink:0;}
-.hstat{padding:12px 22px;border-right:1px solid var(--border);text-align:center;}
-.hstat:last-child{border-right:none;}
-.hstat-n{font-family:var(--font-display);font-size:30px;color:var(--cream);line-height:1;margin-bottom:2px;}
-.hstat-l{font-family:var(--font-mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
+/* Pillar tabs */
+.pillar-tabs{position:sticky;top:60px;z-index:100;background:rgba(8,8,7,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;}
+.pillar-tab{flex:1;font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);background:none;border:none;padding:16px;cursor:pointer;transition:all 0.25s;border-bottom:2px solid transparent;}
+.pillar-tab:hover{color:var(--cream);}
+.pillar-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.pillar-tab.mind.active{color:var(--mind);}
+.pillar-tab.body.active{color:var(--sand);}
+.pillar-tab.surv.active{color:var(--surv);}
 
-.mode-bar{padding:11px 48px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--deep);}
-.mb-left{display:flex;align-items:center;gap:12px;}
-.mb-phase{font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;}
-.mb-phase.ramp{color:var(--gold);}
-.mb-phase.maint{color:var(--body-col);}
-.mb-desc{font-size:13px;color:var(--muted);}
-.print-btn{font-family:var(--font-mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--border);padding:6px 16px;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:7px;}
-.print-btn:hover{color:var(--cream);border-color:var(--dim);}
-.print-btn::before{content:'◻';}
+/* Sub-tabs */
+.sub-tabs{display:flex;gap:0;padding:0 32px;border-bottom:1px solid var(--border);background:var(--deep);}
+.sub-tab{font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--dim);background:none;border:none;padding:12px 16px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.25s;}
+.sub-tab.active{color:var(--sand);border-bottom-color:var(--sand);}
 
-/* Progress */
-.progress-wrap{padding:24px 48px;border-bottom:1px solid var(--border);}
-.prog-hd{font-family:var(--font-mono);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;justify-content:space-between;}
-.prog-hd span{color:var(--gold);}
-.week-pips{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:6px;}
-.w-pip{height:9px;border-radius:1px;background:var(--border);cursor:pointer;transition:all 0.3s;}
-.w-pip.done{background:var(--gold);}
-.w-pip.now{background:var(--gold-dim);border:1px solid var(--gold);animation:pp 2s ease infinite;}
-.w-pip.maint{background:var(--body-col);}
-@keyframes pp{0%,100%{opacity:1}50%{opacity:0.5}}
-.week-pip-lbls{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;}
-.w-pip-lbl{font-family:var(--font-mono);font-size:7px;color:var(--dim);text-align:center;}
-.w-pip-lbl.now{color:var(--gold);}
-.w-pip-lbl.maint{color:var(--body-col);}
+/* Pillar content */
+.pillar-panel{display:none;max-width:800px;margin:0 auto;padding:40px 32px 120px;}
+.pillar-panel.active{display:block;}
 
-.pillar-bars{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:18px;}
-.pbar{background:var(--panel);padding:16px 18px;}
-.pbar-lbl{font-family:var(--font-mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:7px;display:flex;justify-content:space-between;}
-.pbar-lbl.dn{color:var(--deen);}
-.pbar-lbl.bd{color:var(--body-col);}
-.pbar-lbl.bl{color:var(--blade);}
-.pbar-lbl.sv{color:var(--survival);}
-.pbar-track{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:5px;}
-.pbar-fill{height:100%;border-radius:2px;transition:width 0.6s ease;}
-.pbar.dn .pbar-fill{background:var(--deen);}
-.pbar.bd .pbar-fill{background:var(--body-col);}
-.pbar.bl .pbar-fill{background:var(--blade);}
-.pbar.sv .pbar-fill{background:var(--survival);}
-.pbar-streak{font-family:var(--font-mono);font-size:8px;color:var(--dim);letter-spacing:0.08em;}
+/* Section headers */
+.t-section{margin-bottom:40px;}
+.t-section-head{font-family:var(--font-mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:12px;}
+.t-section-head::after{content:'';flex:1;height:1px;background:var(--border);}
+.t-section-title{font-family:var(--font-display);font-size:26px;color:var(--white);font-weight:400;margin-bottom:4px;}
+.t-section-sub{font-size:14px;color:var(--muted);margin-bottom:20px;}
 
-/* Section label */
-.sec-ey{font-family:var(--font-mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);padding:20px 48px 14px;display:flex;align-items:center;gap:14px;}
-.sec-ey::after{content:'';height:1px;background:var(--border);width:48px;}
+/* Task items */
+.task-list{display:flex;flex-direction:column;gap:1px;background:var(--border);}
+.task-item{background:var(--deep);padding:16px 20px;display:flex;align-items:flex-start;gap:14px;transition:background 0.2s;}
+.task-item:hover{background:var(--surface);}
+.task-item.completed{opacity:0.5;}
+.task-item.completed .task-name{text-decoration:line-through;color:var(--dim);}
+.task-cb{width:18px;height:18px;border:1px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;transition:all 0.2s;}
+.task-cb:hover{border-color:var(--gold-dim);}
+.task-cb.checked{background:var(--gold);border-color:var(--gold);}
+.task-cb.checked::after{content:'✓';font-size:10px;color:var(--void);}
+.task-name{font-size:15px;color:var(--sand);line-height:1.4;}
+.task-detail{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.5;}
+.task-tag{font-family:var(--font-mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--dim);margin-top:4px;}
 
-/* Today blocks */
-.today-wrap{padding:0 48px 32px;border-bottom:1px solid var(--border);}
-.today-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);}
-.t-block{background:var(--panel);padding:20px 16px;position:relative;transition:background 0.2s;}
-.t-block::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
-.t-block.dn::before{background:var(--deen);}
-.t-block.bd::before{background:var(--body-col);}
-.t-block.bl::before{background:var(--blade);}
-.t-block.sv::before{background:var(--survival);}
-.t-block.done{background:var(--surface);}
-.t-block.done .t-title{text-decoration:line-through;color:var(--dim);}
-.t-pillar{font-family:var(--font-mono);font-size:8px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:5px;}
-.t-block.dn .t-pillar{color:var(--deen);}
-.t-block.bd .t-pillar{color:var(--body-col);}
-.t-block.bl .t-pillar{color:var(--blade);}
-.t-block.sv .t-pillar{color:var(--survival);}
-.t-title{font-family:var(--font-display);font-size:15px;color:var(--cream);line-height:1.3;margin-bottom:6px;transition:all 0.3s;}
-.t-detail{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;}
-.t-check{width:100%;display:flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);background:none;border:1px solid var(--border);padding:7px 10px;cursor:pointer;transition:all 0.2s;text-align:left;}
-.t-check:hover{color:var(--cream);border-color:var(--dim);}
-.t-check.on{color:var(--body-col);border-color:var(--body-col);}
-.t-chk-ico{width:11px;height:11px;border:1px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0;}
+/* Prayer grid */
+.prayer-grid{display:flex;flex-direction:column;gap:1px;background:var(--border);}
+.prayer-row{background:var(--deep);display:grid;grid-template-columns:1fr auto auto;align-items:center;padding:14px 20px;gap:16px;transition:background 0.2s;}
+.prayer-row:hover{background:var(--surface);}
+.prayer-name{font-family:var(--font-mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--sand);}
+.prayer-cb-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.prayer-cb-label{font-family:var(--font-mono);font-size:7px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);}
+.prayer-date{font-family:var(--font-mono);font-size:9px;color:var(--dim);margin:8px 20px;letter-spacing:0.1em;}
 
-/* Gear track */
-.gear-wrap{padding:0 48px 32px;border-bottom:1px solid var(--border);}
-.gear-box{border:1px solid var(--border);}
-.gear-hd{padding:11px 20px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;justify-content:space-between;align-items:center;}
-.gear-hd-lbl{font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--survival);}
-.gear-hd-ct{font-family:var(--font-mono);font-size:9px;color:var(--dim);}
-.gear-grid{display:grid;grid-template-columns:repeat(2,1fr);}
-.g-item{padding:12px 18px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);display:flex;align-items:flex-start;gap:9px;cursor:pointer;transition:background 0.2s;}
-.g-item:nth-child(even){border-right:none;}
-.g-item:hover{background:var(--surface);}
-.g-item.got{background:var(--surface);}
-.g-ico{width:13px;height:13px;border:1px solid var(--border);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:8px;transition:all 0.2s;}
-.g-item.got .g-ico{background:var(--survival);border-color:var(--survival);color:var(--void);}
-.g-name{font-size:13px;color:var(--sand);line-height:1.4;}
-.g-note{font-family:var(--font-mono);font-size:7px;color:var(--dim);margin-top:2px;letter-spacing:0.05em;}
-.g-item.got .g-name{color:var(--dim);text-decoration:line-through;}
-.gear-tier-label{padding:8px 18px;border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;background:var(--deep);}
-.gear-tier-label.t1{color:var(--body-col);}
-.gear-tier-label.t2{color:var(--gold);}
-.gear-tier-label.t3{color:var(--survival);}
+/* Missed tasks */
+.missed-section{margin-bottom:32px;}
+.missed-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.missed-label{font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#8b3030;padding:4px 10px;border:1px solid #3a1515;background:rgba(110,42,42,0.1);}
+.missed-count{font-family:var(--font-mono);font-size:9px;color:var(--dim);}
 
-/* Checkpoints */
-.cp-wrap{padding:0 48px 32px;border-bottom:1px solid var(--border);}
-.week-sel{display:flex;border:1px solid var(--border);overflow-x:auto;scrollbar-width:none;margin-bottom:18px;}
-.week-sel::-webkit-scrollbar{display:none;}
-.ws-btn{font-family:var(--font-mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);background:none;border:none;border-right:1px solid var(--border);padding:10px 14px;cursor:pointer;white-space:nowrap;transition:all 0.2s;flex:1;text-align:center;}
-.ws-btn:last-child{border-right:none;}
-.ws-btn:hover{background:var(--surface);color:var(--cream);}
-.ws-btn.on{color:var(--gold);background:var(--gold-faint);}
-.ws-btn.done{color:var(--body-col);}
-.ws-btn.maint-btn{color:var(--body-col);}
-.ws-btn.maint-btn.on{background:rgba(109,184,127,0.07);}
-.cp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
-.cp-card{background:var(--panel);padding:20px;}
-.cp-hd{font-family:var(--font-mono);font-size:8px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid var(--border);}
-.cp-hd.dn{color:var(--deen);}
-.cp-hd.bd{color:var(--body-col);}
-.cp-hd.bl{color:var(--blade);}
-.cp-rows{display:flex;flex-direction:column;gap:5px;}
-.cp-row{display:flex;align-items:flex-start;gap:7px;cursor:pointer;}
-.cp-box{width:13px;height:13px;border:1px solid var(--border);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:8px;transition:all 0.2s;}
-.cp-row.on .cp-box{background:var(--body-col);border-color:var(--body-col);color:var(--void);}
-.cp-text{font-size:12px;color:var(--muted);line-height:1.5;transition:all 0.2s;}
-.cp-row.on .cp-text{text-decoration:line-through;color:var(--dim);}
-.week-status{margin-top:14px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);}
-.ws-lbl{font-family:var(--font-mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
-.ws-badge{font-family:var(--font-mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border:1px solid;}
-.ws-badge.pass{color:var(--body-col);border-color:var(--body-col);}
-.ws-badge.pend{color:var(--dim);border-color:var(--border);}
+/* Week header */
+.week-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+.week-title{font-family:var(--font-display);font-size:28px;color:var(--white);font-weight:400;}
+.week-title em{font-style:italic;color:var(--gold-bright);}
+.week-theme{font-size:14px;color:var(--muted);margin-top:4px;}
+.week-badge{font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-dim);padding:6px 12px;white-space:nowrap;flex-shrink:0;}
 
-/* Streaks */
-.streak-wrap{padding:0 48px 40px;}
-.streak-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
-.st-card{background:var(--deep);padding:22px;text-align:center;}
-.st-n{font-family:var(--font-display);font-size:46px;line-height:1;font-weight:700;margin-bottom:3px;}
-.st-card.dn .st-n{color:var(--deen);}
-.st-card.bd .st-n{color:var(--body-col);}
-.st-card.bl .st-n{color:var(--blade);}
-.st-card.sv .st-n{color:var(--survival);}
-.st-icon{font-size:16px;margin-bottom:3px;}
-.st-lbl{font-family:var(--font-mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
-.st-sub{font-family:var(--font-mono);font-size:7px;color:var(--dim);letter-spacing:0.06em;}
+/* Gear checklist */
+.gear-item{background:var(--deep);padding:14px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);transition:background 0.2s;}
+.gear-item:hover{background:var(--surface);}
+.gear-item.acquired{opacity:0.45;}
+.gear-item.acquired .gear-name{text-decoration:line-through;color:var(--dim);}
+.gear-name{font-size:15px;color:var(--sand);flex:1;}
+.gear-note{font-size:12px;color:var(--dim);display:block;margin-top:2px;}
 
-#save-ind{position:fixed;bottom:20px;right:20px;font-family:var(--font-mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;padding:6px 12px;background:var(--panel);border:1px solid var(--border);color:var(--dim);z-index:100;transition:all 0.3s;opacity:0;transform:translateY(6px);}
-#save-ind.saving{opacity:1;transform:translateY(0);color:var(--gold);border-color:var(--gold-dim);}
-#save-ind.saved{opacity:1;transform:translateY(0);color:var(--body-col);border-color:var(--body-col);}
+/* ── LEARNING MODULES ── */
+.learn-module{border:1px solid var(--border);background:var(--deep);margin-bottom:32px;}
+.learn-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+.learn-title{font-family:var(--font-display);font-size:20px;color:var(--white);font-weight:400;}
+.learn-badge{font-family:var(--font-mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-dim);padding:4px 10px;}
+.learn-progress-bar{height:2px;background:var(--border);}
+.learn-progress-fill{height:100%;background:var(--gold);transition:width 0.4s;}
+.learn-body{padding:0;}
+.learn-ayah{padding:20px 24px;border-bottom:1px solid var(--border);transition:background 0.2s;}
+.learn-ayah:last-child{border-bottom:none;}
+.learn-ayah.mastered{background:rgba(184,150,60,0.04);}
+.learn-ayah-arabic{font-size:22px;color:var(--cream);direction:rtl;text-align:right;line-height:2;margin-bottom:8px;}
+.learn-ayah-translit{font-family:var(--font-mono);font-size:11px;color:var(--mid);letter-spacing:0.05em;margin-bottom:6px;line-height:1.6;font-style:italic;}
+.learn-ayah-trans{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:12px;}
+.learn-ayah-actions{display:flex;gap:10px;align-items:center;}
+.learn-play-btn{font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--border);padding:7px 16px;cursor:pointer;transition:all 0.25s;display:flex;align-items:center;gap:6px;}
+.learn-play-btn:hover{color:var(--cream);border-color:var(--dim);}
+.learn-play-btn.playing{color:var(--gold);border-color:var(--gold-dim);}
+.learn-mark-btn{font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;border:none;padding:7px 16px;transition:all 0.25s;}
+.learn-mark-btn.unmarked{color:var(--muted);background:none;border:1px solid var(--border);}
+.learn-mark-btn.unmarked:hover{color:var(--cream);}
+.learn-mark-btn.marked{color:var(--void);background:var(--gold);}
+.learn-complete-msg{padding:24px;text-align:center;border-top:1px solid var(--border);display:none;}
+.learn-complete-msg.show{display:block;}
+.learn-complete-msg p{font-family:var(--font-display);font-size:20px;color:var(--gold);font-style:italic;}
 
-footer{border-top:1px solid var(--border);padding:22px 48px;display:flex;justify-content:space-between;align-items:center;background:var(--void);}
-.ft{font-family:var(--font-mono);font-size:9px;color:var(--dim);letter-spacing:0.08em;}
-.ft a{color:var(--gold-dim);text-decoration:none;margin-left:12px;}
-.ft a:hover{color:var(--gold);}
+/* ── FIRST AID MODULE ── */
+.fa-module{border:1px solid var(--border);background:var(--deep);margin-bottom:32px;}
+.fa-header{padding:20px 24px;border-bottom:1px solid var(--border);}
+.fa-title{font-family:var(--font-display);font-size:20px;color:var(--white);font-weight:400;margin-bottom:4px;}
+.fa-sub{font-size:14px;color:var(--muted);}
+.fa-weeks{display:flex;flex-direction:column;gap:1px;background:var(--border);}
+.fa-week{background:var(--deep);transition:background 0.2s;}
+.fa-week-head{padding:16px 24px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;}
+.fa-week-head:hover{background:var(--surface);}
+.fa-week-title{font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--sand);}
+.fa-week-status{font-family:var(--font-mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);}
+.fa-week-status.done{color:var(--surv);}
+.fa-week-body{display:none;padding:0 24px 20px;border-top:1px solid var(--border);}
+.fa-week-body.open{display:block;}
+.fa-week-content{font-size:14px;color:var(--mid);line-height:1.75;margin:16px 0;}
+.fa-week-content h4{font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--sand);margin:14px 0 6px;}
+.fa-week-content ul{padding-left:20px;color:var(--muted);}
+.fa-week-content li{margin-bottom:4px;}
+.fa-complete-btn{font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;border:none;padding:10px 20px;transition:all 0.25s;margin-top:12px;}
+.fa-complete-btn.done{color:var(--void);background:var(--surv);}
+.fa-complete-btn.undone{color:var(--muted);background:none;border:1px solid var(--border);}
+.fa-complete-btn.undone:hover{color:var(--cream);}
+.fa-external{padding:24px;font-size:14px;color:var(--muted);line-height:1.7;}
+.fa-external strong{color:var(--sand);font-weight:400;}
 
-/* PRINT */
-@media print {
-  body{background:#fff!important;color:#000!important;}
-  body::before,nav,#save-ind,.print-btn,.t-check,.week-sel,.streak-wrap,.pillar-bars,footer,.ob-yesno{display:none!important;}
-  #app-screen{padding-top:0!important;}
-  .app-header{background:#fff;border-bottom:2px solid #000;padding:12px 0;}
-  .app-header::before{display:none;}
-  .welcome-block h1,.welcome-block h1 em{color:#000!important;}
-  .welcome-sub,.hstat-l{color:#555!important;}
-  .hstats,.hstat{border-color:#ccc!important;}
-  .hstat-n{color:#000!important;}
-  .mode-bar{background:#f5f5f5;border-color:#ccc;}
-  .mb-phase,.mb-desc{color:#333!important;}
-  .sec-ey{color:#333!important;padding-left:0;padding-right:0;}
-  .today-wrap,.cp-wrap,.gear-wrap{padding-left:0;padding-right:0;}
-  .today-grid,.cp-grid{border-color:#ccc;background:#ccc;}
-  .t-block,.cp-card{background:#fff;}
-  .t-block::before{display:none;}
-  .t-pillar{color:#333!important;}
-  .t-title{color:#000!important;text-decoration:none!important;}
-  .t-detail{color:#555!important;}
-  .cp-hd{color:#333!important;border-color:#ccc;}
-  .cp-text{color:#555!important;text-decoration:none!important;}
-  .cp-box{border-color:#ccc!important;background:#fff!important;color:#000!important;}
-  .cp-row.on .cp-box{background:#555!important;}
-  .progress-wrap{display:none!important;}
-  .gear-box{border-color:#ccc;}
-  .gear-hd{background:#f5f5f5;}
-  .gear-hd-lbl,.gear-hd-ct{color:#333!important;}
-  .g-item{border-color:#ccc!important;}
-  .g-name{color:#000!important;}
-  .g-note{color:#555!important;}
-  .g-ico{border-color:#ccc!important;background:#fff!important;}
-  .g-item.got .g-ico{background:#555!important;}
-  .gear-tier-label{background:#eee!important;color:#333!important;}
-  .week-status{background:#f5f5f5;border-color:#ccc;}
-  .ws-lbl{color:#555!important;}
-  .ws-badge{border-color:#555!important;color:#333!important;}
-  .print-hd{display:block!important;}
-}
-.print-hd{display:none;padding-bottom:14px;border-bottom:2px solid #000;margin-bottom:18px;}
-.print-hd h2{font-size:18px;font-weight:700;}
-.print-hd p{font-size:11px;color:#555;margin-top:3px;}
+/* Stats bar */
+.stats-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-bottom:32px;}
+.stat-box{background:var(--deep);padding:16px 20px;text-align:center;}
+.stat-num{font-family:var(--font-display);font-size:32px;color:var(--white);font-weight:400;}
+.stat-label{font-family:var(--font-mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--dim);margin-top:4px;}
 
-@media(max-width:900px){
-  
-  .app-header{padding:18px 20px;flex-direction:column;align-items:flex-start;}
-  .progress-wrap,.today-wrap,.gear-wrap,.cp-wrap,.streak-wrap{padding-left:20px;padding-right:20px;}
-  .sec-ey{padding-left:20px;padding-right:20px;}
-  .mode-bar{padding:10px 20px;}
-  .today-grid{grid-template-columns:1fr 1fr;}
-  .streak-grid{grid-template-columns:1fr 1fr;}
-  .cp-grid{grid-template-columns:1fr;}
-  .pillar-bars{grid-template-columns:1fr 1fr;}
-  .gear-grid{grid-template-columns:1fr;}
-  .g-item{border-right:none!important;}
-  footer{padding:18px 20px;flex-direction:column;gap:8px;}
-  .ob-wrap{padding:0;}
-  .auth-body{padding:22px;}
+/* Save indicator */
+#save-indicator{position:fixed;bottom:24px;right:24px;font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--border);background:var(--panel);color:var(--dim);opacity:0;transition:opacity 0.3s;z-index:500;}
+#save-indicator.saving{opacity:1;color:var(--gold-dim);}
+#save-indicator.saved{opacity:1;color:var(--surv);}
+
+/* Maintenance mode */
+.maint-banner{background:var(--gold-faint);border:1px solid var(--gold-dim);padding:16px 20px;margin-bottom:28px;font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;color:var(--gold-dim);}
+
+/* Responsive */
+@media(max-width:700px){
+  .pillar-panel{padding:24px 16px 100px;}
+  .sub-tabs{padding:0 16px;}
+  .prayer-row{grid-template-columns:1fr auto auto;padding:12px 16px;}
+  .stats-bar{grid-template-columns:repeat(3,1fr);}
+  .week-header{flex-direction:column;gap:12px;}
 }
 </style>
 </head>
 <body>
-<!-- SHARED NAV -->
+
 <script src="nav.js"></script>
 
-
-
-
-<div id="save-ind">Saving...</div>
-
-<!-- AUTH -->
+<!-- ══════════════════════════════════════════
+     AUTH SCREEN
+══════════════════════════════════════════ -->
 <div id="auth-screen">
-  <div class="auth-box">
-    <div class="auth-header">
-      <div class="auth-logo">Muntazireen — منتظرين</div>
-      <h1 class="auth-title">The Protocol Tracker</h1>
-      <p class="auth-sub">Your progress. Your streak. Your preparation.<br>Free. Always.</p>
-    </div>
+  <div class="auth-wrap">
+    <div class="auth-logo">MUNTAZIREEN</div>
+    <div class="auth-logo-sub">منتظرين — Those who wait, watch, and prepare.</div>
+    <h1 class="auth-title">The Protocol Tracker</h1>
+    <p class="auth-sub">Your progress. Your preparation. Free. Always.</p>
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-signin" onclick="switchTab('signin')">Sign In</button>
-      <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Join Muntazireen</button>
+      <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Join</button>
     </div>
-    <div class="auth-body">
-      <div id="form-signin">
-        <div class="auth-field"><label class="auth-label">Email</label><input class="auth-input" type="email" id="si-email" placeholder="your@email.com"></div>
-        <div class="auth-field"><label class="auth-label">Password</label><div class="auth-pw-wrap"><input class="auth-input" type="password" id="si-password" placeholder="••••••••"><button class="pw-toggle" onclick="togglePw('si-password',this)" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
-        <button class="auth-btn" id="signin-btn" onclick="signIn()">Enter</button>
-        <div class="auth-message" id="signin-msg"></div>
+    <div id="form-signin">
+      <div class="auth-field"><label class="auth-label">Email</label><input class="auth-input" type="email" id="si-email" placeholder="your@email.com"></div>
+      <div class="auth-field"><label class="auth-label">Password</label>
+        <div class="auth-pw-wrap"><input class="auth-input" type="password" id="si-password" placeholder="••••••••">
+        <button class="pw-toggle" onclick="togglePw('si-password',this)" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
       </div>
-      <div id="form-signup" style="display:none;">
-        <div class="auth-field"><label class="auth-label">Name</label><input class="auth-input" type="text" id="su-username" placeholder="Your name" maxlength="30"></div>
-        <div class="auth-field"><label class="auth-label">Email</label><input class="auth-input" type="email" id="su-email" placeholder="your@email.com"></div>
-        <div class="auth-field"><label class="auth-label">Password (min 8 characters)</label><div class="auth-pw-wrap"><input class="auth-input" type="password" id="su-password" placeholder="••••••••"><button class="pw-toggle" onclick="togglePw('su-password',this)" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
-        <button class="auth-btn" id="signup-btn" onclick="signUp()">Begin the Protocol</button>
-        <div class="auth-message" id="signup-msg"></div>
-        <div class="auth-note">Free. No credit card. No conditions.<br>Progress saved across all your devices.</div>
+      <button class="auth-btn" id="signin-btn" onclick="doSignIn()">Enter</button>
+      <div class="auth-message" id="signin-msg"></div>
+    </div>
+    <div id="form-signup" style="display:none;">
+      <div class="auth-field"><label class="auth-label">Name</label><input class="auth-input" type="text" id="su-name" placeholder="Your name" maxlength="30"></div>
+      <div class="auth-field"><label class="auth-label">Email</label><input class="auth-input" type="email" id="su-email" placeholder="your@email.com"></div>
+      <div class="auth-field"><label class="auth-label">Password (min 8 characters)</label>
+        <div class="auth-pw-wrap"><input class="auth-input" type="password" id="su-password" placeholder="••••••••">
+        <button class="pw-toggle" onclick="togglePw('su-password',this)" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
       </div>
+      <button class="auth-btn" id="signup-btn" onclick="doSignUp()">Begin the Protocol</button>
+      <div class="auth-message" id="signup-msg"></div>
+      <div class="auth-note">Free. No credit card. No conditions.<br>Progress saved across devices.</div>
     </div>
   </div>
 </div>
 
-<!-- ONBOARDING -->
+<!-- ══════════════════════════════════════════
+     ONBOARDING SCREEN
+══════════════════════════════════════════ -->
 <div id="onboarding-screen">
   <div class="ob-wrap">
-    <div class="ob-hero">
-      <div class="ob-eyebrow">One-time Assessment — Saved to Your Account</div>
-      <h1 class="ob-title">Where are you <em>right now?</em></h1>
-      <p class="ob-sub">Be honest. What you've already mastered moves straight to maintenance. Your protocol is built around what still needs work.</p>
-    </div>
 
-    <!-- DEEN -->
-    <div class="ob-section">
-      <div class="ob-sec-hd"><span class="ob-dot deen"></span><span class="ob-sec-name">Deen</span><span class="ob-sec-hint">YES = already established, moves to maintenance</span></div>
-      <div class="ob-row">
-        <div class="ob-row-text"><div class="ob-row-label">I consistently protect all 5 daily prayers</div><div class="ob-row-sub">Fajr, Dhuhr, Asr, Maghrib, Isha — rarely if ever missed</div></div>
-        <div class="ob-yesno"><button class="ob-yn-btn yes" onclick="obSet('prayers',true,this)">Yes</button><div class="ob-yn-sep"></div><button class="ob-yn-btn no on" onclick="obSet('prayers',false,this)">No</button></div>
-      </div>
-      <div class="ob-row">
-        <div class="ob-row-text"><div class="ob-row-label">I know Ayat al-Kursi by heart and recite it after every fard prayer</div><div class="ob-row-sub">The habit is established — not just memorised but done daily</div></div>
-        <div class="ob-yesno"><button class="ob-yn-btn yes" onclick="obSet('ayatul_kursi',true,this)">Yes</button><div class="ob-yn-sep"></div><button class="ob-yn-btn no on" onclick="obSet('ayatul_kursi',false,this)">No</button></div>
-      </div>
-      <div class="ob-row">
-        <div class="ob-row-text"><div class="ob-row-label">I have memorised Al-Kahf Ayat 1–10 and recite them on Fridays</div><div class="ob-row-sub">Can recite from memory — not just read from a page</div></div>
-        <div class="ob-yesno"><button class="ob-yn-btn yes" onclick="obSet('kahf',true,this)">Yes</button><div class="ob-yn-sep"></div><button class="ob-yn-btn no on" onclick="obSet('kahf',false,this)">No</button></div>
-      </div>
-      <div class="ob-row">
-        <div class="ob-row-text"><div class="ob-row-label">I consistently do morning and evening adhkar as a daily habit</div><div class="ob-row-sub">Full set — not occasionally, but as an anchor every single day</div></div>
-        <div class="ob-yesno"><button class="ob-yn-btn yes" onclick="obSet('adhkar',true,this)">Yes</button><div class="ob-yn-sep"></div><button class="ob-yn-btn no on" onclick="obSet('adhkar',false,this)">No</button></div>
-      </div>
-    </div>
+    <!-- CAROUSEL -->
+    <div id="ob-carousel">
+      <div class="ob-carousel">
+        <div class="ob-slides" id="ob-slides">
 
-    <!-- BODY -->
-    <div class="ob-section">
-      <div class="ob-sec-hd"><span class="ob-dot body"></span><span class="ob-sec-name">Body</span></div>
-      <div class="ob-row">
-        <div class="ob-row-text"><div class="ob-row-label">I am currently training consistently — 3x per week or more</div><div class="ob-row-sub">A real established habit, not occasional exercise</div></div>
-        <div class="ob-yesno"><button class="ob-yn-btn yes" onclick="obSet('training',true,this)">Yes</button><div class="ob-yn-sep"></div><button class="ob-yn-btn no on" onclick="obSet('training',false,this)">No</button></div>
-      </div>
-      <div class="ob-row">
-        <div class="ob-row-text"><div class="ob-row-label">I can complete 30 consecutive push-ups with clean form</div><div class="ob-row-sub">No stopping, no collapsing, full range of motion</div></div>
-        <div class="ob-yesno"><button class="ob-yn-btn yes" onclick="obSet('pushups',true,this)">Yes</button><div class="ob-yn-sep"></div><button class="ob-yn-btn no on" onclick="obSet('pushups',false,this)">No</button></div>
-      </div>
-    </div>
+          <div class="ob-slide">
+            <div class="ob-slide-inner">
+              <div class="ob-slide-num">Welcome</div>
+              <span class="ob-slide-icon">🌙</span>
+              <h2 class="ob-slide-title">Muntazireen.<br><em>Those who prepare.</em></h2>
+              <p class="ob-slide-body">This tracker is your system. Five weeks of structured preparation across three pillars — <strong>Mind, Body, and Survival</strong>. Each pillar builds on the last. After five weeks, maintenance begins — and never ends.<br><br>Go at your own pace. Check tasks off when done. Missed tasks carry forward. Nothing resets except your intention.</p>
+            </div>
+          </div>
 
-    <!-- BLADE -->
-    <div class="ob-section">
-      <div class="ob-sec-hd"><span class="ob-dot blade"></span><span class="ob-sec-name">Blade & Defence</span></div>
-      <div class="ob-row">
-        <div class="ob-row-text"><div class="ob-row-label">I own a quality 4" fixed blade knife</div><div class="ob-row-sub">Full tang, quality steel — not a kitchen knife</div></div>
-        <div class="ob-yesno"><button class="ob-yn-btn yes" onclick="obSet('fixed_blade',true,this)">Yes</button><div class="ob-yn-sep"></div><button class="ob-yn-btn no on" onclick="obSet('fixed_blade',false,this)">No</button></div>
-      </div>
-      <div class="ob-row">
-        <div class="ob-row-text"><div class="ob-row-label">I own a quality folding knife with one-hand deployment</div><div class="ob-row-sub">Locking mechanism, smooth deployment under stress</div></div>
-        <div class="ob-yesno"><button class="ob-yn-btn yes" onclick="obSet('folder',true,this)">Yes</button><div class="ob-yn-sep"></div><button class="ob-yn-btn no on" onclick="obSet('folder',false,this)">No</button></div>
-      </div>
-      <div class="ob-row">
-        <div class="ob-row-text"><div class="ob-row-label">I have trained grip, draw, and the 5 angles of attack</div><div class="ob-row-sub">Hammer grip, reverse grip, all 5 angles drilled with deliberate practice</div></div>
-        <div class="ob-yesno"><button class="ob-yn-btn yes" onclick="obSet('blade_trained',true,this)">Yes</button><div class="ob-yn-sep"></div><button class="ob-yn-btn no on" onclick="obSet('blade_trained',false,this)">No</button></div>
-      </div>
-    </div>
+          <div class="ob-slide">
+            <div class="ob-slide-inner">
+              <div class="ob-slide-num">Pillar One</div>
+              <span class="ob-slide-icon">📖</span>
+              <h2 class="ob-slide-title">Mind.<br><em>Deen first.</em></h2>
+              <p class="ob-slide-body">Everything built here starts with the foundation of <strong>iman and knowledge</strong>. The Mind pillar covers your daily prayers and their consistency, Quranic learning (Ayatul Kursi and the first 10 ayat of Al-Kahf — both directly connected to the signs we are preparing for), and building your understanding of Aqeedah through Kitab at-Tawheed.<br><br>A body prepared without a grounded mind is just adrenaline. The mind is the anchor.</p>
+            </div>
+          </div>
 
-    <!-- GEAR — Tier 1 Essentials Only -->
-    <div class="ob-section">
-      <div class="ob-sec-hd"><span class="ob-dot surv"></span><span class="ob-sec-name">Essential Gear</span><span class="ob-sec-hint">Tier 1 critical items only</span></div>
-      <div class="ob-row">
-        <div class="ob-row-text"><div class="ob-row-label">I have a water filter — Sawyer Squeeze or equivalent</div></div>
-        <div class="ob-yesno"><button class="ob-yn-btn yes" onclick="obSet('water_filter',true,this)">Yes</button><div class="ob-yn-sep"></div><button class="ob-yn-btn no on" onclick="obSet('water_filter',false,this)">No</button></div>
+          <div class="ob-slide">
+            <div class="ob-slide-inner">
+              <div class="ob-slide-num">Pillar Two</div>
+              <span class="ob-slide-icon">⚔️</span>
+              <h2 class="ob-slide-title">Body.<br><em>Your body is amanah.</em></h2>
+              <p class="ob-slide-body">Physical readiness is not vanity — it is responsibility. The Body pillar builds <strong>cardiovascular endurance, strength, and weaponry skills</strong> week by week. You will be asked about your current fitness level and your preferred weapons — the tracker builds your daily and weekly plan around your answers.<br><br>Week 3 onwards, weaponry training becomes a daily drill. Your choices — knife, archery, firearm, or hand combat — define your sessions.</p>
+            </div>
+          </div>
+
+          <div class="ob-slide">
+            <div class="ob-slide-inner">
+              <div class="ob-slide-num">Pillar Three</div>
+              <span class="ob-slide-icon">🛡️</span>
+              <h2 class="ob-slide-title">Survival.<br><em>Prepare the earth around you.</em></h2>
+              <p class="ob-slide-body">The Survival pillar covers everything physical outside your body — <strong>gear acquisition, safe zones, first aid, food storage, water filtration, radiation monitoring, and emergency planning</strong>. Each item is tiered — Tier 1 first, then building outward.<br><br>First aid training is built in week by week, mirroring a certified first aid curriculum. You will also be asked how you want to complete it — through our system or an external certification of your choice.</p>
+            </div>
+          </div>
+
+          <div class="ob-slide">
+            <div class="ob-slide-inner">
+              <div class="ob-slide-num">The Development Phase</div>
+              <span class="ob-slide-icon">📅</span>
+              <h2 class="ob-slide-title">Five weeks.<br><em>Your pace.</em></h2>
+              <p class="ob-slide-body">The Development Phase is <strong>five weeks of structured daily and weekly tasks</strong> across all three pillars. Weeks advance by calendar — but missed tasks carry forward into a separate section and stay until you complete them. Gear that hasn't been acquired stays in your queue.<br><br>After Week 5, you enter <strong>Maintenance Mode</strong> — permanent daily and weekly habits that continue indefinitely. There is no endpoint. Preparation is not a phase, it is a way of life.<br><br>The next screen will ask you a few questions. Your answers shape your protocol.</p>
+            </div>
+          </div>
+
+        </div>
       </div>
-      <div class="ob-row">
-        <div class="ob-row-text"><div class="ob-row-label">I have a tourniquet — CAT or SOFTT-W</div><div class="ob-row-sub">Military-grade only. Not a shoelace.</div></div>
-        <div class="ob-yesno"><button class="ob-yn-btn yes" onclick="obSet('tourniquet',true,this)">Yes</button><div class="ob-yn-sep"></div><button class="ob-yn-btn no on" onclick="obSet('tourniquet',false,this)">No</button></div>
-      </div>
-      <div class="ob-row">
-        <div class="ob-row-text"><div class="ob-row-label">I have Potassium Iodide (KI) tablets — 130mg</div></div>
-        <div class="ob-yesno"><button class="ob-yn-btn yes" onclick="obSet('ki_tablets',true,this)">Yes</button><div class="ob-yn-sep"></div><button class="ob-yn-btn no on" onclick="obSet('ki_tablets',false,this)">No</button></div>
-      </div>
-      <div class="ob-row">
-        <div class="ob-row-text"><div class="ob-row-label">I have a hand crank or solar emergency radio</div></div>
-        <div class="ob-yesno"><button class="ob-yn-btn yes" onclick="obSet('radio',true,this)">Yes</button><div class="ob-yn-sep"></div><button class="ob-yn-btn no on" onclick="obSet('radio',false,this)">No</button></div>
-      </div>
-      <div class="ob-row">
-        <div class="ob-row-text"><div class="ob-row-label">I have a 72-hour food supply per person in my household</div><div class="ob-row-sub">High-calorie, long-shelf. Dates, oats, rice — Halal.</div></div>
-        <div class="ob-yesno"><button class="ob-yn-btn yes" onclick="obSet('food_72h',true,this)">Yes</button><div class="ob-yn-sep"></div><button class="ob-yn-btn no on" onclick="obSet('food_72h',false,this)">No</button></div>
-      </div>
-      <div class="ob-row">
-        <div class="ob-row-text"><div class="ob-row-label">I have a cash reserve in small denominations</div><div class="ob-row-sub">Minimum £50–100. Digital payments fail first.</div></div>
-        <div class="ob-yesno"><button class="ob-yn-btn yes" onclick="obSet('cash',true,this)">Yes</button><div class="ob-yn-sep"></div><button class="ob-yn-btn no on" onclick="obSet('cash',false,this)">No</button></div>
+      <div class="ob-carousel-nav">
+        <button class="ob-nav-btn" id="ob-prev" onclick="obSlide(-1)" style="visibility:hidden;">← Back</button>
+        <div class="ob-dots" id="ob-dots">
+          <div class="ob-dot active" onclick="obGoTo(0)"></div>
+          <div class="ob-dot" onclick="obGoTo(1)"></div>
+          <div class="ob-dot" onclick="obGoTo(2)"></div>
+          <div class="ob-dot" onclick="obGoTo(3)"></div>
+          <div class="ob-dot" onclick="obGoTo(4)"></div>
+        </div>
+        <button class="ob-nav-btn primary" id="ob-next" onclick="obSlide(1)">Next →</button>
       </div>
     </div>
 
-    <div class="ob-cta">
-      <button class="ob-submit" onclick="submitOnboarding()">Build My Protocol</button>
-      <div class="ob-cta-note">Saved to your account — your protocol adapts around your answers.</div>
+    <!-- QUESTIONS -->
+    <div id="ob-questions">
+      <div class="ob-q-title">A few questions.</div>
+      <p class="ob-q-sub">Be honest. Your answers shape your protocol. They can be changed later in Account settings.</p>
+
+      <div class="ob-question">
+        <span class="ob-q-label">Do you already have a regular workout routine?</span>
+        <div class="ob-options">
+          <button class="ob-opt" data-q="workout" data-v="yes" onclick="obSelect(this,'workout')">Yes</button>
+          <button class="ob-opt" data-q="workout" data-v="no" onclick="obSelect(this,'workout')">No</button>
+        </div>
+      </div>
+
+      <div class="ob-question">
+        <span class="ob-q-label">Do you know Ayatul Kursi by heart?</span>
+        <div class="ob-options">
+          <button class="ob-opt" data-q="ayatul_kursi" data-v="yes" onclick="obSelect(this,'ayatul_kursi')">Yes, I know it</button>
+          <button class="ob-opt" data-q="ayatul_kursi" data-v="no" onclick="obSelect(this,'ayatul_kursi')">Not yet</button>
+        </div>
+      </div>
+
+      <div class="ob-question">
+        <span class="ob-q-label">Do you know the first 10 ayat of Surah Al-Kahf?</span>
+        <div class="ob-options">
+          <button class="ob-opt" data-q="kahf" data-v="yes" onclick="obSelect(this,'kahf')">Yes, I know them</button>
+          <button class="ob-opt" data-q="kahf" data-v="no" onclick="obSelect(this,'kahf')">Not yet</button>
+        </div>
+      </div>
+
+      <div class="ob-question">
+        <span class="ob-q-label">Preferred weaponry — select all that apply</span>
+        <p class="ob-multi-note">Multi-select. Changeable in Account settings.</p>
+        <div class="ob-options">
+          <button class="ob-opt" data-q="weapons" data-v="knife" onclick="obMulti(this,'weapons')">Knife</button>
+          <button class="ob-opt" data-q="weapons" data-v="bow" onclick="obMulti(this,'weapons')">Bow & Arrow</button>
+          <button class="ob-opt" data-q="weapons" data-v="firearm" onclick="obMulti(this,'weapons')">Firearm</button>
+          <button class="ob-opt" data-q="weapons" data-v="hand" onclick="obMulti(this,'weapons')">Hand Combat</button>
+        </div>
+      </div>
+
+      <div class="ob-question">
+        <span class="ob-q-label">First aid training preference</span>
+        <p class="ob-q-sub-text">Our built-in system mirrors a certified first aid curriculum week by week.</p>
+        <div class="ob-options">
+          <button class="ob-opt" data-q="firstaid" data-v="builtin" onclick="obSelect(this,'firstaid')">Built-in System</button>
+          <button class="ob-opt" data-q="firstaid" data-v="external" onclick="obSelect(this,'firstaid')">External Certification</button>
+        </div>
+      </div>
+
+      <button class="ob-submit" onclick="submitOnboarding()">Begin My Protocol →</button>
+      <div class="auth-message" id="ob-msg" style="margin-top:12px;"></div>
     </div>
+
   </div>
 </div>
 
-<!-- APP -->
+<!-- ══════════════════════════════════════════
+     APP SCREEN
+══════════════════════════════════════════ -->
 <div id="app-screen">
-
-  <div class="app-header">
-    <div class="welcome-block">
-      <h1>As-salamu alaykum, <em id="user-name-disp">Brother</em></h1>
-      <div class="welcome-sub" id="today-date-disp"></div>
-    </div>
-    <div class="hstats">
-      <div class="hstat"><div class="hstat-n" id="st-day">—</div><div class="hstat-l">Day</div></div>
-      <div class="hstat"><div class="hstat-n" id="st-week">—</div><div class="hstat-l">Week</div></div>
-      <div class="hstat"><div class="hstat-n" id="st-phase">—</div><div class="hstat-l">Phase</div></div>
-    </div>
+  <div class="pillar-tabs">
+    <button class="pillar-tab mind active" onclick="switchPillar('mind')">Mind</button>
+    <button class="pillar-tab body" onclick="switchPillar('body')">Body</button>
+    <button class="pillar-tab surv" onclick="switchPillar('survival')">Survival</button>
   </div>
 
-  <div class="mode-bar">
-    <div class="mb-left">
-      <span class="mb-phase" id="mb-phase-lbl">—</span>
-      <span class="mb-desc" id="mb-phase-desc"></span>
+  <!-- MIND PANEL -->
+  <div class="pillar-panel active" id="panel-mind">
+    <div class="sub-tabs">
+      <button class="sub-tab active" onclick="switchSub('mind','today',this)">Today</button>
+      <button class="sub-tab" onclick="switchSub('mind','week',this)">This Week</button>
     </div>
-    <button class="print-btn" onclick="printWeek()">Print This Week</button>
+    <div id="mind-today" style="padding-top:28px;"></div>
+    <div id="mind-week" style="display:none;padding-top:28px;"></div>
   </div>
 
-  <!-- Progress -->
-  <div class="progress-wrap">
-    <div class="prog-hd">5-Week Protocol Ramp <span id="prog-pct">0%</span></div>
-    <div class="week-pips" id="week-pips"></div>
-    <div class="week-pip-lbls" id="week-pip-lbls"></div>
-    <div class="pillar-bars">
-      <div class="pbar dn"><div class="pbar-lbl dn">Deen <span id="dn-pct">0%</span></div><div class="pbar-track"><div class="pbar-fill" id="dn-bar" style="width:0%"></div></div><div class="pbar-streak" id="dn-st">—</div></div>
-      <div class="pbar bd"><div class="pbar-lbl bd">Body <span id="bd-pct">0%</span></div><div class="pbar-track"><div class="pbar-fill" id="bd-bar" style="width:0%"></div></div><div class="pbar-streak" id="bd-st">—</div></div>
-      <div class="pbar bl"><div class="pbar-lbl bl">Blade <span id="bl-pct">0%</span></div><div class="pbar-track"><div class="pbar-fill" id="bl-bar" style="width:0%"></div></div><div class="pbar-streak" id="bl-st">—</div></div>
-      <div class="pbar sv"><div class="pbar-lbl sv">Survival <span id="sv-pct">0%</span></div><div class="pbar-track"><div class="pbar-fill" id="sv-bar" style="width:0%"></div></div><div class="pbar-streak" id="sv-st">—</div></div>
+  <!-- BODY PANEL -->
+  <div class="pillar-panel" id="panel-body">
+    <div class="sub-tabs">
+      <button class="sub-tab active" onclick="switchSub('body','today',this)">Today</button>
+      <button class="sub-tab" onclick="switchSub('body','week',this)">This Week</button>
     </div>
+    <div id="body-today" style="padding-top:28px;"></div>
+    <div id="body-week" style="display:none;padding-top:28px;"></div>
   </div>
 
-  <div class="sec-ey">Today's Protocol</div>
-  <div class="today-wrap"><div class="today-grid" id="today-grid"></div></div>
-
-  <div class="sec-ey">Gear Acquisition — <span id="gear-phase-lbl" style="color:var(--survival)">This Week</span></div>
-  <div class="gear-wrap"><div class="gear-box" id="gear-box"></div></div>
-
-  <div class="sec-ey">Weekly Checkpoints</div>
-  <div class="cp-wrap">
-    <div class="week-sel" id="week-sel"></div>
-    <div class="cp-grid" id="cp-grid"></div>
-    <div class="week-status"><span class="ws-lbl">Week Status</span><span class="ws-badge pend" id="ws-badge">In Progress</span></div>
-  </div>
-
-  <div class="sec-ey">Pillar Streaks</div>
-  <div class="streak-wrap">
-    <div class="streak-grid">
-      <div class="st-card dn"><div class="st-icon">☾</div><div class="st-n" id="st-deen">0</div><div class="st-lbl">Deen</div><div class="st-sub">consecutive days</div></div>
-      <div class="st-card bd"><div class="st-icon">⚡</div><div class="st-n" id="st-body">0</div><div class="st-lbl">Body</div><div class="st-sub">consecutive days</div></div>
-      <div class="st-card bl"><div class="st-icon">⚔</div><div class="st-n" id="st-blade">0</div><div class="st-lbl">Blade</div><div class="st-sub">consecutive days</div></div>
-      <div class="st-card sv"><div class="st-icon">◈</div><div class="st-n" id="st-surv">0</div><div class="st-lbl">Survival</div><div class="st-sub">consecutive days</div></div>
+  <!-- SURVIVAL PANEL -->
+  <div class="pillar-panel" id="panel-survival">
+    <div class="sub-tabs">
+      <button class="sub-tab active" onclick="switchSub('survival','today',this)">Today</button>
+      <button class="sub-tab" onclick="switchSub('survival','week',this)">This Week</button>
     </div>
+    <div id="survival-today" style="padding-top:28px;"></div>
+    <div id="survival-week" style="display:none;padding-top:28px;"></div>
   </div>
-
-  <footer>
-    <div class="ft">MUNTAZIREEN — Free Forever<a href="index.html">Home</a><a href="developments.html">Developments</a></div>
-    <div class="ft">"Hasten to do good deeds before trials come like pieces of a dark night." — Muslim 118</div>
-  </footer>
-
 </div>
+
+<div id="save-indicator">Saving...</div>
+
 
 <script>
-// ═══════════════════════════════════════════════
-//  SUPABASE
-// ═══════════════════════════════════════════════
-const SUPABASE_URL='https://ulsbuqsjsssqflydwylm.supabase.co';
-const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsc2J1cXNqc3NzcWZseWR3eWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTAxNTYsImV4cCI6MjA4ODI2NjE1Nn0.EIJVQBN9bkufyroUDE1Va8zExBKbEH9CegBOIGauRfs';
-const {createClient}=supabase;
-const sb=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+// ════════════════════════════════════════════
+// SUPABASE INIT
+// ════════════════════════════════════════════
+const SB_URL = 'https://ulsbuqsjsssqflydwylm.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsc2J1cXNqc3NzcWZseWR3eWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTAxNTYsImV4cCI6MjA4ODI2NjE1Nn0.EIJVQBN9bkufyroUDE1Va8zExBKbEH9CegBOIGauRfs';
+const supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
-// ═══════════════════════════════════════════════
-//  PROTOCOL — 5 WEEK RAMP
-// ═══════════════════════════════════════════════
-// flag: if set and user answered YES in onboarding, block is skipped (already mastered)
-// gear: tiered acquisition list per week — BEYOND the onboarding essentials
+// ════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════
+let currentUser = null;
+let userData = {};
+let saveTimer = null;
 
-const WEEKS=[
-  // ─── WEEK 1 — ANCHOR ───────────────────────────────────────────
-  { label:'Week 1', phase:'Anchor',
-    blocks:[
-      {id:'w1_prayers',   pillar:'deen',     cls:'dn', title:'5 Prayers — Lock Every One',          detail:'Fajr. Dhuhr. Asr. Maghrib. Isha. No exceptions. If you miss one this week, you know your weak point — and you fix it immediately.', flag:'prayers'},
-      {id:'w1_kursi',     pillar:'deen',     cls:'dn', title:'Ayat al-Kursi After Every Fard',       detail:'Recite after each obligatory prayer. If you don\'t know it by heart, learn it this week. It is 3 lines. There is no excuse not to know it.', flag:'ayatul_kursi'},
-      {id:'w1_adhkar_m',  pillar:'deen',     cls:'dn', title:'Morning Adhkar — Establish the Habit', detail:'After Fajr. Begin with: Subhanallah × 33, Alhamdulillah × 33, Allahu Akbar × 33. Add Ayat al-Kursi, Al-Ikhlas, Al-Falaq, An-Nas. 10 minutes.', flag:'adhkar'},
-      {id:'w1_body',      pillar:'body',     cls:'bd', title:'Push + Core Foundation',               detail:'3 sets: push-ups to failure, plank 30 seconds, bodyweight squats × 20. BRACE your core before every single rep. This is non-negotiable.'},
-      {id:'w1_grip',      pillar:'blade',    cls:'bl', title:'Hammer Grip — 20 Draws Daily',         detail:'Draw your 4" fixed blade 20 times. Hammer grip: wrap all four fingers, thumb on top. No pinching. Slow and deliberate. Re-sheathe safely every time.', flag:'blade_trained'},
-      {id:'w1_gear_list', pillar:'survival', cls:'sv', title:'Write Your Tier 1 List',               detail:'Open Resources. Write every Tier 1 item you don\'t own. This is your acquisition target. You cannot prepare for what you haven\'t listed.'},
-    ],
-    gear:[
-      {tier:'t1', id:'g_fixed_blade', name:'4" fixed blade knife',          note:'Mora Garberg, ESEE-4, or equivalent. Full tang. Quality steel.', flag:'fixed_blade'},
-      {tier:'t1', id:'g_folder',      name:'Folding knife with lock',        note:'One-hand thumb deployment. Locking blade. Spyderco, Benchmade, or equivalent.', flag:'folder'},
-      {tier:'t1', id:'g_fire',        name:'Lighter + waterproof matches',   note:'Both. Redundancy is the principle. Store separately.'},
-      {tier:'t1', id:'g_knife_stone', name:'Sharpening stone',               note:'A dull blade is a useless blade. Diamond stone or whetstone.'},
-      {tier:'t2', id:'g_axe',         name:'Hatchet — Fiskars X7 or equiv.', note:'Shelter, fire, utility, defence. Start looking now.'},
-    ],
-    checkpoints:{
-      deen:['All 5 prayers protected every day — zero misses','Ayat al-Kursi recited after every fard prayer all week','Morning adhkar completed at least 5 of 7 days — habit forming'],
-      body:['3 training sessions done — no skipping','Core brace started — you think about it before each rep','Daily walk on non-training days'],
-      blade:['20 hammer-grip draws done every day','Re-sheathing safely and consistently — no fumbles','4" fixed blade owned or ordered'],
-    }
+// ════════════════════════════════════════════
+// AYATUL KURSI DATA
+// ════════════════════════════════════════════
+const AYATUL_KURSI = [
+  {
+    arabic: 'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ',
+    translit: 'Allāhu lā ilāha illā huwa l-ḥayyu l-qayyūm',
+    trans: 'Allah — there is no deity except Him, the Ever-Living, the Sustainer of existence.'
   },
-
-  // ─── WEEK 2 — BUILD ────────────────────────────────────────────
-  { label:'Week 2', phase:'Build',
-    blocks:[
-      {id:'w2_prayers',   pillar:'deen',     cls:'dn', title:'5 Prayers — Unbroken',                 detail:'Second week. Prayers must be unbroken. If Fajr is your weakness, sleep earlier. If Dhuhr is missed at work, plan your break around it.'},
-      {id:'w2_kahf',      pillar:'deen',     cls:'dn', title:'Al-Kahf Ayat 1–5 — Memorise',          detail:'Start with the first 5 ayat. Repeat them after every Fajr until they are locked. These 10 ayat are protection against the Dajjal — the greatest fitna humanity will face.', flag:'kahf'},
-      {id:'w2_adhkar_e',  pillar:'deen',     cls:'dn', title:'Add Evening Adhkar',                   detail:'After Asr or Maghrib. The same set as morning. Morning armour + evening armour. Ayat al-Kursi both sets. No breaks.', flag:'adhkar'},
-      {id:'w2_pull',      pillar:'body',     cls:'bd', title:'Push + Pull + Core',                   detail:'Add pulling: resistance band rows, door-frame pulls, or any pulling movement. 3 sets each. Brace every rep. Track your numbers — push-up max, sets completed.'},
-      {id:'w2_angles',    pillar:'blade',    cls:'bl', title:'5 Angles of Attack — Introduced',      detail:'Angle 1: Diagonal slash down-right. Angle 2: Diagonal slash down-left. Angle 3: Horizontal slash right. Angle 4: Horizontal slash left. Angle 5: Forward thrust. Drill each × 10, very slow, full extension.', flag:'blade_trained'},
-      {id:'w2_order',     pillar:'survival', cls:'sv', title:'Order KI Tablets + Tourniquet',        detail:'Potassium iodide 130mg per adult. CAT or SOFTT-W tourniquet. Order today. These are not optional. You do not want to be ordering them when you need them.', flag:'ki_tablets'},
-    ],
-    gear:[
-      {tier:'t1', id:'g_ki',         name:'Potassium Iodide 130mg tablets', note:'One per adult in household. Thyroid protection against radiation.', flag:'ki_tablets'},
-      {tier:'t1', id:'g_tourniquet', name:'Tourniquet — CAT or SOFTT-W',    note:'Military grade only. Learn application to under 60 seconds.', flag:'tourniquet'},
-      {tier:'t1', id:'g_cash',       name:'Cash reserve — small denominations', note:'Minimum £50–100. Digital payments die first.', flag:'cash'},
-      {tier:'t1', id:'g_torch',      name:'Head torch + spare batteries',   note:'Hands-free light. Fenix or Black Diamond recommended.'},
-      {tier:'t2', id:'g_paracord',   name:'Paracord 550 — 30m+',           note:'Shelter, snares, lashing, repair. Infinite uses.'},
-    ],
-    checkpoints:{
-      deen:['Al-Kahf Ayat 1–5 memorised — tested by reciting without looking','Morning AND evening adhkar both done daily this week','5 prayers unbroken — not one missed, not one delayed beyond reason'],
-      body:['Pull movements added — you are now doing push AND pull','Intensity measurably higher than Week 1','Numbers tracked and written down'],
-      blade:['All 5 angles introduced — you understand the framework','Each angle drilled × 10 daily, slow and clean','KI tablets and tourniquet ordered'],
-    }
+  {
+    arabic: 'لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ',
+    translit: 'Lā taʾkhuḏhū sinatun wa-lā nawm',
+    trans: 'Neither drowsiness overtakes Him nor sleep.'
   },
-
-  // ─── WEEK 3 — DEEPEN ──────────────────────────────────────────
-  { label:'Week 3', phase:'Deepen',
-    blocks:[
-      {id:'w3_prayers',   pillar:'deen',     cls:'dn', title:'5 Prayers — On Time',                  detail:'Not just praying — praying on time. Know your prayer times. Set reminders if needed. The goal is eventually not needing the reminder.'},
-      {id:'w3_kahf',      pillar:'deen',     cls:'dn', title:'Al-Kahf Ayat 6–10 — Complete the 10',  detail:'Ayat 6–10 this week. Link them to 1–5. By Friday you should be reciting all 10 in one chain. Recite in your Sunnah prayers — embed it in your salah.', flag:'kahf'},
-      {id:'w3_adhkar_b',  pillar:'deen',     cls:'dn', title:'Adhkar Both Sets + Fajr Dua',          detail:'Morning and evening adhkar both sets, no gaps. Add 2 minutes of personal dua after Fajr. Specific. Name what you\'re asking for: steadfastness, tawbah, your family, the ummah.'},
-      {id:'w3_sprint',    pillar:'body',     cls:'bd', title:'Sprint Intervals — Stress Inoculation', detail:'3 × 30-second sprints, 90 seconds rest between. Then immediately complete your push/pull set. This is the critical drill — function under elevated heart rate. This is what defence looks like.'},
-      {id:'w3_speed',     pillar:'blade',    cls:'bl', title:'Angles at 60% Speed + Folder Deploy',  detail:'All 5 angles × 15 each at 60% speed — still clean, no slop. Then: one-handed folder deployment × 20. Thumb on stud, flick open, lock engaged. Do it until it\'s smooth.', flag:'blade_trained'},
-      {id:'w3_filter',    pillar:'survival', cls:'sv', title:'Water Filter Practice',                detail:'Use your Sawyer filter. Fill from a tap, push through, clean the filter, store it. Know the setup time. Know the flow rate. Know how to backflush it. Before you need it.', flag:'water_filter'},
-    ],
-    gear:[
-      {tier:'t1', id:'g_water_filter', name:'Sawyer Squeeze water filter',   note:'Filters 100,000 gallons. Know how to use it before crisis.', flag:'water_filter'},
-      {tier:'t1', id:'g_radio',        name:'Hand crank / solar emergency radio', note:'No battery dependency. Emergency broadcasts survive all failures.', flag:'radio'},
-      {tier:'t1', id:'g_food_72h',     name:'72-hour food supply per person', note:'High-calorie, long-shelf. Dates, oats, rice, tinned protein. Halal.', flag:'food_72h'},
-      {tier:'t1', id:'g_matches_wp',   name:'Waterproof container for documents', note:'Passport, IDs, cash — in a sealed waterproof bag.'},
-      {tier:'t2', id:'g_gloves_work',  name:'Heavy-duty work gloves',        note:'For kit handling, rope work, blade training protection.'},
-    ],
-    checkpoints:{
-      deen:['Al-Kahf Ayat 1–10 fully memorised — recited every Friday from now','Post-Fajr dua is part of the routine — not an afterthought','Adhkar both sets unbroken — morning and evening, every day'],
-      body:['Sprint intervals completed — you\'ve felt what stress inoculation means','Conditioning measurably better than Week 1 — your numbers prove it','No injuries from ego — you modified when your knee signalled to stop'],
-      blade:['All 5 angles at 60% speed — clean, consistent, no stopping between','Folder deployment smooth one-handed — 20 reps per day','Water filter practised at least once — you know the process'],
-    }
+  {
+    arabic: 'لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ',
+    translit: 'Lahū mā fī s-samāwāti wa-mā fī l-arḍ',
+    trans: 'To Him belongs whatever is in the heavens and whatever is on the earth.'
   },
-
-  // ─── WEEK 4 — PRESSURE ────────────────────────────────────────
-  { label:'Week 4', phase:'Pressure',
-    blocks:[
-      {id:'w4_prayers',   pillar:'deen',     cls:'dn', title:'5 Prayers + Aqeedah Study Begins',     detail:'Begin Kitab at-Tawheed by Sheikh Muhammad ibn Abd al-Wahhab. One chapter. Read it. Then sit with it. What does it change about how you see your day?'},
-      {id:'w4_kahf_fri',  pillar:'deen',     cls:'dn', title:'Al-Kahf — Every Friday, No Exceptions', detail:'This is now permanent. Every single Friday. Recite Ayat 1–10. Understand what you\'re saying. The protection of Al-Kahf is for the believer who acts on it.'},
-      {id:'w4_adhkar_b',  pillar:'deen',     cls:'dn', title:'Adhkar Both Sets — No Gaps',           detail:'Both sets. Every day. This week adds specificity to your dua — make dua for a righteous spouse, your family\'s protection, steadfastness in fitna. Name it.'},
-      {id:'w4_bag',       pillar:'body',     cls:'bd', title:'Heavy Session + Bag Carry',            detail:'Max effort push/pull/core. Then: load your bag to 10kg+ and walk for 25 minutes without stopping. This is not gym fitness. This is functional survival fitness.'},
-      {id:'w4_pressure',  pillar:'blade',    cls:'bl', title:'Post-Sprint Blade Deployment Drill',   detail:'Sprint 30 seconds at full effort. Heart rate maxed. Then: draw fixed blade, cycle all 5 angles × 5 each, re-sheathe. That shake in your hand — that\'s what you\'re training through.'},
-      {id:'w4_bob',       pillar:'survival', cls:'sv', title:'Bug-Out Bag + IFAK Assembly',          detail:'Source a 45–65L bag. Start building your IFAK: pressure bandage, hemostatic gauze, chest seal (vented), gloves. Pack Tier 1 items into the bag. It should be grab-and-go.'},
-    ],
-    gear:[
-      {tier:'t1', id:'g_bob',      name:'Bug-out bag — 45–65L',              note:'Loaded weight must stay under 25% of your bodyweight.'},
-      {tier:'t1', id:'g_bandage',  name:'IFAK — pressure bandage',           note:'Israeli bandage (Emergency Bandage) or H&H equivalent.'},
-      {tier:'t1', id:'g_gauze',    name:'IFAK — hemostatic gauze',           note:'QuikClot Combat Gauze or Celox-A. Stops arterial bleeding.'},
-      {tier:'t2', id:'g_compass',  name:'Compass — Silva baseplate type',    note:'Practice navigation before you need it. Know your cardinal directions.'},
-      {tier:'t2', id:'g_maps',     name:'Printed + laminated local maps',    note:'Road, topographic. Mark your routes and meeting points now.'},
-      {tier:'t2', id:'g_radio_tx', name:'Two-way radio — Baofeng UV-5R',     note:'Short-range comms when phones fail. Learn before crisis.'},
-    ],
-    checkpoints:{
-      deen:['Kitab at-Tawheed Chapter 1 read and understood — not just read','Al-Kahf recited on Friday without looking at text','Adhkar no gaps, dua is specific and personal'],
-      body:['Bag carry completed — 10kg+ for 25 minutes','Heavy session numbers tracked — push-up max improved vs Week 1','You are visibly different physically from the person who started Week 1'],
-      blade:['Post-sprint deployment done — your draw was clean under a racing heart rate','All 5 angles at 80% speed, clean form throughout','Bug-out bag sourced or ordered'],
-    }
+  {
+    arabic: 'مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ',
+    translit: 'Man ḏḥā llaḏī yashfaʿu ʿindahū illā bi-iḏnih',
+    trans: 'Who is it that can intercede with Him except by His permission?'
   },
-
-  // ─── WEEK 5 — INTEGRATION ─────────────────────────────────────
-  { label:'Week 5', phase:'Integration',
-    blocks:[
-      {id:'w5_deen_audit', pillar:'deen',    cls:'dn', title:'Full Deen Audit',                     detail:'Are 5 prayers truly protected? Is Al-Kahf locked — can you recite it without thinking? Is Ayat al-Kursi a reflex? Are both adhkar sets automatic? Audit. Close every gap.'},
-      {id:'w5_community',  pillar:'deen',    cls:'dn', title:'Identify Your Community',             detail:'Find the masjid you commit to for Jumu\'ah. Identify at least one other believer who is awake. Share the platform. Share the protocol. You do not survive the coming trials alone.'},
-      {id:'w5_peak',       pillar:'body',    cls:'bd', title:'Peak Effort — Document Your Numbers', detail:'Max push-ups in one set. Timed sprint. Bag carry at full load for 40 minutes. Write every number. Compare to Week 1. The difference is your preparation dividend.'},
-      {id:'w5_full_drill', pillar:'blade',   cls:'bl', title:'Full Pressure Drill — Both Blades',  detail:'Sprint 30 seconds maximum effort. Then: fixed blade — all 5 angles × 10, re-sheathe. Folder — one-hand deploy × 10, re-sheathe. The whole sequence. Under pressure. This is the test.'},
-      {id:'w5_gear_audit', pillar:'survival',cls:'sv', title:'Full Tier 1 Audit + Begin Tier 2',   detail:'Every Tier 1 item: owned, functional, accessible, and in the bag. Write your Tier 2 list. Begin with 30-day food supply extension. You are now beyond emergency — you are building resilience.'},
-    ],
-    gear:[
-      {tier:'t1', id:'g_chest_seal',  name:'IFAK — vented chest seal',           note:'Hyfin Vent or equivalent. For penetrating chest wounds.'},
-      {tier:'t2', id:'g_food_30',     name:'30-day food supply per person',       note:'Rice, lentils, oats, ghee, honey, tinned fish/beans. Begin building.'},
-      {tier:'t2', id:'g_water_store', name:'Water storage — 20L+ per person',     note:'WaterBOB, jerry cans, or dedicated containers.'},
-      {tier:'t2', id:'g_solar',       name:'Solar charger — 20W+ panel',          note:'Keeps radio, torch, and phone charged indefinitely. Renogy or Goal Zero.'},
-      {tier:'t3', id:'g_quran_phys',  name:'Physical Quran — in waterproof bag',  note:'Your most important possession. Protect it accordingly.'},
-      {tier:'t3', id:'g_gold_silver', name:'Physical gold or silver — any amount', note:'When fiat collapses, precious metals are currency. Start small.'},
-    ],
-    checkpoints:{
-      deen:['Every deen element is a reflex — prayers, adhkar, Al-Kahf. You don\'t think about them. You do them.','Community identified — at least one believer who knows where you are','Aqeedah study ongoing — Chapter 2 of Kitab at-Tawheed started or planned'],
-      body:['Numbers documented and compared — your proof of growth is written','Can carry a loaded bag for 40 minutes without stopping','Training is no longer a discipline problem — you want to do it'],
-      blade:['Full pressure drill completed clean — draw automatic under elevated heart rate','All 5 angles at full speed, no hesitation, clean re-sheathe','Tier 1 gear complete or you have a concrete dated acquisition plan'],
-    }
+  {
+    arabic: 'يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ',
+    translit: 'Yaʿlamu mā bayna aydīhim wa-mā khalfahum',
+    trans: 'He knows what is before them and what will be after them,'
+  },
+  {
+    arabic: 'وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ',
+    translit: 'Wa-lā yuḥīṭūna bi-shayʾin min ʿilmihī illā bi-mā shāʾ',
+    trans: 'and they encompass not a thing of His knowledge except for what He wills.'
+  },
+  {
+    arabic: 'وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ',
+    translit: 'Wasiʿa kursiyyuhu s-samāwāti wa-l-arḍa wa-lā yaʾūduhū ḥifẓuhumā wa-huwa l-ʿaliyyu l-ʿaẓīm',
+    trans: 'His Throne extends over the heavens and the earth, and their preservation tires Him not. And He is the Most High, the Most Great.'
   }
 ];
 
-// ─── MAINTENANCE — WEEK 6+ — NO END DATE ───────────────────────
-const MAINTENANCE={
-  label:'Maintenance', phase:'Ongoing — No End Date',
-  blocks:[
-    {id:'m_prayers',  pillar:'deen',     cls:'dn', title:'5 Prayers — Protected',               detail:'Every day. No exceptions. Fajr first. This is the foundation. Nothing else stands without it.'},
-    {id:'m_kursi',    pillar:'deen',     cls:'dn', title:'Ayat al-Kursi After Every Fard',       detail:'After each obligatory prayer. Every single day. This is a daily shield — it does not take 2 minutes to maintain. Do not let it slip.'},
-    {id:'m_adhkar',   pillar:'deen',     cls:'dn', title:'Morning & Evening Adhkar + Friday Kahf', detail:'Full set both. Al-Kahf recited every Friday — the full 10 ayat. Monthly: one new chapter of Kitab at-Tawheed. Deen is not maintained — it is deepened.'},
-    {id:'m_train',    pillar:'body',     cls:'bd', title:'Training or Active Recovery',         detail:'3x week: push/pull/core + sprint intervals. Other 4 days: minimum 20-minute walk. Weekly: bag carry at full load. Monthly: max effort test and document your numbers.'},
-    {id:'m_blade',    pillar:'blade',    cls:'bl', title:'Daily Blade Drill — 10 Minutes',      detail:'Hammer grip draws × 20. All 5 angles × 10 each — diagonal, diagonal, horizontal, horizontal, thrust. Folder deploy × 10. Re-sheathe clean. Weekly: full post-sprint pressure drill.'},
-    {id:'m_survival', pillar:'survival', cls:'sv', title:'Weekly Gear Check + Monthly Skill',   detail:'Weekly: is kit accessible? Water filter clean? Bag packed? Monthly: practise one skill (filter water, apply tourniquet, navigate by compass, build a fire). Monthly: add one Tier 2 item.'},
-  ],
-  gear:[
-    {tier:'t2', id:'g_m_t2_food',    name:'30-day food supply — complete',     note:'If not already done. This month\'s priority.'},
-    {tier:'t2', id:'g_m_ifak_full',  name:'Full IFAK complete and accessible', note:'All components. Not in storage — in the bag.'},
-    {tier:'t2', id:'g_m_nav',        name:'Navigation practised this month',   note:'Read a paper map. Use a compass. Know your exits.'},
-    {tier:'t3', id:'g_m_battery',    name:'Backup power — 500Wh battery bank', note:'Jackery, EcoFlow, or equivalent. Powers radios, lights, medical.'},
-    {tier:'t3', id:'g_m_community',  name:'Community network identified',      note:'Names, skills, meeting point, comms plan. At least 3 people.'},
-    {tier:'t3', id:'g_m_gold',       name:'Physical gold/silver added',        note:'Any amount. Consistency over quantity. Every month.'},
-  ],
-  checkpoints:{
-    deen:['All 5 prayers protected — every single one this week','Al-Kahf recited in full on Friday — no skipping','Morning and evening adhkar unbroken — no gaps this week','Monthly aqeedah: one chapter of Kitab at-Tawheed completed'],
-    body:['3 training sessions completed this week','Weekly bag carry done — you loaded up and walked','No ego injuries — you modified when the signal came'],
-    blade:['Daily 10-minute blade drill — every day this week','Weekly post-sprint pressure drill completed — full sequence','Your draw is automatic. You don\'t think about it. You\'ve earned that.'],
+// ════════════════════════════════════════════
+// AL-KAHF FIRST 10 AYAT
+// ════════════════════════════════════════════
+const AL_KAHF = [
+  {
+    arabic: 'الْحَمْدُ لِلَّهِ الَّذِي أَنزَلَ عَلَىٰ عَبْدِهِ الْكِتَابَ وَلَمْ يَجْعَل لَّهُ عِوَجًا',
+    translit: 'Al-ḥamdu lillāhi llaḏī anzala ʿalā ʿabdihī l-kitāba wa-lam yajʿal lahū ʿiwajā',
+    trans: 'All praise is due to Allah, who has sent down upon His servant the Book and has not made therein any deviance.'
+  },
+  {
+    arabic: 'قَيِّمًا لِّيُنذِرَ بَأْسًا شَدِيدًا مِّن لَّدُنْهُ وَيُبَشِّرَ الْمُؤْمِنِينَ الَّذِينَ يَعْمَلُونَ الصَّالِحَاتِ أَنَّ لَهُمْ أَجْرًا حَسَنًا',
+    translit: 'Qayyiman li-yunḏhira baʾsan shadīdan min ladunhu wa-yubashshira l-muʾminīna llaḏīna yaʿmalūna ṣ-ṣāliḥāti anna lahum ajran ḥasanā',
+    trans: '[He has made it] straight, to warn of severe punishment from Him and to give good tidings to the believers who do righteous deeds that they will have a good reward.'
+  },
+  {
+    arabic: 'مَّاكِثِينَ فِيهِ أَبَدًا',
+    translit: 'Mākiṯīna fīhi abadā',
+    trans: 'In which they will remain forever.'
+  },
+  {
+    arabic: 'وَيُنذِرَ الَّذِينَ قَالُوا اتَّخَذَ اللَّهُ وَلَدًا',
+    translit: 'Wa-yunḏhira llaḏīna qālū ittakhaḏha llāhu waladā',
+    trans: 'And to warn those who say, "Allah has taken a son."'
+  },
+  {
+    arabic: 'مَّا لَهُم بِهِ مِنْ عِلْمٍ وَلَا لِآبَائِهِمْ كَبُرَتْ كَلِمَةً تَخْرُجُ مِنْ أَفْوَاهِهِمْ إِن يَقُولُونَ إِلَّا كَذِبًا',
+    translit: 'Mā lahum bihī min ʿilmin wa-lā li-ābāʾihim kaburat kalimatan takhruju min afwāhihim in yaqūlūna illā kaḏhibā',
+    trans: 'They have no knowledge of it, nor had their fathers. Grave is the word that comes out of their mouths; they speak not except a lie.'
+  },
+  {
+    arabic: 'فَلَعَلَّكَ بَاخِعٌ نَّفْسَكَ عَلَىٰ آثَارِهِمْ إِن لَّمْ يُؤْمِنُوا بِهَٰذَا الْحَدِيثِ أَسَفًا',
+    translit: 'Falaʿallaka bākhiʿun nafsaka ʿalā āthārihim in lam yuʾminū bi-hāḏhā l-ḥadīṯhi asafā',
+    trans: 'Then perhaps you would kill yourself through grief over them, if they do not believe in this message, out of sorrow.'
+  },
+  {
+    arabic: 'إِنَّا جَعَلْنَا مَا عَلَى الْأَرْضِ زِينَةً لَّهَا لِنَبْلُوَهُمْ أَيُّهُمْ أَحْسَنُ عَمَلًا',
+    translit: 'Innā jaʿalnā mā ʿalā l-arḍi zīnatan lahā li-nabluwahum ayyuhum aḥsanu ʿamalā',
+    trans: 'Indeed, We have made that which is on the earth adornment for it that We may test them as to which of them is best in deed.'
+  },
+  {
+    arabic: 'وَإِنَّا لَجَاعِلُونَ مَا عَلَيْهَا صَعِيدًا جُرُزًا',
+    translit: 'Wa-innā la-jāʿilūna mā ʿalayhā ṣaʿīdan jurazā',
+    trans: 'And indeed, We will make that which is upon it [into] a barren ground.'
+  },
+  {
+    arabic: 'أَمْ حَسِبْتَ أَنَّ أَصْحَابَ الْكَهْفِ وَالرَّقِيمِ كَانُوا مِنْ آيَاتِنَا عَجَبًا',
+    translit: 'Am ḥasibta anna aṣḥāba l-kahfi wa-r-raqīmi kānū min āyātinā ʿajabā',
+    trans: 'Or have you thought that the companions of the cave and the inscription were, among Our signs, a wonder?'
+  },
+  {
+    arabic: 'إِذْ أَوَى الْفِتْيَةُ إِلَى الْكَهْفِ فَقَالُوا رَبَّنَا آتِنَا مِن لَّدُنكَ رَحْمَةً وَهَيِّئْ لَنَا مِنْ أَمْرِنَا رَشَدًا',
+    translit: 'Iḏ awaā l-fityatu ilā l-kahfi fa-qālū rabbanā ātinā min ladunka raḥmatan wa-hayyi llanā min amrinā rashadā',
+    trans: '[Mention] when the youths retreated to the cave and said, "Our Lord, grant us from Yourself mercy and prepare for us from our affair right guidance."'
   }
-};
+];
 
-// ═══════════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════════
-let currentUser=null;
-let ud={
-  startDate:null,
-  onboarding:null,
-  onboardingDone:false,
-  checkins:{},      // { 'YYYY-MM-DD': { blockId: bool } }
-  gear:{},          // { gearId: bool }
-  checkpoints:{},   // { 'w1': { deen:[bool], body:[bool], blade:[bool] } }
-  streaks:{deen:0,body:0,blade:0,survival:0}
-};
-let obA={};
-let selWeek=0;
-let saveTmr=null;
+// ════════════════════════════════════════════
+// FIRST AID CURRICULUM
+// ════════════════════════════════════════════
+const FIRST_AID_WEEKS = [
+  {
+    title: 'Week 1 — What is First Aid & Primary Survey',
+    content: `
+      <h4>What is First Aid?</h4>
+      <p>First aid is the immediate care given to a sick or injured person before professional medical help arrives. In a collapse scenario, professional help may never arrive — making this foundational knowledge, not optional preparation.</p>
+      <h4>The Primary Survey — DR ABC</h4>
+      <ul>
+        <li><strong>D — Danger:</strong> Assess the scene before approaching. Ensure it is safe for you, bystanders, and the casualty. A second casualty helps no one.</li>
+        <li><strong>R — Response:</strong> Is the person conscious? Tap their shoulders firmly and ask "Can you hear me?" loudly. Note their response level.</li>
+        <li><strong>A — Airway:</strong> Tilt the head back and lift the chin to open the airway. Look for obstructions.</li>
+        <li><strong>B — Breathing:</strong> Look, listen, and feel for breathing for no more than 10 seconds.</li>
+        <li><strong>C — Circulation / Catastrophic Bleeding:</strong> Check for life-threatening bleeding. Address immediately — bleeding out kills faster than stopped breathing.</li>
+      </ul>
+      <h4>Calling for Help</h4>
+      <p>In normal circumstances: call 911 (or your local emergency number) immediately and stay on the line. In a grid-down or collapse scenario: your two-way radio, community network, or proximity to others becomes your emergency system. This is why the two-way radio is in the gear list.</p>
+      <h4>Recovery Position</h4>
+      <p>If a person is breathing but unconscious: place them in the recovery position (on their side, head tilted back, top knee bent forward). This prevents choking on vomit and keeps the airway open.</p>
+    `
+  },
+  {
+    title: 'Week 2 — CPR & AED Basics',
+    content: `
+      <h4>When to Perform CPR</h4>
+      <p>If a person is unresponsive and not breathing normally (or making gasping sounds), begin CPR immediately. Do not wait for an AED. Time matters — every minute without CPR, survival odds drop approximately 10%.</p>
+      <h4>Adult CPR — Hands-Only</h4>
+      <ul>
+        <li>Position the person flat on their back on a firm surface.</li>
+        <li>Place the heel of your hand on the centre of the chest (lower half of the breastbone).</li>
+        <li>Interlock your fingers. Keep arms straight.</li>
+        <li>Push down hard and fast — at least 5cm (2 inches), at least 100-120 compressions per minute. The beat of "Stayin' Alive" by Bee Gees is the correct tempo.</li>
+        <li>Allow full chest recoil between compressions. Do not lean on the chest.</li>
+        <li>If trained: 30 compressions : 2 rescue breaths. If untrained or hesitant: continuous compressions until help arrives or the person responds.</li>
+      </ul>
+      <h4>Child CPR (1–puberty)</h4>
+      <ul>
+        <li>Use one hand (or two fingers for very small children) — same location, same rate.</li>
+        <li>Depth: approximately one-third of the chest depth.</li>
+        <li>Rescue breaths are more important for children — if trained, use 30:2 ratio.</li>
+      </ul>
+      <h4>AED Basics</h4>
+      <p>Automated External Defibrillators (AEDs) are found in most public buildings. They guide you with voice instructions. Turn it on, follow instructions, apply pads to bare chest (one upper right, one lower left), stand clear when it analyzes. If a shock is advised, ensure no one is touching the person, then deliver shock. Resume CPR immediately after. AEDs are designed for untrained users — do not hesitate to use one.</p>
+    `
+  },
+  {
+    title: 'Week 3 — Bleeding Control, Tourniquets & Wound Packing',
+    content: `
+      <h4>Controlling Bleeding — Direct Pressure</h4>
+      <p>For most wounds: apply firm, direct pressure with the cleanest material available (gauze preferred, clothing acceptable). Maintain pressure continuously for at least 10 minutes. Do not lift to check — this disrupts clotting. If blood soaks through, add more material on top and press harder.</p>
+      <h4>Tourniquet Application</h4>
+      <p>Use for life-threatening limb bleeding that direct pressure cannot control, or for amputations.</p>
+      <ul>
+        <li>Position 5–8cm (2–3 inches) above the wound, never over a joint.</li>
+        <li>Route the strap around the limb and through the buckle.</li>
+        <li>Pull tight, twist the windlass rod until bleeding stops.</li>
+        <li>Secure the rod with the clasp or clip.</li>
+        <li>Note the time of application on the device (or on the person's skin with a marker). Time matters for medical handoff.</li>
+        <li>Target time: applied in under 60 seconds. Practice this until it is automatic.</li>
+      </ul>
+      <h4>Wound Packing (for deep wounds)</h4>
+      <p>For deep wounds where a tourniquet cannot be applied (neck, groin, armpit): pack the wound with hemostatic gauze (Combat Gauze or equivalent). Push gauze firmly into the wound using your fingers — completely fill the wound cavity. Apply direct pressure on top for 3 minutes minimum. Do not remove the packing.</p>
+      <h4>Wound Cleaning</h4>
+      <p>For non-life-threatening wounds: irrigate thoroughly with clean water (pressure washing helps — use a syringe or squeeze bottle). Remove visible debris. Apply antiseptic if available. Cover with clean dressing. Change dressing daily. Watch for signs of infection: increasing redness, warmth, swelling, pus, fever.</p>
+    `
+  },
+  {
+    title: 'Week 4 — Burns, Fractures, Choking & Shock',
+    content: `
+      <h4>Burns</h4>
+      <ul>
+        <li><strong>First degree (redness, no blisters):</strong> Cool under cold running water for 10-20 minutes. Do not use ice, butter, or toothpaste. Cover with a clean dressing.</li>
+        <li><strong>Second degree (blisters):</strong> Cool as above. Do not burst blisters. Cover loosely.</li>
+        <li><strong>Third degree (charred, white, or numb skin):</strong> Do not cool — wrap loosely in clean material. Treat for shock. This is an emergency.</li>
+        <li>For chemical burns: remove contaminated clothing and flush with water for 20+ minutes.</li>
+      </ul>
+      <h4>Fractures</h4>
+      <p>Suspected fracture: immobilise the injury in the position found. Improvise a splint using rigid materials (branches, boards) padded with clothing. Splint the joint above and below the fracture. Do not try to straighten the bone. Check circulation below the injury (pulse, sensation, warmth) before and after splinting.</p>
+      <h4>Choking</h4>
+      <ul>
+        <li><strong>Mild (can cough, speak, breathe):</strong> Encourage coughing. Do not intervene.</li>
+        <li><strong>Severe (cannot cough, speak, or breathe):</strong> 5 back blows (heel of hand, between shoulder blades), then 5 abdominal thrusts (Heimlich). Alternate until cleared or unconscious. If unconscious: begin CPR — look for obstruction in mouth before rescue breaths.</li>
+      </ul>
+      <h4>Shock</h4>
+      <p>Shock is life-threatening inadequate blood flow to organs. Signs: pale, cold, clammy skin; rapid weak pulse; rapid shallow breathing; confusion; nausea. Treatment: lay flat, raise legs 30cm unless head/chest/spinal injury suspected. Keep warm (blanket). Do not give food or drink. Treat the underlying cause (bleeding, etc.). Reassure constantly.</p>
+    `
+  },
+  {
+    title: 'Week 5 — Medical Emergencies & Environmental Threats',
+    content: `
+      <h4>Allergic Reactions & Anaphylaxis</h4>
+      <p>Mild reaction: antihistamine if available, monitor. Anaphylaxis (throat swelling, difficulty breathing, collapse): epinephrine auto-injector (EpiPen) if available — inject into outer thigh, even through clothing. Lay person flat, raise legs. A second dose may be needed after 5-15 minutes if no improvement. Anaphylaxis is life-threatening — treat aggressively.</p>
+      <h4>Diabetic Emergencies</h4>
+      <p>If conscious and hypoglycaemic (low blood sugar) — confused, shaky, sweating: give fast-acting sugar immediately (juice, glucose tablets, sugar water). If unconscious: do not give anything by mouth. Place in recovery position.</p>
+      <h4>Seizures</h4>
+      <p>Protect from injury — clear the area, cushion the head. Do not restrain. Do not put anything in the mouth. Time the seizure. After convulsions stop: recovery position. Most seizures stop on their own in 1-3 minutes. Prolonged seizures (over 5 minutes) are an emergency.</p>
+      <h4>Heat Stroke</h4>
+      <p>High body temperature (over 40°C / 104°F), confusion, hot dry skin. Cool aggressively and immediately: remove clothing, apply cold water, fan. This is life-threatening — cooling is the treatment.</p>
+      <h4>Hypothermia</h4>
+      <p>Shivering, confusion, slurred speech, drowsiness. Move to warmth. Remove wet clothing. Warm core first (chest, neck, groin — not extremities). Give warm drinks if conscious. Handle gently — rough movement can cause cardiac arrest in severe hypothermia.</p>
+      <h4>Radiation Exposure</h4>
+      <p>If radiation exposure is suspected: remove and bag contaminated clothing (removes ~80% of contamination). Shower thoroughly with soap and water. Do not use conditioner (traps particles in hair). Move to a shelter-in-place location. Take KI (potassium iodide) tablets if advised — these protect the thyroid from radioactive iodine only, not full-body radiation. Your dosimeter tracks cumulative exposure.</p>
+    `
+  }
+];
 
-// ═══════════════════════════════════════════════
-//  AUTH
-// ═══════════════════════════════════════════════
-function switchTab(t){
-  document.getElementById('form-signin').style.display=t==='signin'?'block':'none';
-  document.getElementById('form-signup').style.display=t==='signup'?'block':'none';
-  document.getElementById('tab-signin').classList.toggle('active',t==='signin');
-  document.getElementById('tab-signup').classList.toggle('active',t==='signup');
+// ════════════════════════════════════════════
+// WEEK PLAN DATA
+// ════════════════════════════════════════════
+const WEEK_PLAN = [
+  { // Week 1
+    theme: 'Foundation',
+    days: [
+      {
+        mind: { title: 'Begin Ayatul Kursi', detail: 'Learn and memorise lines 1–3 using the learning module.' },
+        body: { title: '20 min walk', detail: 'Easy pace. Add your existing workout if applicable.' },
+        survival: { title: 'Identify your safe zone', detail: 'Underground, no windows, or basement preferred. Make a mental note — no details required here.' }
+      },
+      {
+        mind: { title: 'Ayatul Kursi lines 4–6', detail: 'Review lines 1–3 first. Then add lines 4–6.' },
+        body: { title: 'Walk + push-ups', detail: '20 min walk + 20 push-ups.' },
+        survival: { title: 'Identify nearest clean water source', detail: 'Know where it is.' }
+      },
+      {
+        mind: { title: 'Ayatul Kursi lines 7–9', detail: 'Review lines 1–6. Then add the final lines.' },
+        body: { title: 'Walk + push-ups + squats', detail: '20 min walk + 20 push-ups + 20 squats.' },
+        survival: { title: 'Acquire water filtration', detail: 'Sawyer or LifeStraw. Minimum 1 per person, 2 recommended. See gear list.' }
+      },
+      {
+        mind: { title: 'Full Ayatul Kursi review', detail: 'Attempt full recitation from memory.' },
+        body: { title: 'Existing workout (or rest)', detail: 'If you have a routine, do it. If not, rest.' },
+        survival: { title: 'Acquire lighter + matches', detail: 'See gear list.' }
+      },
+      {
+        mind: { title: 'Begin Al-Kahf — ayat 1–2', detail: 'Open the Al-Kahf learning module.' },
+        body: { title: 'Sprint intervals', detail: '4 × 30 second sprints, rest between each.' },
+        survival: { title: 'Acquire fixed blade knife', detail: 'See gear list.' }
+      },
+      {
+        mind: { title: 'Al-Kahf ayat 3–4', detail: 'Review ayat 1–2 first. Then add ayat 3–4.' },
+        body: { title: 'Sprints + push-ups', detail: '4 × 30 sec sprints + 20 push-ups.' },
+        survival: { title: 'Note your 72-hour water supply plan', detail: 'Calculate litres needed per person per day (approx. 2-4L).' }
+      },
+      {
+        mind: { title: 'Weekly review — Ayatul Kursi', detail: 'Can you recite it without looking? Be honest.' },
+        body: { title: 'Existing workout or rest', detail: '' },
+        survival: { title: 'Gear check', detail: 'Verify: lighter, matches, knife are in hand.' }
+      }
+    ]
+  },
+  { // Week 2
+    theme: 'Build',
+    days: [
+      {
+        mind: { title: 'Al-Kahf ayat 5–6', detail: '' },
+        body: { title: 'Push/pull', detail: 'Push-ups + rows (or improvise with water jugs). 3 sets each.' },
+        survival: { title: 'Acquire duct tape + air filtration mask', detail: 'Gas mask or N95/P100. See gear list.' }
+      },
+      {
+        mind: { title: 'Review Al-Kahf 1–6', detail: '' },
+        body: { title: 'Push/pull + core', detail: 'Add planks 3 × 30 seconds.' },
+        survival: { title: 'Practice filtering water', detail: 'Filter 1 litre using your filtration system. Know the process.' }
+      },
+      {
+        mind: { title: 'Al-Kahf ayat 7–8', detail: '' },
+        body: { title: 'Sprint intervals', detail: '4 × 30 sec sprints.' },
+        survival: { title: 'Acquire tourniquet', detail: 'CAT or SOFT-T preferred. Non-negotiable gear.' }
+      },
+      {
+        mind: { title: 'Review all Al-Kahf so far', detail: '' },
+        body: { title: 'Push/pull/core', detail: '' },
+        survival: { title: 'Acquire 3-day food supply + first aid kit', detail: 'Rice, lentils, oats, tinned food. Full basic first aid kit.' }
+      },
+      {
+        mind: { title: 'Al-Kahf ayat 9–10 — first 10 complete', detail: 'If you have learned all 10 ayat, the module marks complete.' },
+        body: { title: 'Sprints + push-ups', detail: '' },
+        survival: { title: 'Acquire head torch + N95 masks + goggles', detail: 'With spare batteries. See gear list.' }
+      },
+      {
+        mind: { title: 'Full recitation attempt', detail: 'Recite Ayatul Kursi + all 10 Al-Kahf ayat in sequence from memory.' },
+        body: { title: 'Rest or walk', detail: '' },
+        survival: { title: 'Acquire paracord', detail: '30 metres minimum.' }
+      },
+      {
+        mind: { title: 'Weekly review', detail: 'Both recitations solid? Mark this day honestly.' },
+        body: { title: 'Rest + reflect', detail: '' },
+        survival: { title: 'Gear check', detail: 'Verify: water filter, tourniquet, food, torch, paracord, duct tape, mask.' }
+      }
+    ]
+  },
+  { // Week 3
+    theme: 'Deepen',
+    days: [
+      {
+        mind: { title: 'Kitab at-Tawheed — Chapter 1', detail: 'Read Chapter 1. Read only today — absorb before reflecting.' },
+        body: { title: 'Weighted carry', detail: 'Backpack loaded to 10kg. Walk 20 minutes.' },
+        survival: { title: 'First aid training begins', detail: 'Open the First Aid module — complete Week 1 content. Also: practice water filtration from an outdoor source.' }
+      },
+      {
+        mind: { title: 'Reflect on Chapter 1', detail: 'Write one sentence on what shifted in your understanding.' },
+        body: { title: 'Push/pull/core + sprints', detail: '' },
+        survival: { title: 'Tourniquet drill', detail: 'Apply your tourniquet in under 60 seconds. Repeat until it is automatic.' }
+      },
+      {
+        mind: { title: 'Kitab at-Tawheed — Chapter 2', detail: '' },
+        body: { title: 'Weaponry session 1', detail: 'First dedicated session for your chosen weapon type(s).' },
+        survival: { title: 'Acquire KI tablets + medical supplies', detail: 'KI (potassium iodide), pain relievers, burn treatment. See gear list.' }
+      },
+      {
+        mind: { title: 'Review both recitations', detail: 'Ayatul Kursi + Al-Kahf first 10. Keep them sharp.' },
+        body: { title: 'Weighted carry + sprints', detail: '10kg backpack + 4 sprint intervals.' },
+        survival: { title: 'Emergency cash reserve', detail: 'Set aside physical cash. Amount not tracked — just make it happen.' }
+      },
+      {
+        mind: { title: 'Kitab at-Tawheed — Chapter 3', detail: '' },
+        body: { title: 'Weaponry session 2', detail: '' },
+        survival: { title: 'Build a fire', detail: 'Using lighter + matches, build a fire from scratch. 3 attempts. Acquire bucket toilet system + sanitation supplies.' }
+      },
+      {
+        mind: { title: 'Memorise Yunus dua', detail: "لَّا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ — 'There is no deity except You; exalted are You. Indeed, I have been of the wrongdoers.' (Surah Al-Anbiya 21:87)" },
+        body: { title: 'Push/pull/core', detail: '' },
+        survival: { title: 'Acquire hand crank radio', detail: 'See gear list.' }
+      },
+      {
+        mind: { title: 'Weekly review', detail: 'Recitations + Aqeedah readings — where are you?' },
+        body: { title: 'Rest + reflect', detail: '' },
+        survival: { title: 'Gear check', detail: 'Verify: KI tabs, radio, cash reserve in place.' }
+      }
+    ]
+  },
+  { // Week 4
+    theme: 'Pressure',
+    days: [
+      {
+        mind: { title: 'Kitab at-Tawheed — Chapter 4', detail: '' },
+        body: { title: 'Heavy session — max reps', detail: 'Max push-ups, max squats. Document your numbers.' },
+        survival: { title: 'Assemble bug-out bag', detail: 'All Tier 1 gear into one bag. Test the weight.' }
+      },
+      {
+        mind: { title: 'Recitation under fatigue', detail: 'After today\'s workout — recite Ayatul Kursi and Al-Kahf from memory. Fatigue is the test.' },
+        body: { title: 'Sprint intervals', detail: '6 × 30 sec with shorter rest.' },
+        survival: { title: 'IFAK assembly', detail: 'Assemble your Immediate First Aid Kit: tourniquet, gauze, gloves, tape.' }
+      },
+      {
+        mind: { title: 'Kitab at-Tawheed — Chapter 5', detail: '' },
+        body: { title: 'Weaponry session — increase reps/duration', detail: 'Build on last week.' },
+        survival: { title: 'Acquire compass + dosimeter + Geiger counter', detail: 'See gear list.' }
+      },
+      {
+        mind: { title: 'Review all memorised material', detail: '' },
+        body: { title: 'Weighted carry — 15kg, 30 min', detail: 'Increase the weight. Extend the time.' },
+        survival: { title: 'Print physical maps', detail: 'Print maps of your area — 5km radius minimum. These work when power is out.' }
+      },
+      {
+        mind: { title: 'Kitab at-Tawheed — Chapter 6', detail: '' },
+        body: { title: 'Sprints + weaponry combo', detail: 'Sprint intervals, then immediately into weaponry drill. Simulate stress.' },
+        survival: { title: 'Acquire two-way radio + coveralls + gloves', detail: 'Two-way radio, disposable coveralls, protective gloves. See gear list.' }
+      },
+      {
+        mind: { title: 'Review all duas', detail: 'All memorised duas from memory.' },
+        body: { title: 'Push/pull/core', detail: '' },
+        survival: { title: 'Full kit weight test', detail: 'Carry your assembled bug-out bag for 20 minutes. Can you move with it?' }
+      },
+      {
+        mind: { title: 'Weekly review — Aqeedah check', detail: 'Is your understanding of Tawheed solidifying? Identify any gaps.' },
+        body: { title: 'Rest + reflect', detail: '' },
+        survival: { title: 'Gear check', detail: 'Verify: BOB assembled, IFAK complete, compass, printed maps, radio.' }
+      }
+    ]
+  },
+  { // Week 5
+    theme: 'Integration',
+    days: [
+      {
+        mind: { title: 'Community audit', detail: 'Identify 2 Muslims in your area. Make contact or plan to. Consider referring the site to those who are ready.' },
+        body: { title: 'Peak effort — document everything', detail: 'Max push-ups, max squats, max sprints. Write the numbers down.' },
+        survival: { title: 'Acquire pressure bandage + hemostatic gauze', detail: 'See gear list.' }
+      },
+      {
+        mind: { title: 'Write a preparedness will', detail: 'One page. Who inherits your gear knowledge? Who knows where your supplies are?' },
+        body: { title: 'Sprints + weaponry', detail: '' },
+        survival: { title: 'Acquire vented chest seal', detail: 'For penetrating chest wounds. See gear list.' }
+      },
+      {
+        mind: { title: 'Kitab at-Tawheed — continue', detail: 'Continue from where you are.' },
+        body: { title: 'Weighted carry + weaponry', detail: '15kg carry + weaponry drill.' },
+        survival: { title: 'Acquire 30-day food supply', detail: 'Canned goods, rice, lentils, oats, freeze-dried, peanut butter, energy bars.' }
+      },
+      {
+        mind: { title: 'Full deen audit', detail: 'Are prayers consistent? Recitations solid? Aqeedah clear? Be ruthlessly honest.' },
+        body: { title: 'Push/pull/core', detail: '' },
+        survival: { title: 'Acquire water storage containers', detail: 'For long-term water storage beyond filtration.' }
+      },
+      {
+        mind: { title: 'Identify local Imam', detail: 'Find your local masjid\'s Imam. Make contact or attend.' },
+        body: { title: 'Sprint intervals', detail: '' },
+        survival: { title: 'Acquire solar charger', detail: 'For devices when grid is down.' }
+      },
+      {
+        mind: { title: 'Acquire physical Quran', detail: 'Arabic + English translation. Paper. Works when the grid does not.' },
+        body: { title: 'Weaponry session', detail: '' },
+        survival: { title: 'Tier 1 full audit', detail: 'Every item on the Tier 1 list — is it in your possession? Everything accounted for?' }
+      },
+      {
+        mind: { title: 'Final review', detail: 'Where are you after 5 weeks? Document it honestly.' },
+        body: { title: 'Rest + reflect', detail: '' },
+        survival: { title: 'Begin Tier 2 planning', detail: 'Gold/silver, extended food supply, shelter materials. Add antibiotics if accessible.' }
+      }
+    ]
+  }
+];
+
+// ════════════════════════════════════════════
+// GEAR LISTS
+// ════════════════════════════════════════════
+const GEAR_TIER1 = [
+  { id:'water_filter', name:'Water filtration', note:'Sawyer Squeeze or LifeStraw. Min 1 per person, 2 recommended.' },
+  { id:'lighter', name:'Lighter', note:'BIC or equivalent. Multiple recommended.' },
+  { id:'matches', name:'Waterproof matches', note:'' },
+  { id:'fixed_knife', name:'Fixed blade knife', note:'Mora, ESEE, or equivalent. Not a folding knife.' },
+  { id:'duct_tape', name:'Duct tape', note:'2 rolls minimum.' },
+  { id:'air_mask', name:'Air filtration mask', note:'N95 or P100 respirator. Multiple units.' },
+  { id:'gas_mask', name:'Gas mask / full face respirator', note:'Optional but recommended. NATO 40mm thread preferred.' },
+  { id:'tourniquet', name:'Tourniquet', note:'CAT (Combat Application Tourniquet) or SOFT-T Wide. Learn to apply.' },
+  { id:'food_3day', name:'3-day food supply', note:'Rice, lentils, oats, canned goods.' },
+  { id:'first_aid_kit', name:'First aid kit', note:'Full basic kit with bandages, antiseptic, gauze.' },
+  { id:'head_torch', name:'Head torch + spare batteries', note:'Hands-free lighting is non-negotiable.' },
+  { id:'goggles', name:'Protective goggles', note:'Eye protection for smoke, debris, chemicals.' },
+  { id:'paracord', name:'Paracord — 30m', note:'550 paracord. Multiple uses.' },
+  { id:'ki_tabs', name:'KI tablets (potassium iodide)', note:'For thyroid protection from radioactive iodine.' },
+  { id:'pain_meds', name:'Pain relievers', note:'Ibuprofen + paracetamol.' },
+  { id:'burn_supplies', name:'Burn treatment supplies', note:'Hydrogel dressings, burn gel.' },
+  { id:'hand_radio', name:'Hand crank radio', note:'Battery-free. For emergency broadcasts without grid power.' },
+  { id:'compass', name:'Compass', note:'Baseplate or lensatic. Works without batteries.' },
+  { id:'dosimeter', name:'Personal dosimeter', note:'Tracks cumulative radiation exposure.' },
+  { id:'geiger', name:'Geiger counter', note:'For real-time radiation detection.' },
+  { id:'printed_maps', name:'Printed maps — 5km radius', note:'Paper. Works without power. Mark safe zones.' },
+  { id:'two_way_radio', name:'Two-way radio', note:'For communication when mobile networks fail.' },
+  { id:'coveralls', name:'Disposable coveralls', note:'For contamination scenarios.' },
+  { id:'gloves_protect', name:'Protective gloves', note:'Heavy-duty nitrile or chemical-resistant.' },
+  { id:'ifak_gauze', name:'Hemostatic gauze', note:'Combat Gauze or QuikClot. For wound packing.' },
+  { id:'chest_seal', name:'Vented chest seal', note:'For penetrating chest wounds.' },
+  { id:'pressure_bandage', name:'Pressure bandage', note:'Israeli bandage / emergency bandage.' },
+  { id:'food_30day', name:'30-day food supply', note:'Freeze-dried, canned, rice/lentils, peanut butter, energy bars.' },
+  { id:'water_storage', name:'Water storage containers', note:'For long-term water reserves.' },
+  { id:'solar_charger', name:'Solar charger', note:'For devices when grid is down.' },
+  { id:'physical_quran', name:'Physical Quran', note:'Arabic + English translation. Paper.' },
+  { id:'toilet_system', name:'Bucket toilet system', note:'Bucket, heavy bags, bleach, wet wipes, hand sanitizer.' },
+];
+
+// ════════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════════
+function togglePw(id, btn) {
+  const inp = document.getElementById(id);
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+  } else {
+    inp.type = 'password';
+    btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  }
 }
 
-async function signIn(){
-  const email=document.getElementById('si-email').value.trim();
-  const pass=document.getElementById('si-password').value;
-  const msg=document.getElementById('signin-msg');
-  const btn=document.getElementById('signin-btn');
-  if(!email||!pass){msg.textContent='Please enter email and password.';msg.className='auth-message error';return;}
-  btn.disabled=true;btn.textContent='Entering...';msg.textContent='';
-  const{error}=await sb.auth.signInWithPassword({email,password:pass});
-  if(error){msg.textContent=error.message;msg.className='auth-message error';btn.disabled=false;btn.textContent='Enter';}
+function switchTab(t) {
+  document.getElementById('tab-signin').classList.toggle('active', t==='signin');
+  document.getElementById('tab-signup').classList.toggle('active', t==='signup');
+  document.getElementById('form-signin').style.display = t==='signin' ? '' : 'none';
+  document.getElementById('form-signup').style.display = t==='signup' ? '' : 'none';
 }
 
-const EYE_OPEN=`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
-const EYE_CLOSED=`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
-function togglePw(id,btn){
-  const inp=document.getElementById(id);
-  if(inp.type==='password'){inp.type='text';btn.innerHTML=EYE_CLOSED;}
-  else{inp.type='password';btn.innerHTML=EYE_OPEN;}
+function showMsg(id, msg, type) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'auth-message ' + type;
 }
 
-async function signUp(){
-  const username=document.getElementById('su-username').value.trim();
-  const email=document.getElementById('su-email').value.trim();
-  const pass=document.getElementById('su-password').value;
-  const msg=document.getElementById('signup-msg');
-  const btn=document.getElementById('signup-btn');
-  if(!username){msg.textContent='Please enter your name.';msg.className='auth-message error';return;}
-  if(username.length<2){msg.textContent='Name must be at least 2 characters.';msg.className='auth-message error';return;}
-  if(!email||!pass){msg.textContent='Please fill in all fields.';msg.className='auth-message error';return;}
-  if(pass.length<8){msg.textContent='Password must be at least 8 characters.';msg.className='auth-message error';return;}
-  btn.disabled=true;btn.textContent='Creating account...';msg.textContent='';
-  // Sign up
-  const{data:signUpData,error:signUpError}=await sb.auth.signUp({
-    email,
-    password:pass,
-    options:{data:{username}}
+async function doSignIn() {
+  const email = document.getElementById('si-email').value.trim();
+  const pw = document.getElementById('si-password').value;
+  if (!email || !pw) return showMsg('signin-msg','Enter email and password.','error');
+  const btn = document.getElementById('signin-btn');
+  btn.disabled = true; btn.textContent = 'Entering...';
+  const {data, error} = await supabase.auth.signInWithPassword({email, password: pw});
+  btn.disabled = false; btn.textContent = 'Enter';
+  if (error) return showMsg('signin-msg', error.message, 'error');
+  currentUser = data.user;
+  await loadUserData();
+}
+
+async function doSignUp() {
+  const name = document.getElementById('su-name').value.trim();
+  const email = document.getElementById('su-email').value.trim();
+  const pw = document.getElementById('su-password').value;
+  if (!name) return showMsg('signup-msg','Enter your name.','error');
+  if (!email) return showMsg('signup-msg','Enter your email.','error');
+  if (pw.length < 8) return showMsg('signup-msg','Password must be at least 8 characters.','error');
+  const btn = document.getElementById('signup-btn');
+  btn.disabled = true; btn.textContent = 'Creating...';
+  const {data, error} = await supabase.auth.signUp({
+    email, password: pw,
+    options: { data: { username: name }, emailRedirectTo: 'https://muntazireen.vercel.app/tracker.html' }
   });
-  if(signUpError){
-    msg.textContent=signUpError.message;msg.className='auth-message error';
-    btn.disabled=false;btn.textContent='Begin the Protocol';
+  btn.disabled = false; btn.textContent = 'Begin the Protocol';
+  if (error) return showMsg('signup-msg', error.message, 'error');
+  if (data.session) {
+    currentUser = data.user;
+    await ensureUserRecord();
+    showOnboarding();
+  } else {
+    showMsg('signup-msg','Check your email to confirm your account, then sign in.','success');
+  }
+}
+
+async function ensureUserRecord() {
+  const { data } = await supabase.from('protocol_progress').select('id').eq('user_id', currentUser.id).single();
+  if (!data) {
+    await supabase.from('protocol_progress').insert({
+      user_id: currentUser.id,
+      signup_date: new Date().toISOString(),
+      onboarding_complete: false,
+      onboarding: null,
+      gear_acquired: {},
+      daily_checkins: {},
+      weekly_checkpoints: {},
+      learning_progress: {},
+      first_aid_progress: {},
+      missed_tasks: {}
+    });
+  }
+}
+
+// ════════════════════════════════════════════
+// ONBOARDING
+// ════════════════════════════════════════════
+let obIndex = 0;
+const obTotal = 5;
+const obAnswers = { workout: null, ayatul_kursi: null, kahf: null, weapons: [], firstaid: null };
+
+function showOnboarding() {
+  document.getElementById('auth-screen').style.display = 'none';
+  const obs = document.getElementById('onboarding-screen');
+  obs.style.display = 'flex';
+}
+
+function obSlide(dir) {
+  obGoTo(obIndex + dir);
+}
+
+function obGoTo(idx) {
+  if (idx < 0) return;
+  if (idx >= obTotal) {
+    // Show questions
+    document.getElementById('ob-carousel').style.display = 'none';
+    document.getElementById('ob-questions').style.display = 'block';
     return;
   }
-  // Immediately sign in — bypasses email confirmation requirement
-  const{error:signInError}=await sb.auth.signInWithPassword({email,password:pass});
-  if(signInError){
-    // Signup worked but auto sign-in failed (e.g. email confirmation still required)
-    msg.textContent='Account created. Check your email to confirm, then sign in.';
-    msg.className='auth-message success';
-    btn.disabled=false;btn.textContent='Begin the Protocol';
-  }
-  // If signIn succeeded, onAuthStateChange fires automatically — no extra handling needed
+  obIndex = idx;
+  document.getElementById('ob-slides').style.transform = `translateX(-${obIndex * 100}%)`;
+  document.querySelectorAll('.ob-dot').forEach((d,i) => d.classList.toggle('active', i===obIndex));
+  document.getElementById('ob-prev').style.visibility = obIndex === 0 ? 'hidden' : 'visible';
+  const nextBtn = document.getElementById('ob-next');
+  if (obIndex === obTotal - 1) { nextBtn.textContent = 'Continue →'; }
+  else { nextBtn.textContent = 'Next →'; }
 }
 
-async function signOut(){
-  await sb.auth.signOut();
-  currentUser=null;
-  document.getElementById('auth-screen').style.display='flex';
-  document.getElementById('app-screen').style.display='none';
-  document.getElementById('onboarding-screen').style.display='none';
-  // nav handled by nav.js
-  // nav handled by nav.js
+function obSelect(btn, q) {
+  btn.closest('.ob-options').querySelectorAll('.ob-opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  obAnswers[q] = btn.dataset.v;
 }
 
-// ═══════════════════════════════════════════════
-//  ONBOARDING
-// ═══════════════════════════════════════════════
-function obSet(key,val,btn){
-  const wrap=btn.closest('.ob-yesno');
-  wrap.querySelectorAll('.ob-yn-btn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  obA[key]=val;
+function obMulti(btn, q) {
+  btn.classList.toggle('selected');
+  obAnswers[q] = Array.from(btn.closest('.ob-options').querySelectorAll('.ob-opt.selected')).map(b => b.dataset.v);
 }
 
-async function submitOnboarding(){
-  ud.onboarding={...obA};
-  ud.onboardingDone=true;
-  ud.startDate=new Date().toISOString().split('T')[0];
-  await saveData(true);
-  document.getElementById('onboarding-screen').style.display='none';
-  document.getElementById('app-screen').style.display='block';
-  renderApp();
+async function submitOnboarding() {
+  if (!obAnswers.workout) return showMsg('ob-msg','Please answer: do you have a workout routine?','error');
+  if (!obAnswers.ayatul_kursi) return showMsg('ob-msg','Please answer: Ayatul Kursi?','error');
+  if (!obAnswers.kahf) return showMsg('ob-msg','Please answer: Al-Kahf?','error');
+  if (!obAnswers.weapons.length) return showMsg('ob-msg','Please select at least one weapon type.','error');
+  if (!obAnswers.firstaid) return showMsg('ob-msg','Please choose your first aid preference.','error');
+
+  showMsg('ob-msg','Saving...','');
+  const { error } = await supabase.from('protocol_progress')
+    .update({ onboarding: obAnswers, onboarding_complete: true })
+    .eq('user_id', currentUser.id);
+  if (error) return showMsg('ob-msg', error.message, 'error');
+  userData.onboarding = obAnswers;
+  userData.onboarding_complete = true;
+  showApp();
 }
 
-// ═══════════════════════════════════════════════
-//  DATA
-// ═══════════════════════════════════════════════
-async function loadData(){
-  const{data,error}=await sb.from('protocol_progress').select('*').eq('user_id',currentUser.id).maybeSingle();
-  if(data&&!error){
-    ud.startDate=data.start_date;
-    ud.onboarding=data.onboarding||null;
-    ud.onboardingDone=data.onboarding_complete||false;
-    ud.checkins=data.daily_checkins||{};
-    ud.gear=data.gear_acquired||{};
-    ud.checkpoints=data.weekly_checkpoints||{};
-    ud.streaks=data.streaks||{deen:0,body:0,blade:0,survival:0};
+// ════════════════════════════════════════════
+// LOAD + ROUTE
+// ════════════════════════════════════════════
+async function loadUserData() {
+  const { data, error } = await supabase.from('protocol_progress').select('*').eq('user_id', currentUser.id).single();
+  if (error || !data) {
+    await ensureUserRecord();
+    userData = {};
   } else {
-    ud.startDate=new Date().toISOString().split('T')[0];
+    userData = data;
   }
-}
-
-async function saveData(immediate=false){
-  showSave('saving');
-  const{error}=await sb.from('protocol_progress').upsert({
-    user_id:currentUser.id,
-    start_date:ud.startDate,
-    onboarding:ud.onboarding,
-    onboarding_complete:ud.onboardingDone,
-    daily_checkins:ud.checkins,
-    gear_acquired:ud.gear,
-    weekly_checkpoints:ud.checkpoints,
-    streaks:ud.streaks,
-    updated_at:new Date().toISOString()
-  },{onConflict:'user_id'});
-  if(error){
-    console.error('saveData error:',error.message,error.details);
-    showSave('saved'); // still clear indicator
+  if (!userData.onboarding_complete) {
+    showOnboarding();
   } else {
-    showSave('saved');
+    showApp();
   }
 }
 
-function qSave(){clearTimeout(saveTmr);saveTmr=setTimeout(()=>saveData(),1200);}
-
-function showSave(s){
-  const el=document.getElementById('save-ind');
-  el.className=s;
-  el.textContent=s==='saving'?'Saving...':'✓ Saved';
-  if(s==='saved')setTimeout(()=>{el.className='';},2000);
+// ════════════════════════════════════════════
+// APP INIT
+// ════════════════════════════════════════════
+function showApp() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('onboarding-screen').style.display = 'none';
+  document.getElementById('app-screen').style.display = 'block';
+  renderAll();
 }
 
-// ═══════════════════════════════════════════════
-//  HELPERS
-// ═══════════════════════════════════════════════
-function todayKey(){return new Date().toISOString().split('T')[0];}
-function dayNum(){
-  if(!ud.startDate)return 1;
-  return Math.max(1,Math.floor((new Date()-new Date(ud.startDate))/86400000)+1);
-}
-function weekNum(){return Math.min(Math.ceil(dayNum()/7),5);}
-function isMaint(){return dayNum()>35;}
-function wKey(i){return i>=5?'maintenance':'w'+(i+1);}
-function wData(i){return i>=5?MAINTENANCE:WEEKS[i];}
-
-// Filter blocks/gear based on onboarding — skip what user already has
-function activeBlocks(wd){
-  const ob=ud.onboarding||{};
-  return wd.blocks.filter(b=>!b.flag||!ob[b.flag]);
-}
-function activeGear(wd){
-  const ob=ud.onboarding||{};
-  return wd.gear.filter(g=>!g.flag||!ob[g.flag]);
+function getCurrentWeek() {
+  if (!userData.signup_date) return 1;
+  const signup = new Date(userData.signup_date);
+  const now = new Date();
+  const days = Math.floor((now - signup) / (1000 * 60 * 60 * 24));
+  return Math.min(Math.max(1, Math.floor(days / 7) + 1), 6); // 6 = maintenance
 }
 
-// ═══════════════════════════════════════════════
-//  RENDER
-// ═══════════════════════════════════════════════
-function renderApp(){
-  const day=dayNum();
-  const wk=weekNum();
-  const maint=isMaint();
-  const wi=maint?5:wk-1;
+function getTodayKey() {
+  return new Date().toISOString().slice(0, 10);
+}
 
-  // Header
-  const displayName=currentUser.user_metadata&&currentUser.user_metadata.username?currentUser.user_metadata.username:currentUser.email.split('@')[0];
-  document.getElementById('user-name-disp').textContent=displayName;
-  document.getElementById('today-date-disp').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  document.getElementById('st-day').textContent=day;
-  document.getElementById('st-week').textContent=maint?'∞':wk;
-  document.getElementById('st-phase').textContent=maint?'∞':wk+'/5';
+function getWeekDay() {
+  // 0-indexed day within current week (0=day1, 6=day7)
+  if (!userData.signup_date) return 0;
+  const signup = new Date(userData.signup_date);
+  const now = new Date();
+  const totalDays = Math.floor((now - signup) / (1000 * 60 * 60 * 24));
+  return totalDays % 7;
+}
 
-  // Mode bar
-  const ml=document.getElementById('mb-phase-lbl');
-  const md=document.getElementById('mb-phase-desc');
-  if(maint){
-    ml.textContent='∞ Maintenance Mode';ml.className='mb-phase maint';
-    md.textContent='Skills acquired. Sharpening them forever.';
-  } else {
-    ml.textContent='Week '+wk+' — '+WEEKS[wi].phase;ml.className='mb-phase ramp';
-    md.textContent='Ramp phase — '+(Math.max(0,35-day))+' days until maintenance.';
+function isDone(key) {
+  const checkins = userData.daily_checkins || {};
+  const today = getTodayKey();
+  return !!(checkins[today] && checkins[today][key]);
+}
+
+function toggleDone(key) {
+  const today = getTodayKey();
+  if (!userData.daily_checkins) userData.daily_checkins = {};
+  if (!userData.daily_checkins[today]) userData.daily_checkins[today] = {};
+  userData.daily_checkins[today][key] = !userData.daily_checkins[today][key];
+  scheduleSave();
+  return userData.daily_checkins[today][key];
+}
+
+function isWeekDone(key) {
+  const wk = userData.weekly_checkpoints || {};
+  const week = getCurrentWeek();
+  return !!(wk[week] && wk[week][key]);
+}
+
+function toggleWeekDone(key) {
+  const week = getCurrentWeek();
+  if (!userData.weekly_checkpoints) userData.weekly_checkpoints = {};
+  if (!userData.weekly_checkpoints[week]) userData.weekly_checkpoints[week] = {};
+  userData.weekly_checkpoints[week][key] = !userData.weekly_checkpoints[week][key];
+  scheduleSave();
+  return userData.weekly_checkpoints[week][key];
+}
+
+function isGearAcquired(id) {
+  return !!(userData.gear_acquired && userData.gear_acquired[id]);
+}
+
+function toggleGear(id) {
+  if (!userData.gear_acquired) userData.gear_acquired = {};
+  userData.gear_acquired[id] = !userData.gear_acquired[id];
+  scheduleSave();
+  return userData.gear_acquired[id];
+}
+
+function getLearningProgress(module) {
+  return (userData.learning_progress && userData.learning_progress[module]) || {};
+}
+
+function setLearningLine(module, idx, val) {
+  if (!userData.learning_progress) userData.learning_progress = {};
+  if (!userData.learning_progress[module]) userData.learning_progress[module] = {};
+  userData.learning_progress[module][idx] = val;
+  scheduleSave();
+}
+
+function getFAProgress() {
+  return (userData.first_aid_progress) || {};
+}
+
+function setFAWeek(week, val) {
+  if (!userData.first_aid_progress) userData.first_aid_progress = {};
+  userData.first_aid_progress[week] = val;
+  scheduleSave();
+}
+
+// ════════════════════════════════════════════
+// SAVE
+// ════════════════════════════════════════════
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  showSaveIndicator('saving');
+  saveTimer = setTimeout(saveData, 1200);
+}
+
+function showSaveIndicator(state) {
+  const el = document.getElementById('save-indicator');
+  el.className = state;
+  el.textContent = state === 'saving' ? 'Saving...' : 'Saved';
+  if (state === 'saved') setTimeout(() => el.className='', 2000);
+}
+
+async function saveData() {
+  if (!currentUser) return;
+  await supabase.from('protocol_progress').update({
+    gear_acquired: userData.gear_acquired || {},
+    daily_checkins: userData.daily_checkins || {},
+    weekly_checkpoints: userData.weekly_checkpoints || {},
+    learning_progress: userData.learning_progress || {},
+    first_aid_progress: userData.first_aid_progress || {}
+  }).eq('user_id', currentUser.id);
+  showSaveIndicator('saved');
+}
+
+// ════════════════════════════════════════════
+// RENDER ALL
+// ════════════════════════════════════════════
+function renderAll() {
+  renderMindToday();
+  renderMindWeek();
+  renderBodyToday();
+  renderBodyWeek();
+  renderSurvivalToday();
+  renderSurvivalWeek();
+}
+
+// ════════════════════════════════════════════
+// TASK ITEM BUILDER
+// ════════════════════════════════════════════
+function taskItem(key, name, detail, tag, isDaily) {
+  const done = isDaily ? isDone(key) : isWeekDone(key);
+  const toggleFn = isDaily ? `toggleAndRefresh('${key}',true)` : `toggleAndRefresh('${key}',false)`;
+  return `<div class="task-item ${done ? 'completed' : ''}" id="ti-${key}">
+    <div class="task-cb ${done ? 'checked' : ''}" onclick="${toggleFn}"></div>
+    <div>
+      <div class="task-name">${name}</div>
+      ${detail ? `<div class="task-detail">${detail}</div>` : ''}
+      ${tag ? `<div class="task-tag">${tag}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+function toggleAndRefresh(key, isDaily) {
+  const done = isDaily ? toggleDone(key) : toggleWeekDone(key);
+  const el = document.getElementById('ti-' + key);
+  if (el) {
+    el.classList.toggle('completed', done);
+    el.querySelector('.task-cb').classList.toggle('checked', done);
   }
-  document.getElementById('gear-phase-lbl').textContent=maint?'Ongoing Acquisitions':'Week '+wk+' Acquisitions';
-
-  renderPips(wk,maint);
-  renderBars();
-  renderToday(wi);
-  renderGear(wi);
-  if(!selWeek&&selWeek!==0)selWeek=wi;
-  selWeek=maint?5:wi;
-  renderWeekSel(wi,maint);
-  renderCPs(selWeek);
-  renderStreaks();
 }
 
-function renderPips(wk,maint){
-  const pips=document.getElementById('week-pips');
-  const lbls=document.getElementById('week-pip-lbls');
-  pips.innerHTML='';lbls.innerHTML='';
-  const pct=maint?100:Math.round(((wk-1)/5)*100);
-  document.getElementById('prog-pct').textContent=pct+'%';
-  for(let w=1;w<=5;w++){
-    const p=document.createElement('div');p.className='w-pip';
-    if(maint)p.classList.add('maint');
-    else if(w<wk)p.classList.add('done');
-    else if(w===wk)p.classList.add('now');
-    pips.appendChild(p);
-    const l=document.createElement('div');
-    l.className='w-pip-lbl'+(maint?' maint':w===wk?' now':'');
-    l.textContent=maint?'✓':'W'+w;
-    lbls.appendChild(l);
+function gearItem(id, name, note) {
+  const acquired = isGearAcquired(id);
+  return `<div class="gear-item ${acquired ? 'acquired' : ''}" id="gi-${id}">
+    <div class="task-cb ${acquired ? 'checked' : ''}" onclick="toggleAndRefreshGear('${id}')"></div>
+    <div>
+      <div class="gear-name">${name}</div>
+      ${note ? `<div class="gear-note">${note}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+function toggleAndRefreshGear(id) {
+  const acquired = toggleGear(id);
+  const el = document.getElementById('gi-' + id);
+  if (el) {
+    el.classList.toggle('acquired', acquired);
+    el.querySelector('.task-cb').classList.toggle('checked', acquired);
   }
 }
 
-function renderBars(){
-  const keys=Object.keys(ud.checkins);
-  const total=Math.max(keys.length,1);
-  const pmap={deen:'dn',body:'bd',blade:'bl',survival:'sv'};
-  const pref={deen:'w_prayers|w_kursi|w_adhkar|m_prayer|m_kursi|m_adhkar',body:'w_body|w_pull|w_sprint|w_bag|w_peak|m_train',blade:'w_grip|w_angles|w_speed|w_pressure|w_full|m_blade',survival:'w_gear|w_order|w_filter|w_bob|w_gear_audit|m_survival'};
-  ['deen','body','blade','survival'].forEach(p=>{
-    const pfxs=pref[p].split('|');
-    const done=keys.filter(d=>ud.checkins[d]&&Object.entries(ud.checkins[d]).some(([k,v])=>pfxs.some(px=>k.includes(px.replace('w_','').replace('m_','')))&&v)).length;
-    const pct=Math.round((done/total)*100);
-    document.getElementById(pmap[p]+'-pct').textContent=pct+'%';
-    document.getElementById(pmap[p]+'-bar').style.width=pct+'%';
-    document.getElementById(pmap[p]+'-st').textContent=(ud.streaks[p]||0)+' day streak';
-  });
-}
+// ════════════════════════════════════════════
+// LEARNING MODULE RENDER
+// ════════════════════════════════════════════
+function renderLearningModule(moduleId, title, data) {
+  const progress = getLearningProgress(moduleId);
+  const total = data.length;
+  const done = Object.values(progress).filter(Boolean).length;
+  const pct = Math.round((done / total) * 100);
+  const allDone = done === total;
 
-function renderToday(wi){
-  const grid=document.getElementById('today-grid');
-  const today=ud.checkins[todayKey()]||{};
-  const blocks=activeBlocks(wData(wi));
-  grid.innerHTML=blocks.map(b=>{
-    const on=!!today[b.id];
-    return`<div class="t-block ${b.cls}${on?' done':''}" id="tb-${b.id}">
-      <div class="t-pillar">${b.pillar}</div>
-      <div class="t-title">${b.title}</div>
-      <div class="t-detail">${b.detail}</div>
-      <button class="t-check${on?' on':''}" onclick="toggleBlock('${b.id}')">
-        <span class="t-chk-ico">${on?'✓':''}</span>${on?'Completed':'Mark Complete'}
-      </button>
-    </div>`;
-  }).join('');
-}
-
-function renderGear(wi){
-  const box=document.getElementById('gear-box');
-  const items=activeGear(wData(wi));
-  if(!items.length){box.innerHTML='<div style="padding:18px 20px;font-family:var(--font-mono);font-size:9px;color:var(--dim);letter-spacing:0.1em;">All essential gear for this phase already acquired. See Resources for full Tier 2–3 lists.</div>';return;}
-  const acq=items.filter(g=>ud.gear[g.id]).length;
-  const tierOrder=['t1','t2','t3'];
-  const tierLabels={t1:'Tier 1 — Critical, acquire first',t2:'Tier 2 — Build next',t3:'Tier 3 — Long-term resilience'};
-  let html=`<div class="gear-hd"><span class="gear-hd-lbl">Acquisition Track</span><span class="gear-hd-ct">${acq}/${items.length} acquired</span></div><div class="gear-grid">`;
-  let lastTier='';
-  // Group by tier
-  tierOrder.forEach(tier=>{
-    const tItems=items.filter(g=>g.tier===tier);
-    if(!tItems.length)return;
-    // close and reopen grid for tier label
-    html+=`</div><div class="gear-tier-label ${tier}">${tierLabels[tier]}</div><div class="gear-grid">`;
-    tItems.forEach(g=>{
-      const got=!!ud.gear[g.id];
-      html+=`<div class="g-item${got?' got':''}" onclick="toggleGear('${g.id}')">
-        <div class="g-ico">${got?'✓':''}</div>
-        <div><div class="g-name">${g.name}</div><div class="g-note">${g.note}</div></div>
-      </div>`;
-    });
-  });
-  html+='</div>';
-  box.innerHTML=html;
-}
-
-function renderWeekSel(wi,maint){
-  const sel=document.getElementById('week-sel');
-  let html=WEEKS.map((w,i)=>{
-    const done=isWkDone(i);
-    return`<button class="ws-btn${selWeek===i?' on':''}${done?' done':''}" onclick="pickWeek(${i})">${w.label}<br><span style="font-size:7px;opacity:0.6;">${w.phase}</span></button>`;
-  }).join('');
-  html+=`<button class="ws-btn maint-btn${selWeek===5?' on':''}" onclick="pickWeek(5)">∞ Maintenance<br><span style="font-size:7px;opacity:0.6;">Ongoing</span></button>`;
-  sel.innerHTML=html;
-}
-
-function isWkDone(i){
-  const k=wKey(i);const cp=ud.checkpoints[k];
-  if(!cp)return false;
-  const all=[...(cp.deen||[]),...(cp.body||[]),...(cp.blade||[])];
-  return all.length>0&&all.every(Boolean);
-}
-
-function renderCPs(wi){
-  const grid=document.getElementById('cp-grid');
-  const k=wKey(wi);
-  const cp=ud.checkpoints[k]||{deen:[],body:[],blade:[]};
-  const wd=wData(wi);
-
-  const col=(pillar,cls,items)=>`
-    <div class="cp-card">
-      <div class="cp-hd ${cls}">${pillar}</div>
-      <div class="cp-rows">
-        ${items.map((txt,i)=>{
-          const on=!!(cp[pillar.toLowerCase()]&&cp[pillar.toLowerCase()][i]);
-          return`<div class="cp-row${on?' on':''}" onclick="toggleCP('${pillar.toLowerCase()}',${i},${wi})">
-            <div class="cp-box">${on?'✓':''}</div>
-            <div class="cp-text">${txt}</div>
-          </div>`;
-        }).join('')}
+  let ayahs = '';
+  data.forEach((item, i) => {
+    const mastered = !!progress[i];
+    ayahs += `<div class="learn-ayah ${mastered ? 'mastered' : ''}" id="la-${moduleId}-${i}">
+      <div class="learn-ayah-arabic">${item.arabic}</div>
+      <div class="learn-ayah-translit">${item.translit}</div>
+      <div class="learn-ayah-trans">${item.trans}</div>
+      <div class="learn-ayah-actions">
+        <button class="learn-play-btn" id="play-${moduleId}-${i}" onclick="speakLine('${moduleId}',${i})">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Listen
+        </button>
+        <button class="learn-mark-btn ${mastered ? 'marked' : 'unmarked'}" id="mark-${moduleId}-${i}" onclick="toggleLearnLine('${moduleId}',${i})">
+          ${mastered ? '✓ Memorised' : 'Mark as Memorised'}
+        </button>
       </div>
     </div>`;
-
-  grid.innerHTML=col('Deen','dn',wd.checkpoints.deen)+col('Body','bd',wd.checkpoints.body)+col('Blade','bl',wd.checkpoints.blade);
-
-  const total=wd.checkpoints.deen.length+wd.checkpoints.body.length+wd.checkpoints.blade.length;
-  const done=[...(cp.deen||[]),...(cp.body||[]),...(cp.blade||[])].filter(Boolean).length;
-  const badge=document.getElementById('ws-badge');
-  if(done===total&&total>0){badge.className='ws-badge pass';badge.textContent='✓ Week Complete';}
-  else if(done===0){badge.className='ws-badge pend';badge.textContent='Not Started';}
-  else{badge.className='ws-badge pend';badge.textContent=done+'/'+total+' Done';}
-}
-
-function renderStreaks(){
-  const m={deen:'deen',body:'body',blade:'blade',survival:'surv'};
-  Object.entries(m).forEach(([p,id])=>document.getElementById('st-'+id).textContent=ud.streaks[p]||0);
-}
-
-// ═══════════════════════════════════════════════
-//  INTERACTIONS
-// ═══════════════════════════════════════════════
-function toggleBlock(id){
-  const key=todayKey();
-  if(!ud.checkins[key])ud.checkins[key]={};
-  ud.checkins[key][id]=!ud.checkins[key][id];
-  recalcStreaks();
-  const wi=isMaint()?5:weekNum()-1;
-  renderToday(wi);renderBars();renderStreaks();
-  qSave();
-}
-
-function toggleGear(id){
-  ud.gear[id]=!ud.gear[id];
-  renderGear(isMaint()?5:weekNum()-1);
-  qSave();
-}
-
-function toggleCP(pillar,idx,wi){
-  const k=wKey(wi);
-  if(!ud.checkpoints[k])ud.checkpoints[k]={};
-  if(!ud.checkpoints[k][pillar])ud.checkpoints[k][pillar]=[];
-  ud.checkpoints[k][pillar][idx]=!ud.checkpoints[k][pillar][idx];
-  renderCPs(wi);
-  renderWeekSel(isMaint()?5:weekNum()-1,isMaint());
-  qSave();
-}
-
-function pickWeek(i){selWeek=i;renderWeekSel(isMaint()?5:weekNum()-1,isMaint());renderCPs(i);}
-
-function recalcStreaks(){
-  const pfx={deen:['prayers','kursi','adhkar','m_prayer','m_kursi','m_adhkar'],body:['body','pull','sprint','bag','peak','m_train'],blade:['grip','angles','speed','pressure','full_drill','m_blade'],survival:['gear_list','order','filter','bob','gear_audit','m_survival']};
-  Object.keys(pfx).forEach(p=>{
-    let streak=0,d=new Date();
-    for(let i=0;i<366;i++){
-      const key=d.toISOString().split('T')[0];
-      const day=ud.checkins[key];
-      const hit=day&&Object.entries(day).some(([k,v])=>pfx[p].some(px=>k.includes(px))&&v);
-      if(!hit)break;
-      streak++;d.setDate(d.getDate()-1);
-    }
-    ud.streaks[p]=streak;
   });
+
+  return `<div class="learn-module">
+    <div class="learn-header" onclick="toggleLearnExpand('lbody-${moduleId}')">
+      <div class="learn-title">${title}</div>
+      <div class="learn-badge">${done}/${total} Lines</div>
+    </div>
+    <div class="learn-progress-bar"><div class="learn-progress-fill" id="lpf-${moduleId}" style="width:${pct}%"></div></div>
+    <div id="lbody-${moduleId}" class="learn-body">
+      ${ayahs}
+      <div class="learn-complete-msg ${allDone ? 'show' : ''}" id="lcomplete-${moduleId}">
+        <p>Alhamdulillah — ${moduleId === 'ak' ? 'Ayatul Kursi' : 'Al-Kahf (1–10)'} complete.</p>
+      </div>
+    </div>
+  </div>`;
 }
 
-// ═══════════════════════════════════════════════
-//  PRINT
-// ═══════════════════════════════════════════════
-function printWeek(){window.print();}
-if(new URLSearchParams(window.location.search).get('print')==='true'){
-  window.addEventListener('load',()=>setTimeout(printWeek,2000));
+function toggleLearnExpand(id) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = el.style.display === 'none' ? '' : 'none';
 }
 
-// ═══════════════════════════════════════════════
-//  AUTO TAB
-// ═══════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded',()=>{
-  const t=sessionStorage.getItem('mt_open_tab');
-  if(t==='signup'){sessionStorage.removeItem('mt_open_tab');switchTab('signup');}
-});
+function toggleLearnLine(moduleId, idx) {
+  const progress = getLearningProgress(moduleId);
+  const newVal = !progress[idx];
+  setLearningLine(moduleId, idx, newVal);
 
-// ═══════════════════════════════════════════════
-//  AUTH STATE
-// ═══════════════════════════════════════════════
-sb.auth.onAuthStateChange(async(event,session)=>{
-  if(session&&session.user){
-    currentUser=session.user;
-    // Expose sb for nav.js sign out
-    window._mtSb=sb;
-    await loadData();
-    document.getElementById('auth-screen').style.display='none';
-    document.getElementById('onboarding-screen').style.display='none';
-    document.getElementById('app-screen').style.display='none';
-    // Only show onboarding if not yet completed — never again after that
-    if(!ud.onboardingDone){
-      document.getElementById('onboarding-screen').style.display='flex';
-    } else {
-      document.getElementById('app-screen').style.display='block';
-      renderApp();
-    }
-  } else {
-    currentUser=null;
-    document.getElementById('auth-screen').style.display='flex';
-    document.getElementById('app-screen').style.display='none';
-    document.getElementById('onboarding-screen').style.display='none';
+  const la = document.getElementById(`la-${moduleId}-${idx}`);
+  const btn = document.getElementById(`mark-${moduleId}-${idx}`);
+  if (la) la.classList.toggle('mastered', newVal);
+  if (btn) {
+    btn.className = `learn-mark-btn ${newVal ? 'marked' : 'unmarked'}`;
+    btn.textContent = newVal ? '✓ Memorised' : 'Mark as Memorised';
+  }
+
+  // Update progress bar
+  const prog = getLearningProgress(moduleId);
+  const total = moduleId === 'ak' ? AYATUL_KURSI.length : AL_KAHF.length;
+  const done = Object.values(prog).filter(Boolean).length;
+  const pct = Math.round((done / total) * 100);
+  const bar = document.getElementById(`lpf-${moduleId}`);
+  if (bar) bar.style.width = pct + '%';
+
+  // Show complete msg
+  const complete = document.getElementById(`lcomplete-${moduleId}`);
+  if (complete) complete.classList.toggle('show', done === total);
+
+  // Update badge
+  const badge = document.querySelector(`#lbody-${moduleId}`)?.closest('.learn-module')?.querySelector('.learn-badge');
+  if (badge) badge.textContent = `${done}/${total} Lines`;
+}
+
+let speechActive = {};
+function speakLine(moduleId, idx) {
+  const data = moduleId === 'ak' ? AYATUL_KURSI : AL_KAHF;
+  const text = data[idx].translit;
+  const btn = document.getElementById(`play-${moduleId}-${idx}`);
+  
+  if (speechActive[`${moduleId}-${idx}`]) {
+    window.speechSynthesis.cancel();
+    speechActive[`${moduleId}-${idx}`] = false;
+    if (btn) btn.classList.remove('playing');
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+  Object.keys(speechActive).forEach(k => {
+    speechActive[k] = false;
+    const b = document.getElementById(`play-${k.replace('-', '-')}`);
+  });
+
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.rate = 0.8;
+  utt.onstart = () => { speechActive[`${moduleId}-${idx}`] = true; if (btn) btn.classList.add('playing'); };
+  utt.onend = () => { speechActive[`${moduleId}-${idx}`] = false; if (btn) btn.classList.remove('playing'); };
+  window.speechSynthesis.speak(utt);
+}
+
+// ════════════════════════════════════════════
+// FIRST AID MODULE RENDER
+// ════════════════════════════════════════════
+function renderFirstAidModule() {
+  const ob = userData.onboarding || {};
+  const isExternal = ob.firstaid === 'external';
+  const progress = getFAProgress();
+
+  if (isExternal) {
+    return `<div class="fa-module">
+      <div class="fa-header">
+        <div class="fa-title">First Aid Certification</div>
+        <p class="fa-sub">You've chosen to complete external certification.</p>
+      </div>
+      <div class="fa-external">
+        <strong>Recommended certifications:</strong><br><br>
+        • <strong>St John Ambulance</strong> — standard first aid + CPR courses available in most countries.<br>
+        • <strong>Red Cross First Aid</strong> — widely recognised, available online and in person.<br>
+        • <strong>FEMA Community Emergency Response Training (CERT)</strong> — free, comprehensive, and specifically designed for emergency scenarios.<br><br>
+        Book and complete a course that covers: primary survey, CPR, bleeding control, tourniquet application, and burns. When completed, mark it done below.
+        <br><br>
+        <button class="fa-complete-btn ${progress['external'] ? 'done' : 'undone'}" onclick="toggleFAExternal()">
+          ${progress['external'] ? '✓ Certification Complete' : 'Mark Certification Complete'}
+        </button>
+      </div>
+    </div>`;
+  }
+
+  let weeks = '';
+  FIRST_AID_WEEKS.forEach((w, i) => {
+    const done = !!progress[i];
+    weeks += `<div class="fa-week">
+      <div class="fa-week-head" onclick="toggleFAWeek(${i})">
+        <div class="fa-week-title">${w.title}</div>
+        <div class="fa-week-status ${done ? 'done' : ''}">${done ? '✓ Complete' : 'Not started'}</div>
+      </div>
+      <div class="fa-week-body" id="fa-body-${i}">
+        <div class="fa-week-content">${w.content}</div>
+        <button class="fa-complete-btn ${done ? 'done' : 'undone'}" id="fa-btn-${i}" onclick="toggleFAWeekComplete(${i})">
+          ${done ? '✓ Marked Complete' : 'Mark as Complete'}
+        </button>
+      </div>
+    </div>`;
+  });
+
+  const completedCount = Object.keys(progress).filter(k => progress[k]).length;
+
+  return `<div class="fa-module">
+    <div class="fa-header">
+      <div class="fa-title">First Aid Training</div>
+      <p class="fa-sub">${completedCount}/${FIRST_AID_WEEKS.length} weeks complete — read each week's content, then mark complete.</p>
+    </div>
+    <div class="fa-weeks">${weeks}</div>
+  </div>`;
+}
+
+function toggleFAWeek(idx) {
+  const body = document.getElementById(`fa-body-${idx}`);
+  if (body) body.classList.toggle('open');
+}
+
+function toggleFAWeekComplete(idx) {
+  const progress = getFAProgress();
+  const newVal = !progress[idx];
+  setFAWeek(idx, newVal);
+  const btn = document.getElementById(`fa-btn-${idx}`);
+  const statusEl = document.querySelector(`#fa-body-${idx}`)?.closest('.fa-week')?.querySelector('.fa-week-status');
+  if (btn) { btn.className = `fa-complete-btn ${newVal ? 'done' : 'undone'}`; btn.textContent = newVal ? '✓ Marked Complete' : 'Mark as Complete'; }
+  if (statusEl) { statusEl.className = `fa-week-status ${newVal ? 'done' : ''}`; statusEl.textContent = newVal ? '✓ Complete' : 'Not started'; }
+}
+
+function toggleFAExternal() {
+  const progress = getFAProgress();
+  const newVal = !progress['external'];
+  setFAWeek('external', newVal);
+  renderSurvivalWeek(); // re-render
+}
+
+// ════════════════════════════════════════════
+// MIND — TODAY
+// ════════════════════════════════════════════
+function renderMindToday() {
+  const ob = userData.onboarding || {};
+  const akKnown = ob.ayatul_kursi === 'yes';
+  const kahfKnown = ob.kahf === 'yes';
+  const akProgress = getLearningProgress('ak');
+  const kahfProgress = getLearningProgress('kahf');
+  const akComplete = akKnown || Object.values(akProgress).filter(Boolean).length === AYATUL_KURSI.length;
+  const kahfComplete = kahfKnown || Object.values(kahfProgress).filter(Boolean).length === AL_KAHF.length;
+
+  let html = '';
+
+  // Learning modules
+  if (!akKnown) {
+    html += `<div class="t-section">
+      <div class="t-section-head">Learning Module</div>
+      ${renderLearningModule('ak', 'Ayatul Kursi', AYATUL_KURSI)}
+    </div>`;
+  }
+
+  if (!kahfKnown && akComplete) {
+    html += `<div class="t-section">
+      <div class="t-section-head">Learning Module</div>
+      ${renderLearningModule('kahf', 'Surah Al-Kahf — First 10 Ayat', AL_KAHF)}
+    </div>`;
+  }
+
+  // Daily prayers
+  const prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+  const today = getTodayKey();
+  const checkins = userData.daily_checkins || {};
+  const todayData = checkins[today] || {};
+
+  html += `<div class="t-section">
+    <div class="t-section-head">Daily Prayers</div>
+    <div class="prayer-date">${new Date().toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long'})}</div>
+    <div class="prayer-grid">`;
+
+  prayers.forEach(p => {
+    const pKey = `prayer-${p.toLowerCase()}`;
+    const akKey = `ak-${p.toLowerCase()}`;
+    const pDone = !!todayData[pKey];
+    const akDone = !!todayData[akKey];
+    html += `<div class="prayer-row">
+      <div class="prayer-name">${p}</div>
+      <div class="prayer-cb-wrap">
+        <div class="prayer-cb-label">Prayer</div>
+        <div class="task-cb ${pDone ? 'checked' : ''}" onclick="togglePrayerCb('${pKey}', this)"></div>
+      </div>
+      <div class="prayer-cb-wrap">
+        <div class="prayer-cb-label">Ayatul Kursi</div>
+        <div class="task-cb ${akDone ? 'checked' : ''}" onclick="togglePrayerCb('${akKey}', this)" ${!akComplete ? 'style="opacity:0.35;pointer-events:none;"' : ''}></div>
+      </div>
+    </div>`;
+  });
+
+  html += `</div></div>`;
+  document.getElementById('mind-today').innerHTML = html;
+}
+
+function togglePrayerCb(key, el) {
+  const done = toggleDone(key);
+  el.classList.toggle('checked', done);
+  el.closest('.prayer-row').style.opacity = '';
+}
+
+// ════════════════════════════════════════════
+// MIND — THIS WEEK
+// ════════════════════════════════════════════
+function renderMindWeek() {
+  const week = getCurrentWeek();
+  const weekIdx = Math.min(week - 1, 4);
+  const isMaintenance = week > 5;
+
+  let html = '';
+
+  if (isMaintenance) {
+    html += `<div class="maint-banner">You are in Maintenance Mode. The protocol is now a permanent habit.</div>`;
+    html += `<div class="t-section">
+      <div class="t-section-head">Weekly</div>
+      <div class="task-list">
+        ${taskItem('maint-kahf', 'Friday — Al-Kahf recitation', 'Recite all 10 ayat from memory.', 'Weekly / Mind', false)}
+        ${taskItem('maint-tawheed', 'One chapter Kitab at-Tawheed', 'Maintain your knowledge of Aqeedah.', 'Weekly / Mind', false)}
+      </div>
+    </div>`;
+    document.getElementById('mind-week').innerHTML = html;
+    return;
+  }
+
+  const weekData = WEEK_PLAN[weekIdx];
+  html += `<div class="week-header">
+    <div>
+      <div class="week-title">Week ${week} — <em>${weekData.theme}</em></div>
+      <div class="week-theme">Day ${getWeekDay() + 1} of 7</div>
+    </div>
+    <div class="week-badge">Week ${week}</div>
+  </div>`;
+
+  // Build this week's Mind tasks
+  html += `<div class="t-section">
+    <div class="t-section-head">This Week — Mind</div>
+    <div class="task-list">`;
+  weekData.days.forEach((day, i) => {
+    html += taskItem(`w${week}-mind-d${i}`, `Day ${i+1}: ${day.mind.title}`, day.mind.detail, `Week ${week} / Mind`, false);
+  });
+  html += `</div></div>`;
+
+  // Missed from previous weeks
+  const missed = getMissedMindTasks(week);
+  if (missed.length) {
+    html += `<div class="missed-section">
+      <div class="missed-head"><span class="missed-label">Missed</span><span class="missed-count">${missed.length} task${missed.length!==1?'s':''} from previous weeks</span></div>
+      <div class="task-list">${missed.join('')}</div>
+    </div>`;
+  }
+
+  document.getElementById('mind-week').innerHTML = html;
+}
+
+function getMissedMindTasks(currentWeek) {
+  const missed = [];
+  for (let w = 1; w < currentWeek; w++) {
+    const weekIdx = w - 1;
+    if (weekIdx >= WEEK_PLAN.length) continue;
+    WEEK_PLAN[weekIdx].days.forEach((day, i) => {
+      const key = `w${w}-mind-d${i}`;
+      if (!isWeekDone(key)) {
+        missed.push(taskItem(key, `[W${w}D${i+1}] ${day.mind.title}`, day.mind.detail, `Week ${w} / Mind — Missed`, false));
+      }
+    });
+  }
+  return missed;
+}
+
+// ════════════════════════════════════════════
+// BODY — TODAY
+// ════════════════════════════════════════════
+function renderBodyToday() {
+  const week = getCurrentWeek();
+  const weekIdx = Math.min(week - 1, 4);
+  const isMaintenance = week > 5;
+  const ob = userData.onboarding || {};
+  const dayIdx = getWeekDay();
+
+  let html = '';
+
+  if (isMaintenance) {
+    html += `<div class="maint-banner">Maintenance Mode — daily movement and weekly drills continue forever.</div>`;
+    html += `<div class="t-section"><div class="t-section-head">Today</div><div class="task-list">
+      ${taskItem('maint-move', 'Daily movement', 'Walk minimum. Workout if routine applies.', 'Daily / Body', true)}
+      ${taskItem('maint-weapon', 'Weaponry drill — 10 min', getWeaponDrillNote(ob.weapons), 'Daily / Body', true)}
+    </div></div>`;
+    document.getElementById('body-today').innerHTML = html;
+    return;
+  }
+
+  const dayData = WEEK_PLAN[weekIdx].days[dayIdx];
+  html += `<div class="t-section">
+    <div class="t-section-head">Today — Day ${dayIdx + 1}</div>
+    <div class="task-list">
+      ${taskItem(`today-body-main`, dayData.body.title, dayData.body.detail, `Week ${week} Day ${dayIdx+1} / Body`, true)}
+    </div>
+  </div>`;
+
+  // Weaponry from week 3
+  if (week >= 3 && ob.weapons && ob.weapons.length) {
+    html += `<div class="t-section">
+      <div class="t-section-head">Weaponry</div>
+      <div class="task-list">
+        ${taskItem('today-weapon', 'Weaponry drill', getWeaponDrillNote(ob.weapons), 'Daily / Body', true)}
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('body-today').innerHTML = html;
+}
+
+function getWeaponDrillNote(weapons) {
+  if (!weapons || !weapons.length) return '';
+  const notes = {
+    knife: 'Knife drills — grip, draw, basic cuts, defensive movement.',
+    bow: 'Archery — stance, draw, aim, release. Dry-fire if no arrows.',
+    firearm: 'Firearm — safe handling, dry-fire, magazine drill, sight picture.',
+    hand: 'Hand combat — guard, jab-cross-hook, footwork, clinch work.'
+  };
+  return weapons.map(w => notes[w] || w).join(' / ');
+}
+
+// ════════════════════════════════════════════
+// BODY — THIS WEEK
+// ════════════════════════════════════════════
+function renderBodyWeek() {
+  const week = getCurrentWeek();
+  const weekIdx = Math.min(week - 1, 4);
+  const isMaintenance = week > 5;
+
+  let html = '';
+
+  if (isMaintenance) {
+    html += `<div class="maint-banner">Maintenance Mode.</div>`;
+    html += `<div class="t-section"><div class="t-section-head">Weekly</div><div class="task-list">
+      ${taskItem('maint-maxeff', 'Max effort session', 'Document your numbers — push-ups, squats, sprints.', 'Weekly / Body', false)}
+      ${taskItem('maint-benchmark', 'Monthly fitness benchmark', 'Once a month — full test. Record and compare.', 'Monthly / Body', false)}
+    </div></div>`;
+    document.getElementById('body-week').innerHTML = html;
+    return;
+  }
+
+  const weekData = WEEK_PLAN[weekIdx];
+  html += `<div class="week-header">
+    <div><div class="week-title">Week ${week} — <em>${weekData.theme}</em></div></div>
+    <div class="week-badge">Week ${week}</div>
+  </div>`;
+
+  html += `<div class="t-section"><div class="t-section-head">This Week — Body</div><div class="task-list">`;
+  weekData.days.forEach((day, i) => {
+    html += taskItem(`w${week}-body-d${i}`, `Day ${i+1}: ${day.body.title}`, day.body.detail, `Week ${week} / Body`, false);
+  });
+  html += `</div></div>`;
+
+  const missed = getMissedBodyTasks(week);
+  if (missed.length) {
+    html += `<div class="missed-section">
+      <div class="missed-head"><span class="missed-label">Missed</span><span class="missed-count">${missed.length} task${missed.length!==1?'s':''}</span></div>
+      <div class="task-list">${missed.join('')}</div>
+    </div>`;
+  }
+
+  document.getElementById('body-week').innerHTML = html;
+}
+
+function getMissedBodyTasks(currentWeek) {
+  const missed = [];
+  for (let w = 1; w < currentWeek; w++) {
+    if (w - 1 >= WEEK_PLAN.length) continue;
+    WEEK_PLAN[w-1].days.forEach((day, i) => {
+      const key = `w${w}-body-d${i}`;
+      if (!isWeekDone(key)) {
+        missed.push(taskItem(key, `[W${w}D${i+1}] ${day.body.title}`, day.body.detail, `Week ${w} / Body — Missed`, false));
+      }
+    });
+  }
+  return missed;
+}
+
+// ════════════════════════════════════════════
+// SURVIVAL — TODAY
+// ════════════════════════════════════════════
+function renderSurvivalToday() {
+  const week = getCurrentWeek();
+  const weekIdx = Math.min(week - 1, 4);
+  const isMaintenance = week > 5;
+  const dayIdx = getWeekDay();
+
+  let html = '';
+
+  if (isMaintenance) {
+    html += `<div class="maint-banner">Maintenance Mode.</div>`;
+    html += `<div class="t-section"><div class="t-section-head">Weekly</div><div class="task-list">
+      ${taskItem('maint-gearcheck', 'Full gear check', 'Verify all Tier 1 items are in place.', 'Weekly / Survival', false)}
+      ${taskItem('maint-tier2', 'Add one Tier 2 item', 'Gold/silver, extended food, shelter materials, antibiotics.', 'Monthly / Survival', false)}
+    </div></div>`;
+    document.getElementById('survival-today').innerHTML = html;
+    return;
+  }
+
+  const dayData = WEEK_PLAN[weekIdx].days[dayIdx];
+  html += `<div class="t-section">
+    <div class="t-section-head">Today — Day ${dayIdx + 1}</div>
+    <div class="task-list">
+      ${taskItem('today-surv-main', dayData.survival.title, dayData.survival.detail, `Week ${week} Day ${dayIdx+1} / Survival`, true)}
+    </div>
+  </div>`;
+
+  document.getElementById('survival-today').innerHTML = html;
+}
+
+// ════════════════════════════════════════════
+// SURVIVAL — THIS WEEK
+// ════════════════════════════════════════════
+function renderSurvivalWeek() {
+  const week = getCurrentWeek();
+  const weekIdx = Math.min(week - 1, 4);
+  const isMaintenance = week > 5;
+
+  let html = '';
+
+  if (isMaintenance) {
+    html += `<div class="maint-banner">Maintenance Mode.</div>`;
+    html += renderFirstAidModule();
+    html += buildGearSection('All Gear', GEAR_TIER1);
+    document.getElementById('survival-week').innerHTML = html;
+    return;
+  }
+
+  const weekData = WEEK_PLAN[weekIdx];
+  html += `<div class="week-header">
+    <div><div class="week-title">Week ${week} — <em>${weekData.theme}</em></div></div>
+    <div class="week-badge">Week ${week}</div>
+  </div>`;
+
+  html += `<div class="t-section"><div class="t-section-head">This Week — Survival</div><div class="task-list">`;
+  weekData.days.forEach((day, i) => {
+    html += taskItem(`w${week}-surv-d${i}`, `Day ${i+1}: ${day.survival.title}`, day.survival.detail, `Week ${week} / Survival`, false);
+  });
+  html += `</div></div>`;
+
+  // First aid from week 3
+  if (week >= 3) {
+    html += `<div class="t-section"><div class="t-section-head">First Aid Training</div>${renderFirstAidModule()}</div>`;
+  }
+
+  // Gear list (always visible)
+  html += buildGearSection('Tier 1 Gear Checklist', GEAR_TIER1);
+
+  const missed = getMissedSurvTasks(week);
+  if (missed.length) {
+    html += `<div class="missed-section">
+      <div class="missed-head"><span class="missed-label">Missed</span><span class="missed-count">${missed.length} task${missed.length!==1?'s':''}</span></div>
+      <div class="task-list">${missed.join('')}</div>
+    </div>`;
+  }
+
+  document.getElementById('survival-week').innerHTML = html;
+}
+
+function buildGearSection(title, items) {
+  const acquired = items.filter(g => isGearAcquired(g.id)).length;
+  return `<div class="t-section">
+    <div class="t-section-head">${title} — ${acquired}/${items.length} acquired</div>
+    <div>${items.map(g => gearItem(g.id, g.name, g.note)).join('')}</div>
+  </div>`;
+}
+
+function getMissedSurvTasks(currentWeek) {
+  const missed = [];
+  for (let w = 1; w < currentWeek; w++) {
+    if (w - 1 >= WEEK_PLAN.length) continue;
+    WEEK_PLAN[w-1].days.forEach((day, i) => {
+      const key = `w${w}-surv-d${i}`;
+      if (!isWeekDone(key)) {
+        missed.push(taskItem(key, `[W${w}D${i+1}] ${day.survival.title}`, day.survival.detail, `Week ${w} / Survival — Missed`, false));
+      }
+    });
+  }
+  return missed;
+}
+
+// ════════════════════════════════════════════
+// TAB SWITCHING
+// ════════════════════════════════════════════
+function switchPillar(pillar) {
+  document.querySelectorAll('.pillar-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.pillar-panel').forEach(p => p.classList.remove('active'));
+  const btn = document.querySelector(`.pillar-tab.${pillar === 'survival' ? 'surv' : pillar}`);
+  if (btn) btn.classList.add('active');
+  const panel = document.getElementById(`panel-${pillar}`);
+  if (panel) panel.classList.add('active');
+}
+
+function switchSub(pillar, view, btn) {
+  const panel = document.getElementById(`panel-${pillar}`);
+  panel.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const todayEl = document.getElementById(`${pillar}-today`);
+  const weekEl = document.getElementById(`${pillar}-week`);
+  if (todayEl) todayEl.style.display = view === 'today' ? '' : 'none';
+  if (weekEl) weekEl.style.display = view === 'week' ? '' : 'none';
+}
+
+// ════════════════════════════════════════════
+// AUTH OBSERVER
+// ════════════════════════════════════════════
+supabase.auth.onAuthStateChange(async (event, session) => {
+  if (event === 'INITIAL_SESSION' && session) {
+    currentUser = session.user;
+    await loadUserData();
+  } else if (event === 'SIGNED_OUT') {
+    currentUser = null;
+    userData = {};
+    document.getElementById('auth-screen').style.display = '';
+    document.getElementById('onboarding-screen').style.display = 'none';
+    document.getElementById('app-screen').style.display = 'none';
   }
 });
 </script>
