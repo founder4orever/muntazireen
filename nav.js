@@ -148,7 +148,7 @@ nav.innerHTML=`
       </div>
     </li>
     <li class="n-item" id="nav-protocol">
-      <a class="n-link" href="protocol.html">Protocol</a>
+      <a class="n-link" href="tracker.html">Tracker</a>
     </li>
     <li class="n-item">
       <a class="n-link" href="mission.html">Mission</a>
@@ -237,7 +237,7 @@ function buildAccountDrop(user){
 
 function buildMobileMenu(user){
   const menu=document.getElementById('nav-mobile-menu');
-  const authedProtocol = `<a class="n-mobile-link" href="protocol.html">Protocol</a>`;
+  const authedProtocol = `<a class="n-mobile-link" href="tracker.html">Tracker</a>`;
 
   const accountLinks = user ? `
     <a class="n-mobile-link" href="tracker.html#account">Settings</a>
