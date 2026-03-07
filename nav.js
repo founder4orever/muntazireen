@@ -173,7 +173,7 @@ nav.innerHTML=`
   </button>
   <div class="n-mobile-menu" id="nav-mobile-menu"></div>
 `;
-document.body.insertBefore(nav, document.body.firstChild);
+if (document.body) { document.body.insertBefore(nav, document.body.firstChild); } else { document.addEventListener("DOMContentLoaded", () => document.body.insertBefore(nav, document.body.firstChild)); }
 
 // Ensure body has top padding for fixed nav
 document.body.style.paddingTop = document.body.style.paddingTop || '60px';
