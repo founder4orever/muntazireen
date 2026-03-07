@@ -3,463 +3,623 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Signs — Muntazireen</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<title>Signs of the Hour — Muntazireen</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-:root {
-  --void: #080807; --deep: #0e0d0b; --surface: #141310; --panel: #1a1916;
-  --border: #272521; --dim: #4a463e; --muted: #6b6558; --mid: #9a9184;
-  --sand: #c4b89a; --cream: #e8dfc8; --white: #f2ece0;
-  --gold: #b8963c; --gold-bright: #d4a843; --gold-dim: #6b5520; --gold-faint: rgba(184,150,60,0.07);
-  --active: #b8963c; --fulfilled: #6db87f; --major: #c06060; --awaited: #6a9fcc;
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-body: 'Cormorant Garamond', Georgia, serif;
-  --font-mono: 'Courier Prime', 'Courier New', monospace;
+:root{
+  --void:#080807;--deep:#0e0d0b;--surface:#141310;--panel:#1a1916;
+  --border:#272521;--dim:#4a463e;--muted:#6b6558;--mid:#9a9184;
+  --sand:#c4b89a;--cream:#e8dfc8;--white:#f2ece0;
+  --gold:#b8963c;--gold-bright:#d4a843;--gold-dim:#6b5520;--gold-faint:rgba(184,150,60,0.08);
+  --occurred:#3d6e52;--occurred-dim:rgba(61,110,82,0.12);
+  --ongoing:#7a6520;--ongoing-dim:rgba(122,101,32,0.12);
+  --pending:#4a3a6e;--pending-dim:rgba(74,58,110,0.12);
+  --major:#6e2a2a;--major-dim:rgba(110,42,42,0.12);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Cormorant Garamond',Georgia,serif;
+  --font-mono:'Courier Prime','Courier New',monospace;
 }
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior: smooth; }
-body { background:var(--void); color:var(--sand); font-family:var(--font-body); font-size:17px; line-height:1.7; overflow-x:hidden; }
-body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:9999; opacity:0.5; }
-::selection { background:var(--gold-dim); color:var(--cream); }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--sand);font-family:var(--font-body);font-size:18px;font-weight:300;line-height:1.7;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.6;}
+::selection{background:var(--gold-dim);color:var(--cream);}
 
+/* PAGE */
+.page-wrap{max-width:1100px;margin:0 auto;padding:80px 48px 120px;}
 
+/* HADITH OPENER */
+.hadith-opener{
+  border-left:3px solid var(--gold-dim);
+  padding:32px 36px;
+  background:var(--gold-faint);
+  margin-bottom:80px;
+  position:relative;
+}
+.hadith-opener::before{
+  content:'"';
+  position:absolute;top:-20px;left:28px;
+  font-family:var(--font-display);font-size:80px;
+  color:rgba(184,150,60,0.15);line-height:1;
+}
+.hadith-arabic{
+  font-size:24px;color:var(--cream);direction:rtl;text-align:right;
+  line-height:1.9;margin-bottom:16px;font-weight:300;
+}
+.hadith-text{
+  font-family:var(--font-display);font-size:20px;font-style:italic;
+  color:var(--sand);line-height:1.6;margin-bottom:12px;
+}
+.hadith-ref{
+  font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--gold-dim);
+}
+.hadith-note{
+  font-size:15px;color:var(--muted);line-height:1.7;
+  margin-top:16px;padding-top:16px;border-top:1px solid var(--border);
+}
 
-.nav-logo span { color:var(--muted); font-size:9px; display:block; letter-spacing:0.15em; margin-top:1px; }
+/* PAGE HEADER */
+.page-header{margin-bottom:48px;}
+.page-eyebrow{
+  font-family:var(--font-mono);font-size:10px;letter-spacing:0.3em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:14px;
+  display:flex;align-items:center;gap:16px;
+}
+.page-eyebrow::after{content:'';height:1px;background:var(--border);width:60px;}
+.page-title{
+  font-family:var(--font-display);font-size:clamp(40px,6vw,72px);
+  font-weight:400;color:var(--white);line-height:1.0;
+  letter-spacing:-0.01em;margin-bottom:20px;
+}
+.page-title em{font-style:italic;color:var(--gold-bright);}
+.page-intro{font-size:18px;color:var(--mid);max-width:640px;line-height:1.7;}
 
+/* FILTER TABS */
+.filter-bar{
+  display:flex;gap:2px;margin-bottom:56px;
+  border-bottom:1px solid var(--border);
+  padding-bottom:0;
+}
+.fb-btn{
+  font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--muted);background:none;border:none;
+  padding:12px 20px;cursor:pointer;transition:all 0.25s;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+}
+.fb-btn:hover{color:var(--cream);}
+.fb-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
 
+/* SECTION DIVIDER */
+.signs-section{margin-bottom:64px;}
+.section-head{
+  display:flex;align-items:center;gap:20px;
+  margin-bottom:24px;padding-bottom:16px;
+  border-bottom:1px solid var(--border);
+}
+.section-head-label{
+  font-family:var(--font-mono);font-size:9px;letter-spacing:0.25em;
+  text-transform:uppercase;
+}
+.section-head-label.occurred{color:var(--occurred);}
+.section-head-label.ongoing{color:var(--gold);}
+.section-head-label.pending{color:#7a6acc;}
+.section-head-label.major{color:#c04040;}
+.section-head-title{
+  font-family:var(--font-display);font-size:22px;color:var(--white);font-weight:400;
+}
+.section-head-count{
+  font-family:var(--font-mono);font-size:9px;color:var(--dim);
+  letter-spacing:0.15em;margin-left:auto;
+}
 
+/* SIGN CARDS */
+.signs-grid{display:flex;flex-direction:column;gap:1px;background:var(--border);}
+.sign-card{
+  background:var(--deep);padding:28px 32px;
+  display:grid;grid-template-columns:4px 1fr;gap:0;
+  transition:background 0.25s;cursor:pointer;
+  position:relative;
+}
+.sign-card:hover{background:var(--surface);}
+.sign-bar{width:4px;margin:-28px 0 -28px -32px;align-self:stretch;flex-shrink:0;}
+.sign-bar.occurred{background:var(--occurred);}
+.sign-bar.ongoing{background:var(--gold);}
+.sign-bar.pending{background:#7a6acc;}
+.sign-bar.major{background:#c04040;}
+.sign-inner{padding-left:24px;}
+.sign-name{
+  font-family:var(--font-display);font-size:20px;color:var(--white);
+  font-weight:400;line-height:1.2;margin-bottom:8px;
+}
+.sign-desc{font-size:15px;color:var(--mid);line-height:1.65;margin-bottom:10px;}
+.sign-hadith{
+  font-family:var(--font-mono);font-size:8px;color:var(--dim);
+  letter-spacing:0.08em;line-height:1.6;
+}
+.sign-expand{display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
+.sign-expand.open{display:block;}
+.sign-expand p{font-size:15px;color:var(--muted);line-height:1.7;}
 
+/* MAJOR SIGNS — numbered sequence */
+.major-seq{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border:1px solid #6e2a2a;
+  font-family:var(--font-mono);font-size:9px;color:#c04040;
+  margin-right:10px;flex-shrink:0;float:left;margin-top:3px;
+}
+.major-note{
+  background:var(--major-dim);border:1px solid #3a1515;
+  padding:16px 20px;margin-bottom:24px;
+  font-size:14px;color:var(--muted);line-height:1.7;
+}
+.major-note strong{color:var(--sand);font-weight:400;}
 
+/* HIDE SECTIONS */
+.signs-section.hidden{display:none;}
+.sign-card.hidden{display:none;}
 
+/* METHODOLOGY NOTE */
+.method-note{
+  margin-top:80px;padding:28px 32px;
+  border:1px solid var(--border);background:var(--surface);
+}
+.method-note-title{
+  font-family:var(--font-mono);font-size:9px;letter-spacing:0.25em;
+  text-transform:uppercase;color:var(--gold-dim);margin-bottom:12px;
+}
+.method-note p{font-size:15px;color:var(--dim);line-height:1.7;}
 
-.page-hero { padding:120px 48px 60px; border-bottom:1px solid var(--border); background:var(--surface); position:relative; overflow:hidden; }
-.page-hero::before { content:'الآيات'; position:absolute; right:-20px; top:-20px; font-size:180px; color:rgba(184,150,60,0.03); pointer-events:none; line-height:1; }
-.hero-eyebrow { font-family:var(--font-mono); font-size:9px; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:16px; }
-.hero-title { font-family:var(--font-display); font-size:clamp(40px,7vw,96px); font-weight:900; color:var(--white); line-height:0.95; letter-spacing:-0.01em; margin-bottom:24px; }
-.hero-title em { font-style:italic; font-weight:400; color:var(--gold-bright); }
-.hero-body { font-size:18px; color:var(--muted); line-height:1.8; max-width:600px; margin-bottom:32px; }
-.hero-hadith { border-left:3px solid var(--gold-dim); padding:16px 24px; background:var(--gold-faint); max-width:560px; }
-.hero-hadith .arabic { font-size:18px; color:var(--cream); direction:rtl; text-align:right; line-height:1.8; margin-bottom:8px; }
-.hero-hadith .trans { font-size:14px; color:var(--muted); font-style:italic; line-height:1.6; }
-.hero-hadith .ref { font-family:var(--font-mono); font-size:9px; color:var(--gold-dim); margin-top:6px; letter-spacing:0.1em; }
-
-.filter-bar { display:flex; border-bottom:1px solid var(--border); overflow-x:auto; scrollbar-width:none; background:var(--deep); }
-.filter-bar::-webkit-scrollbar { display:none; }
-.fb-btn { font-family:var(--font-mono); font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); background:none; border:none; border-bottom:2px solid transparent; padding:14px 20px; cursor:pointer; white-space:nowrap; transition:all 0.25s; }
-.fb-btn:hover { color:var(--cream); }
-.fb-btn.active { color:var(--gold); border-bottom-color:var(--gold); }
-.fb-btn[data-f="active"].active { color:var(--active); border-bottom-color:var(--active); }
-.fb-btn[data-f="fulfilled"].active { color:var(--fulfilled); border-bottom-color:var(--fulfilled); }
-.fb-btn[data-f="major"].active { color:var(--major); border-bottom-color:var(--major); }
-.fb-btn[data-f="awaited"].active { color:var(--awaited); border-bottom-color:var(--awaited); }
-
-main { padding:0 48px 80px; max-width:1200px; margin:0 auto; }
-
-.signs-section { margin:0; }
-.section-divider { display:flex; align-items:center; gap:0; border-bottom:1px solid var(--border); margin:0 -48px; padding:0 48px; }
-.sd-label { font-family:var(--font-mono); font-size:9px; letter-spacing:0.25em; text-transform:uppercase; padding:14px 0; border-right:1px solid var(--border); padding-right:20px; white-space:nowrap; }
-.sd-label.active { color:var(--active); }
-.sd-label.fulfilled { color:var(--fulfilled); }
-.sd-label.major { color:var(--major); }
-.sd-label.awaited { color:var(--awaited); }
-.sd-rule { flex:1; height:1px; background:var(--border); margin-left:20px; }
-.sd-count { font-family:var(--font-mono); font-size:9px; color:var(--dim); padding-left:20px; }
-
-.signs-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin:0 0 0 0; }
-
-.sign-card { background:var(--panel); padding:32px 28px; position:relative; transition:background 0.25s; }
-.sign-card:hover { background:var(--surface); }
-.sign-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; }
-.sign-card.active::before { background:var(--active); box-shadow:0 0 8px rgba(184,150,60,0.3); }
-.sign-card.fulfilled::before { background:var(--fulfilled); }
-.sign-card.major::before { background:var(--major); }
-.sign-card.awaited::before { background:var(--awaited); }
-
-.sc-num { font-family:var(--font-mono); font-size:10px; color:var(--dim); letter-spacing:0.2em; margin-bottom:10px; }
-.sc-status { font-family:var(--font-mono); font-size:8px; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:12px; padding:3px 10px; border:1px solid; display:inline-block; }
-.sign-card.active .sc-status { color:var(--active); border-color:var(--active); background:rgba(184,150,60,0.08); }
-.sign-card.fulfilled .sc-status { color:var(--fulfilled); border-color:var(--fulfilled); background:rgba(109,184,127,0.08); }
-.sign-card.major .sc-status { color:var(--major); border-color:var(--major); background:rgba(192,96,96,0.08); animation:blink 2s ease infinite; }
-.sign-card.awaited .sc-status { color:var(--awaited); border-color:var(--awaited); background:rgba(106,159,204,0.08); }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.5} }
-
-.sc-name { font-family:var(--font-display); font-size:22px; color:var(--cream); line-height:1.2; margin-bottom:12px; font-weight:600; }
-.sc-desc { font-size:14px; color:var(--muted); line-height:1.75; margin-bottom:16px; }
-.sc-hadith { background:var(--gold-faint); border-left:2px solid var(--gold-dim); padding:12px 16px; margin-bottom:12px; }
-.sc-hadith .arabic { font-size:14px; color:var(--cream); direction:rtl; text-align:right; line-height:1.8; margin-bottom:6px; }
-.sc-hadith .trans { font-size:12px; color:var(--muted); font-style:italic; line-height:1.6; }
-.sc-ref { font-family:var(--font-mono); font-size:8px; color:var(--gold-dim); letter-spacing:0.1em; }
-
-.minor-note { padding:40px 0 0; }
-.mn-label { font-family:var(--font-mono); font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:var(--muted); margin-bottom:20px; display:flex; align-items:center; gap:16px; }
-.mn-label::after { content:''; flex:1; height:1px; background:var(--border); }
-
-.minor-list { display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--border); border:1px solid var(--border); }
-.minor-item { background:var(--panel); padding:20px 24px; display:flex; gap:16px; align-items:flex-start; }
-.mi-dot { width:6px; height:6px; border-radius:50%; background:var(--gold-dim); flex-shrink:0; margin-top:6px; }
-.mi-name { font-family:var(--font-display); font-size:15px; color:var(--sand); line-height:1.3; margin-bottom:4px; }
-.mi-ref { font-family:var(--font-mono); font-size:8px; color:var(--dim); letter-spacing:0.1em; }
-
-.methodology-note { margin:48px 0 0; border:1px solid var(--border); padding:28px 36px; background:var(--surface); }
-.mn-title { font-family:var(--font-mono); font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:12px; }
-.mn-text { font-size:14px; color:var(--muted); line-height:1.8; max-width:720px; }
-
-.reveal { opacity:0; transform:translateY(16px); transition:opacity 0.6s ease, transform 0.6s ease; }
-.reveal.visible { opacity:1; transform:translateY(0); }
-.reveal-delay-1 { transition-delay:0.1s; }
-.reveal-delay-2 { transition-delay:0.2s; }
-
-footer { background:var(--void); border-top:1px solid var(--border); padding:28px 48px; display:flex; justify-content:space-between; align-items:center; margin-top:80px; }
-.footer-mono { font-family:var(--font-mono); font-size:9px; color:var(--dim); letter-spacing:0.1em; }
-.footer-mono a { color:var(--gold-dim); text-decoration:none; margin-left:16px; transition:color 0.3s; }
-.footer-mono a:hover { color:var(--gold); }
-
-@media(max-width:900px) {
-  
-  .page-hero { padding:100px 20px 40px; }
-  main { padding:0 20px 60px; }
-  .signs-grid { grid-template-columns:1fr; }
-  .minor-list { grid-template-columns:1fr; }
-  .section-divider { margin:0 -20px; padding:0 20px; }
-  footer { padding:20px; flex-direction:column; gap:10px; }
+/* RESPONSIVE */
+@media(max-width:700px){
+  .page-wrap{padding:60px 20px 80px;}
+  .filter-bar{flex-wrap:wrap;}
+  .sign-card{padding:22px 20px;grid-template-columns:3px 1fr;}
+  .sign-bar{margin:-22px 0 -22px -20px;}
+  .sign-inner{padding-left:18px;}
 }
 </style>
 </head>
 <body>
+
 <!-- SHARED NAV -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="nav.js"></script>
 
+<div class="page-wrap">
 
-
-<div id="page-content" style="display:none">
-
-<div class="page-hero">
-  <div class="hero-eyebrow">Muntazireen — The Signs</div>
-  <h1 class="hero-title">What was <em>foretold</em><br>is unfolding.</h1>
-  <p class="hero-body">The Prophet ﷺ described the signs of the Hour in precise detail fourteen centuries ago. We document them here — sourced, graded, and plainly explained. No speculation. No sensationalism. The signs speak for themselves.</p>
-  <div class="hero-hadith reveal">
-    <div class="arabic">«اقْتَرَبَتِ السَّاعَةُ وَانشَقَّ الْقَمَرُ»</div>
-    <div class="trans">"The Hour has drawn near and the moon has split."</div>
-    <div class="ref">Surah Al-Qamar 54:1 — The Hour began drawing near from this moment.</div>
+  <!-- HADITH OPENER -->
+  <div class="hadith-opener">
+    <div class="hadith-arabic">كَأَنَّهَا حَبَّةٌ تَنْزِلُ مِنْ نِظَامٍ</div>
+    <div class="hadith-text">"The signs will follow one another like beads falling from a necklace."</div>
+    <div class="hadith-ref">Referenced in scholars' commentary on the Major Signs — once they begin, they come rapidly and in sequence.</div>
+    <div class="hadith-note">
+      The Prophet ﷺ described the Major Signs as a chain — once the first breaks loose, the rest follow in rapid succession. This is why the order matters. The Minor Signs, by contrast, are patterns that unfold across centuries. Some have been fulfilled historically. Others are ongoing. None of them are countdown timers. They are orientations — reminders of where we are in time, and why preparation is not paranoia.
+    </div>
   </div>
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="page-eyebrow">Documented Signs</div>
+    <h1 class="page-title">Signs of<br><em>the Hour.</em></h1>
+    <p class="page-intro">Every sign on this page is drawn from Sahih or Hasan narrations only. Scholarly grading is cited. Interpretation follows mainstream Sunni scholarship. We do not speculate beyond what scholars have established.</p>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <button class="fb-btn active" onclick="filterSigns('all',this)">All Signs</button>
+    <button class="fb-btn" onclick="filterSigns('minor',this)">Minor Signs</button>
+    <button class="fb-btn" onclick="filterSigns('major',this)">Major Signs</button>
+    <button class="fb-btn" onclick="filterSigns('occurred',this)">Occurred</button>
+    <button class="fb-btn" onclick="filterSigns('ongoing',this)">Ongoing</button>
+    <button class="fb-btn" onclick="filterSigns('pending',this)">Not Yet</button>
+  </div>
+
+  <!-- ══ MINOR SIGNS — OCCURRED ══ -->
+  <div class="signs-section" data-group="minor occurred" id="sec-occurred">
+    <div class="section-head">
+      <span class="section-head-label occurred">Minor Signs</span>
+      <span class="section-head-title">Occurred</span>
+      <span class="section-head-count">8 signs</span>
+    </div>
+    <div class="signs-grid">
+
+      <div class="sign-card" data-group="minor occurred" onclick="expandSign(this)">
+        <div class="sign-bar occurred"></div>
+        <div class="sign-inner">
+          <div class="sign-name">The Coming of the Prophet ﷺ</div>
+          <div class="sign-desc">The Prophet himself said: "I and the Hour were sent like these two" — and held up two fingers. The final era of human history began with his prophethood.</div>
+          <div class="sign-hadith">Tirmidhi 2213 — Sahih</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor occurred" onclick="expandSign(this)">
+        <div class="sign-bar occurred"></div>
+        <div class="sign-inner">
+          <div class="sign-name">The Splitting of the Moon</div>
+          <div class="sign-desc">Recorded in the Qur'an as accomplished fact: "The Hour has drawn near and the moon has split." Confirmed to have occurred during the Prophet's ﷺ lifetime in Makkah.</div>
+          <div class="sign-hadith">Sahih Al-Bukhari 3636 — Al-Qamar 54:1</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor occurred" onclick="expandSign(this)">
+        <div class="sign-bar occurred"></div>
+        <div class="sign-inner">
+          <div class="sign-name">The Death of the Prophet ﷺ</div>
+          <div class="sign-desc">Listed by scholars as one of the earliest fulfilled signs of the Hour. His passing marked the end of revelation and the beginning of the ummah's trial.</div>
+          <div class="sign-hadith">Sahih Muslim 2531</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor occurred" onclick="expandSign(this)">
+        <div class="sign-bar occurred"></div>
+        <div class="sign-inner">
+          <div class="sign-name">The Conquest of Jerusalem</div>
+          <div class="sign-desc">Foretold by the Prophet ﷺ. Occurred under the caliphate of Umar ibn al-Khattab (15 AH / 637 CE).</div>
+          <div class="sign-hadith">Sahih Al-Bukhari 1435</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor occurred" onclick="expandSign(this)">
+        <div class="sign-bar occurred"></div>
+        <div class="sign-inner">
+          <div class="sign-name">The Plague of Amwas</div>
+          <div class="sign-desc">A devastating plague in early Islamic history (18 AH), killing thousands of companions including Abu Ubayda ibn al-Jarrah. Predicted by the Prophet ﷺ.</div>
+          <div class="sign-hadith">Sahih Al-Bukhari — documented in early Islamic historical records</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor occurred" onclick="expandSign(this)">
+        <div class="sign-bar occurred"></div>
+        <div class="sign-inner">
+          <div class="sign-name">Widespread Wealth Among Muslims</div>
+          <div class="sign-desc">The Prophet ﷺ predicted wealth becoming so abundant that giving charity would become difficult because no one would need it. Scholars identify this with the Umayyad and Abbasid eras.</div>
+          <div class="sign-hadith">Sahih Al-Bukhari 1036</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor occurred" onclick="expandSign(this)">
+        <div class="sign-bar occurred"></div>
+        <div class="sign-inner">
+          <div class="sign-name">The Spread of Literacy and Writing</div>
+          <div class="sign-desc">Knowledge and writing becoming widespread among the people. Many scholars identify this as fulfilled across the Abbasid era and the broader Islamic golden age.</div>
+          <div class="sign-hadith">Scholarly consensus — broadly accepted as occurred</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor occurred" onclick="expandSign(this)">
+        <div class="sign-bar occurred"></div>
+        <div class="sign-inner">
+          <div class="sign-name">Two Large Muslim Groups Fighting</div>
+          <div class="sign-desc">Large-scale fighting between Muslim groups with the same claim. Scholars point to the Battle of Siffin and other internal conflicts in early Islamic history.</div>
+          <div class="sign-hadith">Sahih Al-Bukhari 7121</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ MINOR SIGNS — ONGOING ══ -->
+  <div class="signs-section" data-group="minor ongoing" id="sec-ongoing">
+    <div class="section-head">
+      <span class="section-head-label ongoing">Minor Signs</span>
+      <span class="section-head-title">Ongoing</span>
+      <span class="section-head-count">13 signs</span>
+    </div>
+    <p style="font-size:14px;color:var(--dim);margin-bottom:24px;font-family:var(--font-mono);letter-spacing:0.05em;">These are patterns, not completed events. Scholars note they can span centuries. Use your own judgment.</p>
+    <div class="signs-grid">
+
+      <div class="sign-card" data-group="minor ongoing" onclick="expandSign(this)">
+        <div class="sign-bar ongoing"></div>
+        <div class="sign-inner">
+          <div class="sign-name">Loss of Trust — Leadership Given to the Unqualified</div>
+          <div class="sign-desc">When the matter is entrusted to those unfit for it, await the Hour. Scholars broadly apply this to political corruption and incompetent leadership globally.</div>
+          <div class="sign-hadith">Sahih Al-Bukhari 6015 — Hadith of Jibril</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor ongoing" onclick="expandSign(this)">
+        <div class="sign-bar ongoing"></div>
+        <div class="sign-inner">
+          <div class="sign-name">Widespread Killing Without Clear Reason</div>
+          <div class="sign-desc">The Prophet ﷺ warned of Harj — mass killing where neither the killer nor the killed knows why. Modern warfare, civil conflict, and mass violence are widely discussed in this context.</div>
+          <div class="sign-hadith">Sahih Al-Bukhari 85</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor ongoing" onclick="expandSign(this)">
+        <div class="sign-bar ongoing"></div>
+        <div class="sign-inner">
+          <div class="sign-name">Competition in Building Tall Structures</div>
+          <div class="sign-desc">From the Hadith of Jibril: "barefoot shepherds competing in tall buildings." Scholars frequently mention Gulf skyscraper development. They emphasize interpretation, not certainty.</div>
+          <div class="sign-hadith">Sahih Al-Bukhari 50 — Muslim 8 — Hadith of Jibril</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor ongoing" onclick="expandSign(this)">
+        <div class="sign-bar ongoing"></div>
+        <div class="sign-inner">
+          <div class="sign-name">Immorality Becoming Open and Normalized</div>
+          <div class="sign-desc">The normalization of zinaa and other moral violations becoming public and accepted. Scholars note this as a pattern, not a singular event.</div>
+          <div class="sign-hadith">Ibn Majah 4045</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor ongoing" onclick="expandSign(this)">
+        <div class="sign-bar ongoing"></div>
+        <div class="sign-inner">
+          <div class="sign-name">Music and Entertainment Everywhere</div>
+          <div class="sign-desc">Musical instruments and entertainment becoming widespread and normalized across society.</div>
+          <div class="sign-hadith">Sahih Al-Bukhari 5590</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor ongoing" onclick="expandSign(this)">
+        <div class="sign-bar ongoing"></div>
+        <div class="sign-inner">
+          <div class="sign-name">Increase in Earthquakes and Natural Disasters</div>
+          <div class="sign-desc">The Prophet ﷺ indicated earthquakes would increase as the Hour approaches. Many scholars say the frequency of major disasters appears to be rising.</div>
+          <div class="sign-hadith">Sahih Al-Bukhari 1036</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor ongoing" onclick="expandSign(this)">
+        <div class="sign-bar ongoing"></div>
+        <div class="sign-inner">
+          <div class="sign-name">Time Feels Shorter</div>
+          <div class="sign-desc">"The year will be like a month, the month like a week, the week like a day." Scholars interpret this as loss of barakah in time — not the same as time literally compressing.</div>
+          <div class="sign-hadith">Tirmidhi 2332 — Hasan</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor ongoing" onclick="expandSign(this)">
+        <div class="sign-bar ongoing"></div>
+        <div class="sign-inner">
+          <div class="sign-name">Knowledge Disappears, Ignorance Spreads</div>
+          <div class="sign-desc">True scholars become fewer, religious knowledge becomes scarce, and ignorance spreads among the people. This refers to knowledge of deen, not worldly knowledge.</div>
+          <div class="sign-hadith">Sahih Al-Bukhari 80</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor ongoing" onclick="expandSign(this)">
+        <div class="sign-bar ongoing"></div>
+        <div class="sign-inner">
+          <div class="sign-name">Extreme Materialism</div>
+          <div class="sign-desc">People competing in worldly luxury and accumulation. The dunya becomes the greatest concern and primary measure of success.</div>
+          <div class="sign-hadith">Sahih Muslim — various narrations</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor ongoing" onclick="expandSign(this)">
+        <div class="sign-bar ongoing"></div>
+        <div class="sign-inner">
+          <div class="sign-name">Riba Becomes Unavoidable</div>
+          <div class="sign-desc">"A time will come when there will be no one left who has not consumed riba — and if he has not consumed it directly, its dust will reach him." The global financial system makes avoidance nearly impossible.</div>
+          <div class="sign-hadith">Abu Dawud 3331 — Ibn Majah 2278</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor ongoing" onclick="expandSign(this)">
+        <div class="sign-bar ongoing"></div>
+        <div class="sign-inner">
+          <div class="sign-name">Ties of Kinship Severed</div>
+          <div class="sign-desc">Silat al-rahim abandoned — family bonds broken, relatives estranged. The obligation of maintaining kinship ties becomes increasingly disregarded.</div>
+          <div class="sign-hadith">Ahmad — various narrations</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor ongoing" onclick="expandSign(this)">
+        <div class="sign-bar ongoing"></div>
+        <div class="sign-inner">
+          <div class="sign-name">False Prophets Appear</div>
+          <div class="sign-desc">"There will be thirty or more liars, each claiming to be a prophet." Numerous false claimants to prophethood have emerged across Islamic history and continue today.</div>
+          <div class="sign-hadith">Sahih Al-Bukhari 3609 — Abu Dawud 4252</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor ongoing" onclick="expandSign(this)">
+        <div class="sign-bar ongoing"></div>
+        <div class="sign-inner">
+          <div class="sign-name">Women Outnumber Men</div>
+          <div class="sign-desc">The Prophet ﷺ described a time when one man would be responsible for fifty women due to the ratio shift. Scholars note demographic trends in various regions.</div>
+          <div class="sign-hadith">Sahih Al-Bukhari 81</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ MINOR SIGNS — NOT YET ══ -->
+  <div class="signs-section" data-group="minor pending" id="sec-pending">
+    <div class="section-head">
+      <span class="section-head-label pending">Minor Signs</span>
+      <span class="section-head-title">Not Yet Occurred</span>
+      <span class="section-head-count">4 signs</span>
+    </div>
+    <div class="signs-grid">
+
+      <div class="sign-card" data-group="minor pending" onclick="expandSign(this)">
+        <div class="sign-bar pending"></div>
+        <div class="sign-inner">
+          <div class="sign-name">The Euphrates Uncovers a Mountain of Gold</div>
+          <div class="sign-desc">The Euphrates will recede to reveal a mountain of gold. People will fight over it, and 99 out of every 100 will die. Most scholars say this is literal and has not yet occurred.</div>
+          <div class="sign-hadith">Sahih Muslim 2894</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor pending" onclick="expandSign(this)">
+        <div class="sign-bar pending"></div>
+        <div class="sign-inner">
+          <div class="sign-name">Arabia Returns to Rivers and Meadows</div>
+          <div class="sign-desc">The Arabian Peninsula will return to being green with rivers and vegetation, as it once was. Some scholars discuss climate change in this context but note it has not clearly occurred.</div>
+          <div class="sign-hadith">Sahih Muslim 157</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor pending" onclick="expandSign(this)">
+        <div class="sign-bar pending"></div>
+        <div class="sign-inner">
+          <div class="sign-name">A Man from Qahtan Ruling the People</div>
+          <div class="sign-desc">A leader from the Qahtan tribe will emerge and drive people with his staff. Mentioned in hadith but not historically identified.</div>
+          <div class="sign-hadith">Sahih Al-Bukhari 3517</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="minor pending" onclick="expandSign(this)">
+        <div class="sign-bar pending"></div>
+        <div class="sign-inner">
+          <div class="sign-name">The Destruction of the Kaaba</div>
+          <div class="sign-desc">Dhul-Suwayqatayn — a man from Ethiopia — will destroy the Kaaba stone by stone. Described as happening near the very end of time, after the believers have been taken.</div>
+          <div class="sign-hadith">Sahih Al-Bukhari 1591</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ MAJOR SIGNS ══ -->
+  <div class="signs-section" data-group="major" id="sec-major">
+    <div class="section-head">
+      <span class="section-head-label major">Major Signs</span>
+      <span class="section-head-title">The Final Events</span>
+      <span class="section-head-count">9 signs</span>
+    </div>
+    <div class="major-note">
+      <strong>Mainstream Sunni consensus: none of the Major Signs have begun.</strong> When the first appears, the others follow rapidly — like beads from a broken necklace. The sequence below reflects the most widely accepted scholarly ordering. Scholars differ on the exact order of signs 5–9.
+    </div>
+    <div class="signs-grid">
+
+      <div class="sign-card" data-group="major" onclick="expandSign(this)">
+        <div class="sign-bar major"></div>
+        <div class="sign-inner">
+          <div class="sign-name"><span class="major-seq">1</span>The Mahdi</div>
+          <div class="sign-desc">A righteous leader from the lineage of the Prophet ﷺ emerges. He does not seek leadership but is given it. He fills the earth with justice after it was filled with oppression. He leads the Muslims and is present when Isa ﷺ descends.</div>
+          <div class="sign-hadith">Abu Dawud 4282 — Tirmidhi 2232</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="major" onclick="expandSign(this)">
+        <div class="sign-bar major"></div>
+        <div class="sign-inner">
+          <div class="sign-name"><span class="major-seq">2</span>The Dajjal</div>
+          <div class="sign-desc">The greatest trial humanity will face. One-eyed — his right eye like a floating grape, left eye extinguished. The word Kafir written between his eyes, visible to every believer. Claims to be Allah. Recitation of the first and last 10 ayat of Surah Al-Kahf is protection.</div>
+          <div class="sign-hadith">Sahih Muslim 2946 — Bukhari 7131</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="major" onclick="expandSign(this)">
+        <div class="sign-bar major"></div>
+        <div class="sign-inner">
+          <div class="sign-name"><span class="major-seq">3</span>The Descent of Isa ﷺ</div>
+          <div class="sign-desc">Isa ibn Maryam descends to the white minaret east of Damascus, hands resting on the wings of two angels. He kills the Dajjal at the gate of Ludd. He breaks the cross, kills the swine, and abolishes the jizyah. He lives among the Muslims, prays behind the Mahdi.</div>
+          <div class="sign-hadith">Sahih Muslim 2937 — Bukhari 3448</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="major" onclick="expandSign(this)">
+        <div class="sign-bar major"></div>
+        <div class="sign-inner">
+          <div class="sign-name"><span class="major-seq">4</span>Ya'juj and Ma'juj</div>
+          <div class="sign-desc">Released after Isa ﷺ kills the Dajjal. They pour down from every hill, consume the earth's resources, drink entire bodies of water. Isa ﷺ and the believers take refuge on a mountain. They are destroyed by a plague sent by Allah.</div>
+          <div class="sign-hadith">Sahih Muslim 2937 — Al-Anbiya 21:96</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="major" onclick="expandSign(this)">
+        <div class="sign-bar major"></div>
+        <div class="sign-inner">
+          <div class="sign-name"><span class="major-seq">5</span>Three Great Landslides</div>
+          <div class="sign-desc">Three massive land collapses — one in the East, one in the West, one in the Arabian Peninsula. Scholars differ on whether these precede or follow the smoke.</div>
+          <div class="sign-hadith">Sahih Muslim 2901</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="major" onclick="expandSign(this)">
+        <div class="sign-bar major"></div>
+        <div class="sign-inner">
+          <div class="sign-name"><span class="major-seq">6</span>The Smoke</div>
+          <div class="sign-desc">A smoke covers the entire earth for 40 days. For the believer it is like a cold, for the disbeliever it enters through every orifice. The sky will appear as visible smoke.</div>
+          <div class="sign-hadith">Ad-Dukhan 44:10–11 — Tirmidhi 3270</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="major" onclick="expandSign(this)">
+        <div class="sign-bar major"></div>
+        <div class="sign-inner">
+          <div class="sign-name"><span class="major-seq">7</span>The Beast from the Earth</div>
+          <div class="sign-desc">The Beast emerges from the earth and marks people — stamping the believer's face with light and the disbeliever's face with darkness. It speaks to people and moves with extraordinary speed.</div>
+          <div class="sign-hadith">An-Naml 27:82 — Tirmidhi 3187</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="major" onclick="expandSign(this)">
+        <div class="sign-bar major"></div>
+        <div class="sign-inner">
+          <div class="sign-name"><span class="major-seq">8</span>The Sun Rises from the West</div>
+          <div class="sign-desc">The sun rises from its place of setting. This is the point at which the door of tawbah closes permanently — repentance is no longer accepted. Faith professed after this sight is of no benefit.</div>
+          <div class="sign-hadith">Sahih Al-Bukhari 4635 — Muslim 157</div>
+        </div>
+      </div>
+
+      <div class="sign-card" data-group="major" onclick="expandSign(this)">
+        <div class="sign-bar major"></div>
+        <div class="sign-inner">
+          <div class="sign-name"><span class="major-seq">9</span>A Fire from Yemen</div>
+          <div class="sign-desc">A fire emerges from the direction of Yemen (Aden) and drives all of humanity to their final gathering place — the plain of resurrection. It moves with them, resting when they rest.</div>
+          <div class="sign-hadith">Sahih Muslim 2901</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- METHODOLOGY NOTE -->
+  <div class="method-note">
+    <div class="method-note-title">Methodology</div>
+    <p>Every sign on this page is drawn from Sahih (authentic) or Hasan (good) narrations only. Da'if (weak) hadith are not included without explicit labelling. All hadith are cited with their source collection. Interpretation follows mainstream Sunni scholarship — we do not speculate beyond what scholars have established. The "Ongoing" category reflects scholarly discussion, not editorial certainty. Use your own judgment. If you find an error in grading or sourcing, the platform accepts corrections.</p>
+  </div>
+
 </div>
-
-<div class="filter-bar">
-  <button class="fb-btn active" data-f="all" onclick="filterSigns('all',this)">All Signs</button>
-  <button class="fb-btn" data-f="active" onclick="filterSigns('active',this)">Active Now</button>
-  <button class="fb-btn" data-f="fulfilled" onclick="filterSigns('fulfilled',this)">Fulfilled</button>
-  <button class="fb-btn" data-f="major" onclick="filterSigns('major',this)">Major Signs</button>
-  <button class="fb-btn" data-f="awaited" onclick="filterSigns('awaited',this)">Awaited</button>
-</div>
-
-<main>
-
-  <!-- ACTIVE SIGNS -->
-  <div class="section-divider" data-group="active">
-    <div class="sd-label active">Active Now — Minor Signs</div>
-    <div class="sd-rule"></div>
-    <div class="sd-count">Occurring in our time</div>
-  </div>
-
-  <div class="signs-grid">
-
-    <div class="sign-card active reveal" data-status="active">
-      <div class="sc-num">01</div>
-      <div class="sc-status">Active Now</div>
-      <div class="sc-name">Time Passes Faster</div>
-      <div class="sc-desc">The Prophet ﷺ foretold that time would compress — a year feeling like a month, a month like a week, a week like a day. This is not metaphor. It is felt globally and increasingly studied.</div>
-      <div class="sc-hadith">
-        <div class="arabic">«لَا تَقُومُ السَّاعَةُ حَتَّى يَتَقَارَبَ الزَّمَانُ، فَتَكُونَ السَّنَةُ كَالشَّهْرِ»</div>
-        <div class="trans">"The Hour will not come until time draws close together, so that a year is like a month."</div>
-      </div>
-      <div class="sc-ref">Sahih Al-Bukhari 1036 — Grade: Sahih</div>
-    </div>
-
-    <div class="sign-card active reveal reveal-delay-1" data-status="active">
-      <div class="sc-num">02</div>
-      <div class="sc-status">Active Now</div>
-      <div class="sc-name">Earthquakes Multiply</div>
-      <div class="sc-desc">Significant earthquakes would increase before the Hour. Global seismic data from USGS shows a marked increase in M5.0+ events over the past two decades, consistent with the prophetic description.</div>
-      <div class="sc-hadith">
-        <div class="arabic">«لَا تَقُومُ السَّاعَةُ حَتَّى... تَكْثُرَ الزَّلَازِلُ»</div>
-        <div class="trans">"The Hour will not come until earthquakes increase."</div>
-      </div>
-      <div class="sc-ref">Sahih Al-Bukhari 1036 — Grade: Sahih</div>
-    </div>
-
-    <div class="sign-card active reveal reveal-delay-2" data-status="active">
-      <div class="sc-num">03</div>
-      <div class="sc-status">Active Now</div>
-      <div class="sc-name">Barefoot Shepherds in Tall Buildings</div>
-      <div class="sc-desc">Those who were barefoot and destitute shepherds would compete in constructing tall buildings. The Gulf states — historically Bedouin — now host the world's tallest structures. Dubai, Riyadh, Doha.</div>
-      <div class="sc-hadith">
-        <div class="arabic">«أَنْ تَرَى الْحُفَاةَ الْعُرَاةَ الْعَالَةَ رِعَاءَ الشَّاءِ يَتَطَاوَلُونَ فِي الْبُنْيَانِ»</div>
-        <div class="trans">"That you see the barefoot, naked, destitute shepherds competing in constructing tall buildings."</div>
-      </div>
-      <div class="sc-ref">Sahih Muslim 8a — Grade: Sahih (Hadith of Jibril)</div>
-    </div>
-
-    <div class="sign-card active reveal" data-status="active">
-      <div class="sc-num">04</div>
-      <div class="sc-status">Active Now</div>
-      <div class="sc-name">Knowledge Decreases, Ignorance Spreads</div>
-      <div class="sc-desc">Scholars diminish, and ignorance prevails. Knowledge is removed not by erasure, but by the death of scholars. Religious illiteracy and misinformation are at historic highs within and outside the ummah.</div>
-      <div class="sc-hadith">
-        <div class="arabic">«إِنَّ اللَّهَ لاَ يَقْبِضُ الْعِلْمَ انْتِزَاعًا... وَلَكِنْ يَقْبِضُ الْعِلْمَ بِقَبْضِ الْعُلَمَاءِ»</div>
-        <div class="trans">"Allah does not take away knowledge by snatching it from people, but He takes it away by taking away the scholars."</div>
-      </div>
-      <div class="sc-ref">Sahih Al-Bukhari 100 — Grade: Sahih</div>
-    </div>
-
-    <div class="sign-card active reveal reveal-delay-1" data-status="active">
-      <div class="sc-num">05</div>
-      <div class="sc-status">Active Now</div>
-      <div class="sc-name">Widespread Tribulation (Fitna)</div>
-      <div class="sc-desc">Trials and tribulations would spread widely — in beliefs, in social fabric, in family structure. The Prophet ﷺ described a time when a man would be a believer in the morning and a disbeliever by evening.</div>
-      <div class="sc-hadith">
-        <div class="arabic">«بَادِرُوا بِالأَعْمَالِ فِتَنًا كَقِطَعِ اللَّيْلِ الْمُظْلِمِ»</div>
-        <div class="trans">"Hasten to do good deeds before trials come like pieces of a dark night."</div>
-      </div>
-      <div class="sc-ref">Sahih Muslim 118 — Grade: Sahih</div>
-    </div>
-
-    <div class="sign-card active reveal reveal-delay-2" data-status="active">
-      <div class="sc-num">06</div>
-      <div class="sc-status">Active Now</div>
-      <div class="sc-name">Widespread Killing</div>
-      <div class="sc-desc">Killing would become widespread and confusion would surround it — the killer not knowing why he kills, the killed not knowing why he was killed. This describes multiple active theatres of war today.</div>
-      <div class="sc-hadith">
-        <div class="arabic">«لَا تَقُومُ السَّاعَةُ حَتَّى يَكْثُرَ الْهَرْجُ. قَالُوا وَمَا الْهَرْجُ قَالَ الْقَتْلُ»</div>
-        <div class="trans">"The Hour will not come until harj (killing) increases." They asked, "What is harj?" He said, "Killing."</div>
-      </div>
-      <div class="sc-ref">Sahih Al-Bukhari 7061 — Grade: Sahih</div>
-    </div>
-
-  </div>
-
-  <!-- FULFILLED SIGNS -->
-  <div class="section-divider" data-group="fulfilled" style="margin-top:48px;">
-    <div class="sd-label fulfilled">Fulfilled — Already Occurred</div>
-    <div class="sd-rule"></div>
-    <div class="sd-count">In the time of the Prophet ﷺ or thereafter</div>
-  </div>
-
-  <div class="signs-grid">
-
-    <div class="sign-card fulfilled reveal" data-status="fulfilled">
-      <div class="sc-num">07</div>
-      <div class="sc-status">Fulfilled</div>
-      <div class="sc-name">The Splitting of the Moon</div>
-      <div class="sc-desc">This occurred in the time of the Prophet ﷺ as a visible miracle witnessed by the companions. The Quran opens Surah Al-Qamar with its affirmation. The Hour began drawing near from this moment.</div>
-      <div class="sc-hadith">
-        <div class="arabic">«اقْتَرَبَتِ السَّاعَةُ وَانشَقَّ الْقَمَرُ»</div>
-        <div class="trans">"The Hour has drawn near and the moon has split."</div>
-      </div>
-      <div class="sc-ref">Surah Al-Qamar 54:1 · Sahih Al-Bukhari 3636 — Grade: Sahih</div>
-    </div>
-
-    <div class="sign-card fulfilled reveal reveal-delay-1" data-status="fulfilled">
-      <div class="sc-num">08</div>
-      <div class="sc-status">Fulfilled</div>
-      <div class="sc-name">The Arabian Peninsula Becomes Green</div>
-      <div class="sc-desc">The Prophet ﷺ foretold that the Arabian Peninsula, then largely barren, would return to being rivers and meadows. Satellite imagery and geological studies confirm the peninsula was once fertile, and current greening programs align with this.</div>
-      <div class="sc-hadith">
-        <div class="arabic">«لَا تَقُومُ السَّاعَةُ حَتَّى تَعُودَ أَرْضُ الْعَرَبِ مُرُوجًا وَأَنْهَارًا»</div>
-        <div class="trans">"The Hour will not come until the land of the Arabs becomes meadows and rivers again."</div>
-      </div>
-      <div class="sc-ref">Sahih Muslim 157 — Grade: Sahih</div>
-    </div>
-
-    <div class="sign-card fulfilled reveal reveal-delay-2" data-status="fulfilled">
-      <div class="sc-num">09</div>
-      <div class="sc-status">Fulfilled</div>
-      <div class="sc-name">The Slave Woman Gives Birth to Her Master</div>
-      <div class="sc-desc">Scholars interpret this as children becoming masters of their parents — the inversion of the family structure where children command and parents serve. Others reference the literal end of institutional slavery. Both have occurred.</div>
-      <div class="sc-hadith">
-        <div class="arabic">«أَنْ تَلِدَ الْأَمَةُ رَبَّتَهَا»</div>
-        <div class="trans">"That the slave woman gives birth to her master."</div>
-      </div>
-      <div class="sc-ref">Sahih Muslim 8a — Grade: Sahih (Hadith of Jibril)</div>
-    </div>
-
-  </div>
-
-  <!-- MAJOR SIGNS -->
-  <div class="section-divider" data-group="major" style="margin-top:48px;">
-    <div class="sd-label major">Major Signs — The Ten</div>
-    <div class="sd-rule"></div>
-    <div class="sd-count">None have occurred yet</div>
-  </div>
-
-  <div class="signs-grid">
-
-    <div class="sign-card major reveal" data-status="major">
-      <div class="sc-num">M01</div>
-      <div class="sc-status">Major — Awaited</div>
-      <div class="sc-name">The Emergence of Dajjal</div>
-      <div class="sc-desc">The greatest trial humanity will face. One-eyed — his right eye like a protruding grape. Claims divinity. Crosses the earth in 40 days. Mecca and Medina are sealed against him. The first 10 ayat of Al-Kahf are protection.</div>
-      <div class="sc-hadith">
-        <div class="arabic">«مَا بَيْنَ خَلْقِ آدَمَ إِلَى قِيَامِ السَّاعَةِ خَلْقٌ أَكْبَرُ مِنَ الدَّجَّالِ»</div>
-        <div class="trans">"There is no creation from Adam to the Hour greater in trial than the Dajjal."</div>
-      </div>
-      <div class="sc-ref">Sahih Muslim 2946 — Grade: Sahih</div>
-    </div>
-
-    <div class="sign-card major reveal reveal-delay-1" data-status="major">
-      <div class="sc-num">M02</div>
-      <div class="sc-status">Major — Awaited</div>
-      <div class="sc-name">The Descent of Isa ibn Maryam ﷺ</div>
-      <div class="sc-desc">Jesus ﷺ will descend near the white minaret east of Damascus. He will kill the Dajjal. He will break the cross, kill the pig, abolish the jizya. He will rule by the Shariah of Muhammad ﷺ.</div>
-      <div class="sc-hadith">
-        <div class="arabic">«وَالَّذِي نَفْسِي بِيَدِهِ لَيُوشِكَنَّ أَنْ يَنْزِلَ فِيكُمُ ابْنُ مَرْيَمَ حَكَمًا عَدْلاً»</div>
-        <div class="trans">"By the One in whose Hand is my soul, the son of Mary will soon descend among you as a just ruler."</div>
-      </div>
-      <div class="sc-ref">Sahih Al-Bukhari 3448 — Grade: Sahih</div>
-    </div>
-
-    <div class="sign-card major reveal reveal-delay-2" data-status="major">
-      <div class="sc-num">M03</div>
-      <div class="sc-status">Major — Awaited</div>
-      <div class="sc-name">The Emergence of Ya'juj and Ma'juj</div>
-      <div class="sc-desc">Gog and Magog will breach the barrier built by Dhul-Qarnayn. They will spread through the earth and drink the seas dry. They will be destroyed by worms sent by Allah after the dua of Isa ﷺ.</div>
-      <div class="sc-hadith">
-        <div class="arabic">«وَيَفْتَحُ اللَّهُ يَأْجُوجَ وَمَأْجُوجَ وَهُمْ مِنْ كُلِّ حَدَبٍ يَنْسِلُونَ»</div>
-        <div class="trans">"And Allah will open up Gog and Magog and they will rush down from every slope."</div>
-      </div>
-      <div class="sc-ref">Sahih Muslim 2937 — Grade: Sahih · Al-Anbiya 21:96</div>
-    </div>
-
-    <div class="sign-card major reveal" data-status="major">
-      <div class="sc-num">M04</div>
-      <div class="sc-status">Major — Awaited</div>
-      <div class="sc-name">The Three Great Sinkholes (Khusuf)</div>
-      <div class="sc-desc">Three great sinkholes: one in the East, one in the West, and one in the Arabian Peninsula — swallowing armies and populations. Scholars differ on interpretation. The signs are clear — the timing is with Allah.</div>
-      <div class="sc-hadith">
-        <div class="arabic">«خَسْفٌ بِالْمَشْرِقِ، وَخَسْفٌ بِالْمَغْرِبِ، وَخَسْفٌ فِي جَزِيرَةِ الْعَرَبِ»</div>
-        <div class="trans">"A sinkhole in the East, a sinkhole in the West, and a sinkhole in the Arabian Peninsula."</div>
-      </div>
-      <div class="sc-ref">Sahih Muslim 2901 — Grade: Sahih</div>
-    </div>
-
-    <div class="sign-card major reveal reveal-delay-1" data-status="major">
-      <div class="sc-num">M05</div>
-      <div class="sc-status">Major — Awaited</div>
-      <div class="sc-name">The Rising of the Sun from the West</div>
-      <div class="sc-desc">The sun will rise from the west. When this occurs, the door of repentance is closed. Faith at that point benefits no soul that did not believe before. This is irreversible — prepare before it comes.</div>
-      <div class="sc-hadith">
-        <div class="arabic">«لَا تَقُومُ السَّاعَةُ حَتَّى تَطْلُعَ الشَّمْسُ مِنْ مَغْرِبِهَا»</div>
-        <div class="trans">"The Hour will not come until the sun rises from the west."</div>
-      </div>
-      <div class="sc-ref">Sahih Al-Bukhari 4635 — Grade: Sahih</div>
-    </div>
-
-    <div class="sign-card major reveal reveal-delay-2" data-status="major">
-      <div class="sc-num">M06</div>
-      <div class="sc-status">Major — Awaited</div>
-      <div class="sc-name">The Beast of the Earth (Dabbat al-Ard)</div>
-      <div class="sc-desc">A creature will emerge from the earth and speak to people, marking the believers on their faces and branding the disbelievers. It carries the Staff of Musa and the Ring of Sulayman ﷺ.</div>
-      <div class="sc-hadith">
-        <div class="arabic">«وَإِذَا وَقَعَ الْقَوْلُ عَلَيْهِمْ أَخْرَجْنَا لَهُمْ دَابَّةً مِّنَ الْأَرْضِ تُكَلِّمُهُمْ»</div>
-        <div class="trans">"And when the word is fulfilled against them, We will bring forth for them a creature from the earth speaking to them."</div>
-      </div>
-      <div class="sc-ref">Al-Naml 27:82 · Sahih Muslim 2901</div>
-    </div>
-
-  </div>
-
-  <!-- MINOR SIGNS LIST -->
-  <div class="minor-note">
-    <div class="mn-label">Additional Minor Signs — Documented</div>
-    <div class="minor-list">
-      <div class="minor-item reveal">
-        <span class="mi-dot"></span>
-        <div><div class="mi-name">Widespread intoxication and music</div><div class="mi-ref">Sahih Al-Bukhari 5590 — Sahih</div></div>
-      </div>
-      <div class="minor-item reveal reveal-delay-1">
-        <span class="mi-dot"></span>
-        <div><div class="mi-name">Men obey their wives and disobey their mothers</div><div class="mi-ref">Sunan At-Tirmidhi 2210 — Hasan</div></div>
-      </div>
-      <div class="minor-item reveal">
-        <span class="mi-dot"></span>
-        <div><div class="mi-name">Euphrates reveals a mountain of gold</div><div class="mi-ref">Sahih Muslim 2894 — Sahih</div></div>
-      </div>
-      <div class="minor-item reveal reveal-delay-1">
-        <span class="mi-dot"></span>
-        <div><div class="mi-name">Mosques used for show, not worship</div><div class="mi-ref">Sunan Ibn Majah 802 — Hasan</div></div>
-      </div>
-      <div class="minor-item reveal">
-        <span class="mi-dot"></span>
-        <div><div class="mi-name">Prevalence of fornication openly</div><div class="mi-ref">Sunan At-Tirmidhi 2211 — Hasan</div></div>
-      </div>
-      <div class="minor-item reveal reveal-delay-1">
-        <span class="mi-dot"></span>
-        <div><div class="mi-name">Killing of the Nafs becomes widespread</div><div class="mi-ref">Sahih Al-Bukhari 7061 — Sahih</div></div>
-      </div>
-      <div class="minor-item reveal">
-        <span class="mi-dot"></span>
-        <div><div class="mi-name">Romans (Western forces) at Dabiq/A'maq</div><div class="mi-ref">Sahih Muslim 2897 — Sahih</div></div>
-      </div>
-      <div class="minor-item reveal reveal-delay-1">
-        <span class="mi-dot"></span>
-        <div><div class="mi-name">Fire emerges from Hijaz illuminating camels</div><div class="mi-ref">Sahih Al-Bukhari 3592 — Sahih</div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="methodology-note reveal">
-    <div class="mn-title">Methodology — How We Document Signs</div>
-    <div class="mn-text">Every sign on this page is drawn from Sahih (authentic) or Hasan (good) narrations only. Da'if (weak) hadith are not used without explicit labelling. All hadith are cited with their source collection and scholarly grade. Interpretation follows mainstream Sunni scholarship — we do not speculate beyond what scholars have established. If you find an error in grading or sourcing, contact us and we will correct it. We follow scholarship. We do not replace it.</div>
-  </div>
-
-</main>
-
-<footer>
-  <div class="footer-mono">MUNTAZIREEN — Free Forever<a href="index.html">Home</a><a href="protocol.html">Protocol</a><a href="tracker.html">Tracker</a></div>
-  <div class="footer-mono">"The Hour has drawn near." — Al-Qamar 54:1</div>
-</footer>
 
 <script>
-const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold:0.08 });
-reveals.forEach(el => observer.observe(el));
-
-function filterSigns(f, btn) {
-  document.querySelectorAll('.fb-btn').forEach(b => b.classList.remove('active'));
+function filterSigns(f, btn){
+  document.querySelectorAll('.fb-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('.sign-card').forEach(c => {
-    c.style.display = (f === 'all' || c.dataset.status === f) ? '' : 'none';
-  });
-  document.querySelectorAll('.section-divider').forEach(d => {
-    const g = d.dataset.group;
-    d.style.display = (f === 'all' || f === g || (f === 'major' && g === 'major') || (f === 'awaited' && g === 'major')) ? '' : 'none';
-  });
-}
-</script>
-</div>
-<script>
-(function(){
-  const URL="https://ulsbuqsjsssqflydwylm.supabase.co";
-  const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsc2J1cXNqc3NzcWZseWR3eWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2OTAxNTYsImV4cCI6MjA4ODI2NjE1Nn0.EIJVQBN9bkufyroUDE1Va8zExBKbEH9CegBOIGauRfs";
-  const sb=supabase.createClient(URL,KEY);
-  window._sb=sb;
-  window._signOut=async function(){await sb.auth.signOut();sessionStorage.setItem("mt_open_tab","signin");window.location.href="tracker.html";};
-  sb.auth.onAuthStateChange((event,session)=>{
-    if(event==='INITIAL_SESSION'){
-      if(!session){sessionStorage.setItem("mt_open_tab","signup");window.location.href="tracker.html";}
-      else{
-      document.getElementById("page-content").style.display="block";
-      const ud=document.getElementById("nav-user-display");
-      const so=document.getElementById("nav-signout-btn");
-      const nb=document.getElementById("nav-begin-wrap");
-      if(ud)ud.textContent=session.user.email.split("@")[0];
-      if(so)so.style.display="block";
-      if(nb)nb.style.display="none";
+
+  const sections = document.querySelectorAll('.signs-section');
+  sections.forEach(sec=>{
+    const g = sec.dataset.group || '';
+    if(f==='all'){
+      sec.classList.remove('hidden');
+    } else if(f==='minor'){
+      sec.classList.toggle('hidden', !g.includes('minor'));
+    } else if(f==='major'){
+      sec.classList.toggle('hidden', !g.includes('major'));
+    } else if(f==='occurred'){
+      sec.classList.toggle('hidden', !g.includes('occurred'));
+    } else if(f==='ongoing'){
+      sec.classList.toggle('hidden', !g.includes('ongoing'));
+    } else if(f==='pending'){
+      sec.classList.toggle('hidden', !g.includes('pending'));
     }
   });
-})();
+}
+
+function expandSign(card){
+  const expand = card.querySelector('.sign-expand');
+  if(expand) expand.classList.toggle('open');
+}
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.style.opacity='1';});
+},{threshold:0.05});
+document.querySelectorAll('.sign-card').forEach((el,i)=>{
+  el.style.opacity='0';
+  el.style.transition=`opacity 0.5s ease ${(i%8)*0.04}s`;
+  observer.observe(el);
+});
 </script>
+
 </body>
 </html>
