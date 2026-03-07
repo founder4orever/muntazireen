@@ -1102,8 +1102,15 @@ async function fetchFeed(source) {
     const json = await res.json();
     if (!json.contents) throw new Error('Empty response');
 
+    // Handle base64 encoded responses (some sources return data:...;base64,...)
+    let xmlText = json.contents;
+    if (typeof xmlText === 'string' && xmlText.startsWith('data:')) {
+      const base64 = xmlText.split(',')[1];
+      xmlText = atob(base64);
+    }
+
     const parser = new DOMParser();
-    const xml = parser.parseFromString(json.contents, 'text/xml');
+    const xml = parser.parseFromString(xmlText, 'text/xml');
     const items = Array.from(xml.querySelectorAll('item'));
 
     if (!items.length) throw new Error('No items found');
