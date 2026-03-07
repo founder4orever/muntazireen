@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Protocol — Muntazireen</title>
+  <title>The Protocol — Muntazireen</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Courier+Prime:wght@400;700&display=swap">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #08080707;
+      --bg: #080807;
       --surface: #0e0d0b;
       --border: #1f1e1b;
       --text: #e8dfc8;
@@ -18,151 +17,329 @@
       --font-serif: 'Cormorant Garamond', Georgia, serif;
       --font-mono: 'Courier Prime', 'Courier New', monospace;
     }
-    html, body { background: #08080707; color: var(--text); font-family: var(--font-mono); min-height: 100vh; }
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+      min-height: 100vh;
+    }
     body { padding-top: 60px; }
 
-    .proto-wrap {
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 80px 32px 120px;
-    }
-
-    .proto-eyebrow {
-      font-size: 9px;
-      letter-spacing: 0.3em;
-      color: var(--dim);
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    .proto-title {
-      font-family: var(--font-serif);
-      font-size: clamp(32px, 6vw, 52px);
-      font-weight: 300;
-      color: var(--text);
-      line-height: 1.1;
-      margin-bottom: 12px;
-    }
-
-    .proto-sub {
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      color: var(--dim);
-      margin-bottom: 64px;
-    }
-
-    .proto-pillars {
+    /* ── PILLAR TABS ── */
+    .pillar-tabs {
+      position: sticky;
+      top: 60px;
+      z-index: 100;
+      background: rgba(8,8,7,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
       display: flex;
-      flex-direction: column;
-      gap: 2px;
     }
-
-    .proto-pillar {
-      display: block;
-      text-decoration: none;
-      padding: 28px 32px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      transition: all 0.3s;
-      position: relative;
-      overflow: hidden;
+    .pillar-tab {
+      flex: 1;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 18px 0;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--dim);
+      cursor: pointer;
+      transition: all 0.25s;
     }
+    .pillar-tab:hover { color: var(--text); }
+    .pillar-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
 
-    .proto-pillar::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 2px;
-      background: var(--gold);
-      transform: scaleY(0);
-      transition: transform 0.3s;
-    }
+    /* ── PANELS ── */
+    .pillar-panel { display: none; max-width: 700px; margin: 0 auto; padding: 60px 32px 100px; }
+    .pillar-panel.active { display: block; }
 
-    .proto-pillar:hover {
-      border-color: #2e2c28;
-      background: #111009;
-    }
-
-    .proto-pillar:hover::before {
-      transform: scaleY(1);
-    }
-
-    .proto-pillar-num {
+    .panel-eyebrow {
       font-size: 9px;
       letter-spacing: 0.3em;
       color: var(--gold);
-      margin-bottom: 8px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
       opacity: 0.7;
     }
-
-    .proto-pillar-name {
+    .panel-title {
       font-family: var(--font-serif);
-      font-size: 26px;
+      font-size: clamp(36px, 6vw, 56px);
       font-weight: 300;
-      color: var(--text);
-      margin-bottom: 6px;
-      letter-spacing: 0.02em;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+    .panel-desc {
+      font-size: 11px;
+      line-height: 1.9;
+      color: var(--dim);
+      letter-spacing: 0.05em;
+      max-width: 520px;
+      margin-bottom: 48px;
     }
 
-    .proto-pillar-desc {
+    /* ── WHAT'S INSIDE ── */
+    .panel-blocks {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 48px;
+    }
+    .panel-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 20px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+    }
+    .panel-block-icon {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      opacity: 0.8;
+    }
+    .panel-block-label {
       font-size: 9px;
-      letter-spacing: 0.12em;
-      color: var(--dim);
+      letter-spacing: 0.2em;
+      color: var(--gold);
       text-transform: uppercase;
+      margin-bottom: 4px;
+      opacity: 0.7;
     }
-
-    .proto-pillar-arrow {
-      position: absolute;
-      right: 28px;
-      top: 50%;
-      transform: translateY(-50%);
+    .panel-block-text {
+      font-size: 10px;
+      line-height: 1.7;
       color: var(--dim);
-      opacity: 0;
-      transition: opacity 0.3s, right 0.3s;
+      letter-spacing: 0.06em;
     }
 
-    .proto-pillar:hover .proto-pillar-arrow {
-      opacity: 1;
-      right: 24px;
+    /* ── CTA ── */
+    .panel-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: none;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .panel-cta:hover {
+      background: rgba(184,150,60,0.08);
+    }
+
+    /* ── WEEK BADGE ── */
+    .week-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 48px;
+    }
+    .week-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .week-num {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      opacity: 0.5;
+      min-width: 36px;
+    }
+    .week-label {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--dim);
+    }
+
+    @media (max-width: 600px) {
+      .pillar-panel { padding: 40px 20px 80px; }
     }
   </style>
 </head>
 <body>
 
-<div class="proto-wrap">
-  <div class="proto-eyebrow">Muntazireen Protocol</div>
-  <h1 class="proto-title">The Protocol</h1>
-  <p class="proto-sub">Your 35-day preparation framework. Select a pillar.</p>
-
-  <div class="proto-pillars">
-    <a href="tracker.html?tab=mind" class="proto-pillar">
-      <div class="proto-pillar-num">01</div>
-      <div class="proto-pillar-name">Mind</div>
-      <div class="proto-pillar-desc">Deen — Prayer, memorisation, spiritual foundation</div>
-      <div class="proto-pillar-arrow">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </div>
-    </a>
-
-    <a href="tracker.html?tab=body" class="proto-pillar">
-      <div class="proto-pillar-num">02</div>
-      <div class="proto-pillar-name">Body</div>
-      <div class="proto-pillar-desc">Physical conditioning — strength, endurance, weaponry</div>
-      <div class="proto-pillar-arrow">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </div>
-    </a>
-
-    <a href="tracker.html?tab=survival" class="proto-pillar">
-      <div class="proto-pillar-num">03</div>
-      <div class="proto-pillar-name">Survival</div>
-      <div class="proto-pillar-desc">Gear, first aid, emergency preparedness</div>
-      <div class="proto-pillar-arrow">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </div>
-    </a>
-  </div>
+<!-- Pillar tabs -->
+<div class="pillar-tabs">
+  <button class="pillar-tab active" onclick="showPanel('mind', this)">Mind</button>
+  <button class="pillar-tab" onclick="showPanel('body', this)">Body</button>
+  <button class="pillar-tab" onclick="showPanel('survival', this)">Survival</button>
 </div>
+
+<!-- ── MIND ── -->
+<div class="pillar-panel active" id="panel-mind">
+  <div class="panel-eyebrow">Pillar 01 — Deen</div>
+  <h1 class="panel-title">Mind</h1>
+  <p class="panel-desc">The first pillar. Before the body is conditioned and before gear is acquired, the mind must be anchored. This pillar builds your spiritual foundation through consistent prayer, active remembrance, and the memorisation of the two most essential recitations.</p>
+
+  <div class="panel-blocks">
+    <div class="panel-block">
+      <div class="panel-block-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div>
+        <div class="panel-block-label">Daily Prayers</div>
+        <div class="panel-block-text">Track all five daily prayers — Fajr, Dhuhr, Asr, Maghrib, Isha. Once Ayatul Kursi is memorised, a recitation checkbox is added after each prayer.</div>
+      </div>
+    </div>
+    <div class="panel-block">
+      <div class="panel-block-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      </div>
+      <div>
+        <div class="panel-block-label">Ayatul Kursi</div>
+        <div class="panel-block-text">Progressive line-by-line memorisation. One line revealed at a time. Mark it memorised to advance. Audio playback included for pronunciation.</div>
+      </div>
+    </div>
+    <div class="panel-block">
+      <div class="panel-block-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      </div>
+      <div>
+        <div class="panel-block-label">Surah Al-Kahf — First 10 Ayat</div>
+        <div class="panel-block-text">Unlocks only after Ayatul Kursi is complete. Same progressive system — one ayah at a time, Arabic with transliteration and translation.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-list">
+    <div class="week-row"><span class="week-num">Wk 1</span><span class="week-label">Establish the five prayers consistently</span></div>
+    <div class="week-row"><span class="week-num">Wk 2</span><span class="week-label">Begin Ayatul Kursi memorisation</span></div>
+    <div class="week-row"><span class="week-num">Wk 3</span><span class="week-label">Complete Ayatul Kursi — begin Al-Kahf</span></div>
+    <div class="week-row"><span class="week-num">Wk 4</span><span class="week-label">Complete Al-Kahf first 10 — recite after every prayer</span></div>
+    <div class="week-row"><span class="week-num">Wk 5+</span><span class="week-label">Maintenance — daily prayer + recitation habit locked in</span></div>
+  </div>
+
+  <a href="tracker.html?tab=mind" class="panel-cta">
+    Open Tracker — Mind
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+</div>
+
+<!-- ── BODY ── -->
+<div class="pillar-panel" id="panel-body">
+  <div class="panel-eyebrow">Pillar 02 — Physical</div>
+  <h1 class="panel-title">Body</h1>
+  <p class="panel-desc">The second pillar. A prepared mind requires a capable body. The 5-week physical protocol builds functional strength, cardiovascular capacity, and from week three, introduces weaponry drills based on what you reported having access to.</p>
+
+  <div class="panel-blocks">
+    <div class="panel-block">
+      <div class="panel-block-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div>
+        <div class="panel-block-label">Daily Movement</div>
+        <div class="panel-block-text">Bodyweight and functional training. Progressive overload across 5 weeks. No equipment required for weeks 1–2.</div>
+      </div>
+    </div>
+    <div class="panel-block">
+      <div class="panel-block-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" y1="19" x2="19" y2="13"/><line x1="16" y1="16" x2="20" y2="20"/></svg>
+      </div>
+      <div>
+        <div class="panel-block-label">Weaponry Drills — Week 3+</div>
+        <div class="panel-block-text">Unlocks at week 3. Drills are personalised to your onboarding selections — knife, bow, firearm, or hand-to-hand. One focused drill per day.</div>
+      </div>
+    </div>
+    <div class="panel-block">
+      <div class="panel-block-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div>
+        <div class="panel-block-label">Weekly Checkpoints</div>
+        <div class="panel-block-text">End-of-week assessments to confirm you've hit the physical benchmarks before progressing to the next week.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-list">
+    <div class="week-row"><span class="week-num">Wk 1</span><span class="week-label">Foundation — baseline movement, mobility, endurance</span></div>
+    <div class="week-row"><span class="week-num">Wk 2</span><span class="week-label">Build — increase volume and intensity</span></div>
+    <div class="week-row"><span class="week-num">Wk 3</span><span class="week-label">Weaponry introduced alongside conditioning</span></div>
+    <div class="week-row"><span class="week-num">Wk 4</span><span class="week-label">Peak output — full protocol daily</span></div>
+    <div class="week-row"><span class="week-num">Wk 5+</span><span class="week-label">Maintenance — daily minimum to hold the standard</span></div>
+  </div>
+
+  <a href="tracker.html?tab=body" class="panel-cta">
+    Open Tracker — Body
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+</div>
+
+<!-- ── SURVIVAL ── -->
+<div class="pillar-panel" id="panel-survival">
+  <div class="panel-eyebrow">Pillar 03 — Preparedness</div>
+  <h1 class="panel-title">Survival</h1>
+  <p class="panel-desc">The third pillar. Knowledge and gear that cannot wait until the moment you need them. The survival protocol covers first aid training, tiered gear acquisition, and the practical skills that make the difference when infrastructure fails.</p>
+
+  <div class="panel-blocks">
+    <div class="panel-block">
+      <div class="panel-block-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <div>
+        <div class="panel-block-label">First Aid Curriculum</div>
+        <div class="panel-block-text">5-week built-in curriculum covering primary survey, CPR, bleeding control, burns, fractures, choking, anaphylaxis, seizures, and radiation exposure. Or track an external certification if you're taking a course.</div>
+      </div>
+    </div>
+    <div class="panel-block">
+      <div class="panel-block-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div>
+        <div class="panel-block-label">Tier 1 Gear — 32 Items</div>
+        <div class="panel-block-text">A vetted checklist of 32 essential items across water, shelter, medical, communication, and protection. Acquire one item at a time — checked off permanently when acquired.</div>
+      </div>
+    </div>
+    <div class="panel-block">
+      <div class="panel-block-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div>
+        <div class="panel-block-label">Daily Survival Tasks</div>
+        <div class="panel-block-text">Week-by-week practical knowledge tasks — water procurement, fire, navigation, shelter, signalling, and more. One per day, building compound knowledge.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-list">
+    <div class="week-row"><span class="week-num">Wk 1</span><span class="week-label">First aid basics + begin Tier 1 gear acquisition</span></div>
+    <div class="week-row"><span class="week-num">Wk 2</span><span class="week-label">CPR, AED — water and fire skills</span></div>
+    <div class="week-row"><span class="week-num">Wk 3</span><span class="week-label">Wound care, tourniquet — navigation basics</span></div>
+    <div class="week-row"><span class="week-num">Wk 4</span><span class="week-label">Advanced medical — shelter, signalling</span></div>
+    <div class="week-row"><span class="week-num">Wk 5+</span><span class="week-label">Maintenance — gear complete, skills reinforced weekly</span></div>
+  </div>
+
+  <a href="tracker.html?tab=survival" class="panel-cta">
+    Open Tracker — Survival
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+</div>
+
+<script>
+function showPanel(id, btn) {
+  document.querySelectorAll('.pillar-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.pillar-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+</script>
 
 <script src="nav.js"></script>
 </body>
