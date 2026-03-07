@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☪️</text></svg>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Protocol Tracker — Muntazireen</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
   --void:#080807;--deep:#0e0d0b;--surface:#141310;--panel:#1a1916;
@@ -105,8 +104,6 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .pillar-tab.mind.active{color:var(--mind);}
 .pillar-tab.body.active{color:var(--sand);}
 .pillar-tab.surv.active{color:var(--surv);}
-.pillar-tab.sett{flex:0;}
-.pillar-tab.sett.active{color:var(--gold);}
 
 /* Sub-tabs */
 .sub-tabs{display:flex;gap:0;padding:0 32px;border-bottom:1px solid var(--border);background:var(--deep);}
@@ -130,6 +127,15 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .task-item:hover{background:var(--surface);}
 .task-item.completed{opacity:0.5;}
 .task-item.completed .task-name{text-decoration:line-through;color:var(--dim);}
+.task-item.future{opacity:0.4;cursor:default;pointer-events:none;}
+.task-item.future .task-cb{border-color:var(--dim);cursor:default;}
+.future-badge{font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--dim);margin-left:8px;}
+.fa-course-card{background:var(--deep);border:1px solid var(--border);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;text-decoration:none;}
+.fa-course-card:hover{border-color:var(--dim);}
+.fa-course-card-left{}
+.fa-course-title{font-size:13px;color:var(--cream);margin-bottom:4px;}
+.fa-course-progress{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:0.1em;}
+.fa-course-arrow{font-family:var(--font-mono);font-size:11px;color:var(--gold);}
 .task-cb{width:18px;height:18px;border:1px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;transition:all 0.2s;}
 .task-cb:hover{border-color:var(--gold-dim);}
 .task-cb.checked{background:var(--gold);border-color:var(--gold);}
@@ -419,7 +425,6 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <button class="pillar-tab mind active" data-tab="mind" onclick="switchPillar('mind')">Mind</button>
     <button class="pillar-tab body" data-tab="body" onclick="switchPillar('body')">Body</button>
     <button class="pillar-tab surv" data-tab="survival" onclick="switchPillar('survival')">Survival</button>
-    <button class="pillar-tab sett" data-tab="settings" onclick="switchPillar('settings')" style="max-width:60px;">⚙</button>
   </div>
 
   <!-- MIND PANEL -->
@@ -453,64 +458,6 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div id="survival-today" style="padding-top:28px;"></div>
     <div id="survival-week" style="display:none;padding-top:28px;"></div>
   </div>
-  <!-- SETTINGS PANEL -->
-  <div class="pillar-panel" id="panel-settings">
-    <div style="margin-bottom:40px;">
-      <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Account</div>
-      <h2 style="font-size:28px;font-weight:300;color:var(--cream);margin:0 0 4px;">Settings</h2>
-      <p style="color:var(--dim);font-size:13px;margin:0;">Update your name, preferences, and account.</p>
-    </div>
-
-    <div style="background:var(--card);border:1px solid var(--border);padding:28px;margin-bottom:16px;">
-      <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;">Profile & Preferences</div>
-
-      <!-- Username -->
-      <div style="margin-bottom:24px;">
-        <label style="display:block;font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;">Display Name</label>
-        <input id="settings-username" type="text" placeholder="Enter username"
-          style="width:100%;background:#0d0c0a;border:1px solid var(--border);color:var(--cream);font-family:var(--font-mono);font-size:13px;padding:12px 16px;box-sizing:border-box;outline:none;">
-      </div>
-
-      <!-- Weaponry -->
-      <div style="margin-bottom:28px;">
-        <label style="display:block;font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--dim);margin-bottom:4px;">Weaponry Preferences</label>
-        <p style="color:var(--muted);font-size:11px;font-family:var(--font-mono);margin:0 0 14px;">Select all that apply — your training drills update accordingly.</p>
-        <div style="display:flex;flex-direction:column;gap:12px;">
-          <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
-            <input type="checkbox" id="wpn-knife" value="knife" style="width:15px;height:15px;accent-color:var(--gold);">
-            <span style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);">Knife / Blade</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
-            <input type="checkbox" id="wpn-archery" value="archery" style="width:15px;height:15px;accent-color:var(--gold);">
-            <span style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);">Archery / Bow</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
-            <input type="checkbox" id="wpn-firearm" value="firearm" style="width:15px;height:15px;accent-color:var(--gold);">
-            <span style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);">Firearm</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
-            <input type="checkbox" id="wpn-hand_combat" value="hand_combat" style="width:15px;height:15px;accent-color:var(--gold);">
-            <span style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);">Hand Combat / Martial Arts</span>
-          </label>
-        </div>
-      </div>
-
-      <button onclick="saveSettings()"
-        style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;background:var(--gold);border:none;color:#0d0c0a;padding:12px 28px;cursor:pointer;font-weight:600;">
-        Save Changes
-      </button>
-      <div id="settings-msg" style="margin-top:12px;font-size:12px;font-family:var(--font-mono);color:var(--muted);"></div>
-    </div>
-
-    <!-- Sign Out -->
-    <div style="background:var(--card);border:1px solid var(--border);padding:28px;">
-      <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Session</div>
-      <button onclick="doSignOut()"
-        style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;background:none;border:1px solid #8b3030;color:#8b3030;padding:10px 24px;cursor:pointer;">
-        Sign Out
-      </button>
-    </div>
-  </div>
 </div>
 
 <div id="save-indicator">Saving...</div>
@@ -526,16 +473,7 @@ const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 let _sb;
 function initSB() {
   if (window.supabase) {
-    // Reuse nav.js client if available, otherwise create one
-    if (window._sbInstance) {
-      _sb = window._sbInstance;
-      window._mtSb = _sb;
-    } else {
-      _sb = window.supabase.createClient(SB_URL, SB_KEY);
-      window._mtSb = _sb;
-      window._sbInstance = _sb;
-    }
-    startAuthObserver();
+    _sb = window.supabase.createClient(SB_URL, SB_KEY);
   } else {
     console.error('Supabase SDK not loaded');
   }
@@ -797,7 +735,7 @@ const WEEK_PLAN = [
       },
       {
         mind: { title: 'Weekly review — Ayatul Kursi', detail: 'Can you recite it without looking? Be honest.' },
-        body: { title: 'Existing workout or rest', detail: 'Use your existing routine. If none, take a rest day — you earned it.' },
+        body: { title: 'Existing workout or rest', detail: '' },
         survival: { title: 'Gear check', detail: 'Verify: lighter, matches, knife are in hand.' }
       }
     ]
@@ -806,38 +744,38 @@ const WEEK_PLAN = [
     theme: 'Build',
     days: [
       {
-        mind: { title: 'Al-Kahf ayat 5–6', detail: 'Review ayat 1–4 first. Then add ayat 5–6 slowly.' },
+        mind: { title: 'Al-Kahf ayat 5–6', detail: '' },
         body: { title: 'Push/pull', detail: 'Push-ups + rows (or improvise with water jugs). 3 sets each.' },
         survival: { title: 'Acquire duct tape + air filtration mask', detail: 'Gas mask or N95/P100. See gear list.' }
       },
       {
-        mind: { title: 'Review Al-Kahf 1–6', detail: 'Full recitation of what you have. Identify any weak lines.' },
+        mind: { title: 'Review Al-Kahf 1–6', detail: '' },
         body: { title: 'Push/pull + core', detail: 'Add planks 3 × 30 seconds.' },
         survival: { title: 'Practice filtering water', detail: 'Filter 1 litre using your filtration system. Know the process.' }
       },
       {
-        mind: { title: 'Al-Kahf ayat 7–8', detail: 'Review 1–6 first. Then add ayat 7–8.' },
+        mind: { title: 'Al-Kahf ayat 7–8', detail: '' },
         body: { title: 'Sprint intervals', detail: '4 × 30 sec sprints.' },
         survival: { title: 'Acquire tourniquet', detail: 'CAT or SOFT-T preferred. Non-negotiable gear.' }
       },
       {
-        mind: { title: 'Review all Al-Kahf so far', detail: 'Full recitation from ayat 1 through whatever you have memorised.' },
-        body: { title: 'Push/pull/core', detail: '3 sets push-ups, 3 sets rows, 3 × 30s plank.' },
+        mind: { title: 'Review all Al-Kahf so far', detail: '' },
+        body: { title: 'Push/pull/core', detail: '' },
         survival: { title: 'Acquire 3-day food supply + first aid kit', detail: 'Rice, lentils, oats, tinned food. Full basic first aid kit.' }
       },
       {
         mind: { title: 'Al-Kahf ayat 9–10 — first 10 complete', detail: 'If you have learned all 10 ayat, the module marks complete.' },
-        body: { title: 'Sprints + push-ups', detail: '4 × 30 sec sprints + 25 push-ups.' },
+        body: { title: 'Sprints + push-ups', detail: '' },
         survival: { title: 'Acquire head torch + N95 masks + goggles', detail: 'With spare batteries. See gear list.' }
       },
       {
         mind: { title: 'Full recitation attempt', detail: 'Recite Ayatul Kursi + all 10 Al-Kahf ayat in sequence from memory.' },
-        body: { title: 'Rest or walk', detail: 'Light 20-minute walk or full rest. Active recovery.' },
+        body: { title: 'Rest or walk', detail: '' },
         survival: { title: 'Acquire paracord', detail: '30 metres minimum.' }
       },
       {
         mind: { title: 'Weekly review', detail: 'Both recitations solid? Mark this day honestly.' },
-        body: { title: 'Rest + reflect', detail: 'Rest. Journal one thing you will carry into Week 3.' },
+        body: { title: 'Rest + reflect', detail: '' },
         survival: { title: 'Gear check', detail: 'Verify: water filter, tourniquet, food, torch, paracord, duct tape, mask.' }
       }
     ]
@@ -852,11 +790,11 @@ const WEEK_PLAN = [
       },
       {
         mind: { title: 'Reflect on Chapter 1', detail: 'Write one sentence on what shifted in your understanding.' },
-        body: { title: 'Push/pull/core + sprints', detail: '3 sets push-ups + rows + plank, then 4 × 30 sec sprints.' },
+        body: { title: 'Push/pull/core + sprints', detail: '' },
         survival: { title: 'Tourniquet drill', detail: 'Apply your tourniquet in under 60 seconds. Repeat until it is automatic.' }
       },
       {
-        mind: { title: 'Kitab at-Tawheed — Chapter 2', detail: 'Read Chapter 2. Do not skip — Tawheed is the foundation of everything.' },
+        mind: { title: 'Kitab at-Tawheed — Chapter 2', detail: '' },
         body: { title: 'Weaponry session 1', detail: 'First dedicated session for your chosen weapon type(s).' },
         survival: { title: 'Acquire KI tablets + medical supplies', detail: 'KI (potassium iodide), pain relievers, burn treatment. See gear list.' }
       },
@@ -866,18 +804,18 @@ const WEEK_PLAN = [
         survival: { title: 'Emergency cash reserve', detail: 'Set aside physical cash. Amount not tracked — just make it happen.' }
       },
       {
-        mind: { title: 'Kitab at-Tawheed — Chapter 3', detail: 'Read Chapter 3. Note any concepts you want to revisit.' },
-        body: { title: 'Weaponry session 2', detail: 'Second session. Increase reps or duration from session 1.' },
+        mind: { title: 'Kitab at-Tawheed — Chapter 3', detail: '' },
+        body: { title: 'Weaponry session 2', detail: '' },
         survival: { title: 'Build a fire', detail: 'Using lighter + matches, build a fire from scratch. 3 attempts. Acquire bucket toilet system + sanitation supplies.' }
       },
       {
         mind: { title: 'Memorise Yunus dua', detail: "لَّا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ — 'There is no deity except You; exalted are You. Indeed, I have been of the wrongdoers.' (Surah Al-Anbiya 21:87)" },
-        body: { title: 'Push/pull/core', detail: '3 sets push-ups, 3 sets rows, 3 × 45s plank.' },
+        body: { title: 'Push/pull/core', detail: '' },
         survival: { title: 'Acquire hand crank radio', detail: 'See gear list.' }
       },
       {
         mind: { title: 'Weekly review', detail: 'Recitations + Aqeedah readings — where are you?' },
-        body: { title: 'Rest + reflect', detail: 'Rest. What has changed in your understanding this week?' },
+        body: { title: 'Rest + reflect', detail: '' },
         survival: { title: 'Gear check', detail: 'Verify: KI tabs, radio, cash reserve in place.' }
       }
     ]
@@ -886,7 +824,7 @@ const WEEK_PLAN = [
     theme: 'Pressure',
     days: [
       {
-        mind: { title: 'Kitab at-Tawheed — Chapter 4', detail: 'Read Chapter 4. Deepen your understanding of shirk and its forms.' },
+        mind: { title: 'Kitab at-Tawheed — Chapter 4', detail: '' },
         body: { title: 'Heavy session — max reps', detail: 'Max push-ups, max squats. Document your numbers.' },
         survival: { title: 'Assemble bug-out bag', detail: 'All Tier 1 gear into one bag. Test the weight.' }
       },
@@ -896,28 +834,28 @@ const WEEK_PLAN = [
         survival: { title: 'IFAK assembly', detail: 'Assemble your Immediate First Aid Kit: tourniquet, gauze, gloves, tape.' }
       },
       {
-        mind: { title: 'Kitab at-Tawheed — Chapter 5', detail: 'Read Chapter 5. Focus on the obligations that follow from Tawheed.' },
+        mind: { title: 'Kitab at-Tawheed — Chapter 5', detail: '' },
         body: { title: 'Weaponry session — increase reps/duration', detail: 'Build on last week.' },
         survival: { title: 'Acquire compass + dosimeter + Geiger counter', detail: 'See gear list.' }
       },
       {
-        mind: { title: 'Review all memorised material', detail: 'Full run — Ayatul Kursi, Al-Kahf first 10, all duas. No skipping.' },
+        mind: { title: 'Review all memorised material', detail: '' },
         body: { title: 'Weighted carry — 15kg, 30 min', detail: 'Increase the weight. Extend the time.' },
         survival: { title: 'Print physical maps', detail: 'Print maps of your area — 5km radius minimum. These work when power is out.' }
       },
       {
-        mind: { title: 'Kitab at-Tawheed — Chapter 6', detail: 'Read Chapter 6. You are building a complete picture — stay with it.' },
+        mind: { title: 'Kitab at-Tawheed — Chapter 6', detail: '' },
         body: { title: 'Sprints + weaponry combo', detail: 'Sprint intervals, then immediately into weaponry drill. Simulate stress.' },
         survival: { title: 'Acquire two-way radio + coveralls + gloves', detail: 'Two-way radio, disposable coveralls, protective gloves. See gear list.' }
       },
       {
         mind: { title: 'Review all duas', detail: 'All memorised duas from memory.' },
-        body: { title: 'Push/pull/core', detail: 'Max sets — push for new rep records. Document them.' },
+        body: { title: 'Push/pull/core', detail: '' },
         survival: { title: 'Full kit weight test', detail: 'Carry your assembled bug-out bag for 20 minutes. Can you move with it?' }
       },
       {
         mind: { title: 'Weekly review — Aqeedah check', detail: 'Is your understanding of Tawheed solidifying? Identify any gaps.' },
-        body: { title: 'Rest + reflect', detail: 'Rest. You pushed hard this week. Recovery is part of the protocol.' },
+        body: { title: 'Rest + reflect', detail: '' },
         survival: { title: 'Gear check', detail: 'Verify: BOB assembled, IFAK complete, compass, printed maps, radio.' }
       }
     ]
@@ -932,7 +870,7 @@ const WEEK_PLAN = [
       },
       {
         mind: { title: 'Write a preparedness will', detail: 'One page. Who inherits your gear knowledge? Who knows where your supplies are?' },
-        body: { title: 'Sprints + weaponry', detail: '6 × 30 sec sprints then straight into weaponry drill.' },
+        body: { title: 'Sprints + weaponry', detail: '' },
         survival: { title: 'Acquire vented chest seal', detail: 'For penetrating chest wounds. See gear list.' }
       },
       {
@@ -942,22 +880,22 @@ const WEEK_PLAN = [
       },
       {
         mind: { title: 'Full deen audit', detail: 'Are prayers consistent? Recitations solid? Aqeedah clear? Be ruthlessly honest.' },
-        body: { title: 'Push/pull/core', detail: 'Full circuit — max effort. This is week 5, push hard.' },
+        body: { title: 'Push/pull/core', detail: '' },
         survival: { title: 'Acquire water storage containers', detail: 'For long-term water storage beyond filtration.' }
       },
       {
         mind: { title: 'Identify local Imam', detail: 'Find your local masjid\'s Imam. Make contact or attend.' },
-        body: { title: 'Sprint intervals', detail: '6 × 30 sec sprints. Push pace — this is week 5.' },
+        body: { title: 'Sprint intervals', detail: '' },
         survival: { title: 'Acquire solar charger', detail: 'For devices when grid is down.' }
       },
       {
         mind: { title: 'Acquire physical Quran', detail: 'Arabic + English translation. Paper. Works when the grid does not.' },
-        body: { title: 'Weaponry session', detail: 'Full session. Apply everything you have built over 5 weeks.' },
+        body: { title: 'Weaponry session', detail: '' },
         survival: { title: 'Tier 1 full audit', detail: 'Every item on the Tier 1 list — is it in your possession? Everything accounted for?' }
       },
       {
         mind: { title: 'Final review', detail: 'Where are you after 5 weeks? Document it honestly.' },
-        body: { title: 'Rest + reflect', detail: 'Final rest day. Document where you are — physically, mentally, spiritually.' },
+        body: { title: 'Rest + reflect', detail: '' },
         survival: { title: 'Begin Tier 2 planning', detail: 'Gold/silver, extended food supply, shelter materials. Add antibiotics if accessible.' }
       }
     ]
@@ -1163,26 +1101,31 @@ async function submitOnboarding() {
 // LOAD + ROUTE
 // ════════════════════════════════════════════
 async function loadUserData() {
-  // Show app immediately — don't block on DB
-  userData = {};
-  showApp();
+  const { data, error } = await _sb.from('protocol_progress').select('*').eq('user_id', currentUser.id).single();
 
-  // Load data in background and re-render when ready
-  try {
-    const { data, error } = await _sb.from('protocol_progress').select('*').eq('user_id', currentUser.id).single();
-    if (!error && data) {
-      userData = data;
-      renderAll();
-      // Repair onboarding flag silently if needed
-      if (!userData.onboarding_complete && userData.onboarding && userData.onboarding.ayatul_kursi) {
-        userData.onboarding_complete = true;
-        _sb.from('protocol_progress').update({ onboarding_complete: true }).eq('user_id', currentUser.id);
-      }
-    } else {
-      await ensureUserRecord();
+  if (error || !data) {
+    // No record yet — create it, then show onboarding
+    await ensureUserRecord();
+    // Re-fetch after insert
+    const { data: fresh } = await _sb.from('protocol_progress').select('*').eq('user_id', currentUser.id).single();
+    userData = fresh || {};
+  } else {
+    userData = data;
+  }
+
+  // Safety net: if onboarding answers exist, treat as complete even if flag is wrong
+  const effectivelyComplete = userData.onboarding_complete || 
+    (userData.onboarding && userData.onboarding.ayatul_kursi);
+
+  if (effectivelyComplete) {
+    // Repair the flag silently if it was wrong
+    if (!userData.onboarding_complete) {
+      userData.onboarding_complete = true;
+      _sb.from('protocol_progress').update({ onboarding_complete: true }).eq('user_id', currentUser.id);
     }
-  } catch(e) {
-    console.error('loadUserData background fetch error:', e);
+    showApp();
+  } else {
+    showOnboarding();
   }
 }
 
@@ -1198,8 +1141,13 @@ function showApp() {
   // URL param: ?tab=mind|body|survival
   const params = new URLSearchParams(location.search);
   const tabParam = params.get('tab');
-  if (tabParam && ['mind','body','survival','settings'].includes(tabParam)) {
-    switchPillar(tabParam);
+  if (tabParam && ['mind','body','survival'].includes(tabParam)) {
+    document.querySelectorAll('.pillar-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.pillar-panel').forEach(p => p.style.display = 'none');
+    const btn = document.querySelector(`.pillar-tab[data-tab="${tabParam}"]`);
+    const panel = document.getElementById(`tab-${tabParam}`);
+    if (btn) btn.classList.add('active');
+    if (panel) panel.style.display = '';
   }
 
   // Admin param: ?week=N — overrides week calculation for vetting
@@ -1336,71 +1284,29 @@ async function saveData() {
 // ════════════════════════════════════════════
 // RENDER ALL
 // ════════════════════════════════════════════
-function switchPillar(tab) {
-  document.querySelectorAll('.pillar-tab').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.pillar-panel').forEach(p => p.style.display = 'none');
-  const btn = document.querySelector(`.pillar-tab[data-tab="${tab}"]`);
-  const panel = document.getElementById(`panel-${tab}`);
-  if (btn) btn.classList.add('active');
-  if (panel) panel.style.display = 'block';
-  if (tab === 'settings') populateSettingsPanel();
-}
-
-function populateSettingsPanel() {
-  const ob = userData?.onboarding || {};
-  const un = document.getElementById('settings-username');
-  if (un) un.value = ob.username || '';
-  const wpns = ob.weaponry || [];
-  ['knife','archery','firearm','hand_combat'].forEach(w => {
-    const cb = document.getElementById('wpn-' + w);
-    if (cb) cb.checked = wpns.includes(w);
-  });
-}
-
-async function saveSettings() {
-  const msg = document.getElementById('settings-msg');
-  const username = document.getElementById('settings-username').value.trim();
-  const weaponry = ['knife','archery','firearm','hand_combat'].filter(w => document.getElementById('wpn-' + w)?.checked);
-  const onboarding = { ...(userData.onboarding || {}), username, weaponry };
-  const { error } = await _sb.from('protocol_progress').update({ onboarding }).eq('user_id', currentUser.id);
-  if (error) {
-    msg.style.color = '#8b3030';
-    msg.textContent = 'Failed to save. Try again.';
-  } else {
-    userData.onboarding = onboarding;
-    msg.style.color = 'var(--gold)';
-    msg.textContent = 'Saved successfully.';
-    setTimeout(() => msg.textContent = '', 3000);
-    renderAll();
-  }
-}
-
-async function doSignOut() {
-  await _sb.auth.signOut();
-  window.location.reload();
-}
-
 function renderAll() {
   // Guard: don't render if userData hasn't loaded
   if (!currentUser) return;
-  try { renderMindToday(); } catch(e) { console.error('renderMindToday error:', e); }
-  try { renderMindWeek(); } catch(e) { console.error('renderMindWeek error:', e); }
-  try { renderBodyToday(); } catch(e) { console.error('renderBodyToday error:', e); }
-  try { renderBodyWeek(); } catch(e) { console.error('renderBodyWeek error:', e); }
-  try { renderSurvivalToday(); } catch(e) { console.error('renderSurvivalToday error:', e); }
-  try { renderSurvivalWeek(); } catch(e) { console.error('renderSurvivalWeek error:', e); }
+  renderMindToday();
+  renderMindWeek();
+  renderBodyToday();
+  renderBodyWeek();
+  renderSurvivalToday();
+  renderSurvivalWeek();
 }
 
 // ════════════════════════════════════════════
 // TASK ITEM BUILDER
 // ════════════════════════════════════════════
-function taskItem(key, name, detail, tag, isDaily) {
+function taskItem(key, name, detail, tag, isDaily, isFuture) {
   const done = isDaily ? isDone(key) : isWeekDone(key);
   const toggleFn = isDaily ? `toggleAndRefresh('${key}',true)` : `toggleAndRefresh('${key}',false)`;
-  return `<div class="task-item ${done ? 'completed' : ''}" id="ti-${key}">
-    <div class="task-cb ${done ? 'checked' : ''}" onclick="${toggleFn}"></div>
+  const futureCls = isFuture ? ' future' : '';
+  const futureBadge = isFuture ? `<span class="future-badge">upcoming</span>` : '';
+  return `<div class="task-item ${done ? 'completed' : ''}${futureCls}" id="ti-${key}">
+    <div class="task-cb ${done ? 'checked' : ''}" onclick="${isFuture ? '' : toggleFn}"></div>
     <div>
-      <div class="task-name">${name}</div>
+      <div class="task-name">${name}${futureBadge}</div>
       ${detail ? `<div class="task-detail">${detail}</div>` : ''}
       ${tag ? `<div class="task-tag">${tag}</div>` : ''}
     </div>
@@ -1898,11 +1804,13 @@ function renderMindWeek() {
   </div>`;
 
   // Build this week's Mind tasks
+  const todayDayIdxM = getWeekDay();
   html += `<div class="t-section">
     <div class="t-section-head">This Week — Mind</div>
     <div class="task-list">`;
   weekData.days.forEach((day, i) => {
-    html += taskItem(`w${week}-mind-d${i}`, `Day ${i+1}: ${day.mind.title}`, day.mind.detail, `Week ${week} / Mind`, false);
+    const isFuture = i > todayDayIdxM;
+    html += taskItem(`w${week}-mind-d${i}`, `Day ${i+1}: ${day.mind.title}`, day.mind.detail, `Week ${week} / Mind`, false, isFuture);
   });
   html += `</div></div>`;
 
@@ -2013,9 +1921,11 @@ function renderBodyWeek() {
     <div class="week-badge">Week ${week}</div>
   </div>`;
 
+  const todayDayIdx = getWeekDay();
   html += `<div class="t-section"><div class="t-section-head">This Week — Body</div><div class="task-list">`;
   weekData.days.forEach((day, i) => {
-    html += taskItem(`w${week}-body-d${i}`, `Day ${i+1}: ${day.body.title}`, day.body.detail, `Week ${week} / Body`, false);
+    const isFuture = i > todayDayIdx;
+    html += taskItem(`w${week}-body-d${i}`, `Day ${i+1}: ${day.body.title}`, day.body.detail, `Week ${week} / Body`, false, isFuture);
   });
   html += `</div></div>`;
 
@@ -2100,15 +2010,31 @@ function renderSurvivalWeek() {
     <div class="week-badge">Week ${week}</div>
   </div>`;
 
+  const todayDayIdxS = getWeekDay();
   html += `<div class="t-section"><div class="t-section-head">This Week — Survival</div><div class="task-list">`;
   weekData.days.forEach((day, i) => {
-    html += taskItem(`w${week}-surv-d${i}`, `Day ${i+1}: ${day.survival.title}`, day.survival.detail, `Week ${week} / Survival`, false);
+    const isFuture = i > todayDayIdxS;
+    html += taskItem(`w${week}-surv-d${i}`, `Day ${i+1}: ${day.survival.title}`, day.survival.detail, `Week ${week} / Survival`, false, isFuture);
   });
   html += `</div></div>`;
 
-  // First aid from week 3
+  // First aid course card from week 3
   if (week >= 3) {
-    html += `<div class="t-section"><div class="t-section-head">First Aid Training</div>${renderFirstAidModule()}</div>`;
+    const fap = userData.first_aid_progress || {};
+    const SESSION_IDS = ['s1','s2','s3','s4','s5','s6'];
+    const completedSessions = SESSION_IDS.filter(id => fap[id] && fap[id].completed).length;
+    const pct = Math.round((completedSessions / 6) * 100);
+    const progLabel = completedSessions === 6 ? 'Course complete ✓' : `${completedSessions}/6 sessions complete`;
+    html += `<div class="t-section">
+      <div class="t-section-head">First Aid Course</div>
+      <a class="fa-course-card" href="firstaid.html">
+        <div class="fa-course-card-left">
+          <div class="fa-course-title">Field First Aid — 6 Sessions</div>
+          <div class="fa-course-progress">${progLabel} · ${pct}% · Weeks 3–5</div>
+        </div>
+        <div class="fa-course-arrow">→ Open Course</div>
+      </a>
+    </div>`;
   }
 
   // Gear list (always visible)
@@ -2150,6 +2076,14 @@ function getMissedSurvTasks(currentWeek) {
 // ════════════════════════════════════════════
 // TAB SWITCHING
 // ════════════════════════════════════════════
+function switchPillar(pillar) {
+  document.querySelectorAll('.pillar-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.pillar-panel').forEach(p => p.classList.remove('active'));
+  const btn = document.querySelector(`.pillar-tab.${pillar === 'survival' ? 'surv' : pillar}`);
+  if (btn) btn.classList.add('active');
+  const panel = document.getElementById(`panel-${pillar}`);
+  if (panel) panel.classList.add('active');
+}
 
 function switchSub(pillar, view, btn) {
   const panel = document.getElementById(`panel-${pillar}`);
@@ -2164,8 +2098,14 @@ function switchSub(pillar, view, btn) {
 // ════════════════════════════════════════════
 // AUTH OBSERVER
 // ════════════════════════════════════════════
+// If ?signin=1 in URL, pre-show auth screen for non-authed visitors
+// (used by nav Account → Sign In link)
+const _forceSignIn = new URLSearchParams(location.search).get('signin') === '1';
+if (_forceSignIn) {
+  document.getElementById('auth-screen').style.display = 'flex';
+}
+
 // Auth init - wrapped in try/catch so any error doesn't kill the page
-function startAuthObserver() {
 try {
   _sb.auth.onAuthStateChange(async (event, session) => {
     if (event === 'INITIAL_SESSION') {
@@ -2193,7 +2133,6 @@ try {
 } catch(e) {
   console.error('Auth init error:', e);
 }
-} // end startAuthObserver
 </script>
 <script src="nav.js"></script>
 </body>
