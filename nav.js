@@ -106,8 +106,9 @@ style.textContent=`
   display:block;width:22px;height:1px;background:#6b6558;transition:all 0.3s;
 }
 #mt-nav .n-mobile-menu{
-  display:none;position:fixed;top:60px;left:0;right:0;bottom:0;
-  background:rgba(8,8,7,0.98);z-index:999;
+  display:none;position:fixed;top:60px;left:0;right:0;
+  height:calc(100vh - 60px);min-height:300px;
+  background:rgba(8,8,7,0.98);z-index:1002;
   flex-direction:column;overflow-y:auto;
   border-top:1px solid #272521;
 }
