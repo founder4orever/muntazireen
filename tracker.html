@@ -25,7 +25,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 ::selection{background:var(--gold-dim);color:var(--cream);}
 
 /* ── AUTH SCREEN ── */
-#auth-screen{display:flex;min-height:100vh;align-items:center;justify-content:center;padding:80px 20px 40px;position:relative;z-index:200;}
+#auth-screen{display:none;min-height:100vh;align-items:center;justify-content:center;padding:80px 20px 40px;position:relative;z-index:200;}
 .auth-wrap{width:100%;max-width:440px;position:relative;z-index:201;}
 .auth-logo{font-family:var(--font-mono);font-size:13px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
 .auth-logo-sub{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:0.2em;margin-bottom:40px;}
@@ -2072,10 +2072,13 @@ try {
   _sb.auth.onAuthStateChange(async (event, session) => {
     if (event === 'INITIAL_SESSION') {
       if (session && session.user) {
+        // Already signed in — go straight to app, no auth screen flash
         currentUser = session.user;
         await loadUserData();
+      } else {
+        // No session — show auth screen
+        document.getElementById('auth-screen').style.display = 'flex';
       }
-      // No session - auth screen already visible, do nothing
     } else if (event === 'SIGNED_IN') {
       if (session && session.user) {
         currentUser = session.user;
