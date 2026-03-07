@@ -1101,6 +1101,12 @@ async function submitOnboarding() {
 // LOAD + ROUTE
 // ════════════════════════════════════════════
 async function loadUserData() {
+  if (!currentUser || !currentUser.id) {
+    // Safety: if currentUser not set, try getSession as fallback
+    const { data: { session } } = await _sb.auth.getSession();
+    if (session && session.user) { currentUser = session.user; }
+    else { document.getElementById('auth-screen').style.display = 'flex'; return; }
+  }
   const { data, error } = await _sb.from('protocol_progress').select('*').eq('user_id', currentUser.id).single();
 
   if (error || !data) {
@@ -2105,9 +2111,8 @@ if (_forceSignIn) {
   document.getElementById('auth-screen').style.display = 'flex';
 }
 
-// Auth init - wrapped in try/catch so any error doesn't kill the page
-try {
-  _sb.auth.onAuthStateChange(async (event, session) => {
+// Auth init
+_sb.auth.onAuthStateChange(async (event, session) => {
     if (event === 'INITIAL_SESSION') {
       if (session && session.user) {
         // Already signed in — go straight to app, no auth screen flash
@@ -2129,10 +2134,7 @@ try {
       document.getElementById('onboarding-screen').style.display = 'none';
       document.getElementById('app-screen').style.display = 'none';
     }
-  });
-} catch(e) {
-  console.error('Auth init error:', e);
-}
+});
 </script>
 <script src="nav.js"></script>
 </body>
