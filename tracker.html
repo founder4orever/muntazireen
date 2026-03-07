@@ -741,24 +741,26 @@ async function signUp(){
   if(!email||!pass){msg.textContent='Please fill in all fields.';msg.className='auth-message error';return;}
   if(pass.length<8){msg.textContent='Password must be at least 8 characters.';msg.className='auth-message error';return;}
   btn.disabled=true;btn.textContent='Creating account...';msg.textContent='';
-  const{data,error}=await sb.auth.signUp({
+  // Sign up
+  const{data:signUpData,error:signUpError}=await sb.auth.signUp({
     email,
     password:pass,
     options:{data:{username}}
   });
-  if(error){
-    msg.textContent=error.message;msg.className='auth-message error';
+  if(signUpError){
+    msg.textContent=signUpError.message;msg.className='auth-message error';
     btn.disabled=false;btn.textContent='Begin the Protocol';
-  } else if(data.session){
-    // Email confirmation disabled — user is immediately signed in
-    // onAuthStateChange will fire and handle the rest
-    msg.textContent='';
-  } else {
-    // Email confirmation enabled — prompt to check email
+    return;
+  }
+  // Immediately sign in — bypasses email confirmation requirement
+  const{error:signInError}=await sb.auth.signInWithPassword({email,password:pass});
+  if(signInError){
+    // Signup worked but auto sign-in failed (e.g. email confirmation still required)
     msg.textContent='Account created. Check your email to confirm, then sign in.';
     msg.className='auth-message success';
     btn.disabled=false;btn.textContent='Begin the Protocol';
   }
+  // If signIn succeeded, onAuthStateChange fires automatically — no extra handling needed
 }
 
 async function signOut(){
