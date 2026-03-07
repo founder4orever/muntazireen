@@ -265,20 +265,20 @@ const sb=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
 // ── AUTH STATE ──
 function setAuthed(user){
-  ['signs','tracker','mind','body','survival'].forEach(id=>{
-    const l=document.getElementById('lock-'+id);
-    if(l)l.style.display='none';
-  });
-  document.getElementById('nav-user-wrap').style.display='';
-  document.getElementById('nav-user').textContent=user.email.split('@')[0];
-  document.getElementById('nav-signout').style.display='block';
-  document.getElementById('nav-begin-wrap').style.display='none';
-  // Hide CTA entirely for signed-in users
+  // Hide any lock icons
+  document.querySelectorAll('[id^="lock-"]').forEach(l=>l.style.display='none');
+  // Hide CTA for signed-in users
   const heroActions=document.getElementById('hero-actions');
   if(heroActions)heroActions.style.display='none';
   // Signs bar — show link to full page
   const btn=document.getElementById('signs-gate-btn');
   if(btn){btn.textContent='View All Signs →';btn.href='signs.html';btn.onclick=null;btn.className='sgb-btn-authed';}
+}
+
+function setUnauthed(){
+  // Show CTA for signed-out users
+  const heroActions=document.getElementById('hero-actions');
+  if(heroActions)heroActions.style.display='';
 }
 
 sb.auth.onAuthStateChange((e,session)=>{
