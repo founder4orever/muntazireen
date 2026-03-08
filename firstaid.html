@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>First Aid Certification — Muntazireen</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
 
@@ -1066,6 +1066,19 @@ async function checkAuth() {
   document.getElementById('topbar').classList.add('visible');
   document.getElementById('app').classList.add('visible');
   render();
+  // Auto-open session from URL hash e.g. firstaid.html#s1
+  const hash = window.location.hash.replace('#','');
+  if (hash && ['s1','s2','s3','s4','s5','s6'].includes(hash)) {
+    setTimeout(() => {
+      const card = document.getElementById('card-' + hash);
+      if (card && (card.classList.contains('unlocked') || card.classList.contains('completed'))) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const wasOpen = card.classList.contains('active-open');
+        document.querySelectorAll('.session-card.active-open').forEach(c => c.classList.remove('active-open'));
+        if (!wasOpen) card.classList.add('active-open');
+      }
+    }, 300);
+  }
 }
 
 async function loadProgress() {

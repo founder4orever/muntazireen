@@ -332,6 +332,15 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .habit-reminder-label { font-family: var(--font-mono); font-size: 10px; color: var(--cream); letter-spacing: 0.08em; }
 .habit-reminder-count { font-family: var(--font-mono); font-size: 9px; color: var(--gold); letter-spacing: 0.1em; }
 
+
+.ak-cell { position: relative; min-width: 52px; }
+.ak-locked { opacity: 0.45; cursor: default; }
+.ak-locked-x { font-size: 14px; color: var(--dim); }
+.ak-tooltip { display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--deep); border: 1px solid var(--border); padding: 6px 10px; font-family: var(--font-mono); font-size: 9px; color: var(--cream); white-space: nowrap; z-index: 10; pointer-events: none; }
+.ak-locked:hover .ak-tooltip { display: block; }
+.week-goal-row.today-goal { border-left: 2px solid var(--gold); }
+.week-goal-row .wg-day { font-family: var(--font-mono); font-size: 9px; color: var(--dim); min-width: 28px; padding-top: 2px; }
+.week-goal-row.today-goal .wg-day { color: var(--gold); font-size: 11px; }
 </style>
 </head>
 <body>
@@ -918,7 +927,7 @@ const WEEK_PLAN = [
       },
       {
         mind: { title: 'Kitab at-Tawheed — Chapter 2', detail: '' },
-        body: { title: 'Weaponry session 1', detail: 'First dedicated session for your chosen weapon type(s).' },
+        body: { title: 'Training session — Week 3', detail: '[Placeholder] Full weapon training session. Structured drills, technique focus, timed sets. Content coming soon.' },
         survival: { title: 'Acquire KI tablets + medical supplies', detail: 'KI (potassium iodide), pain relievers, burn treatment. See gear list.' }
       },
       {
@@ -928,7 +937,7 @@ const WEEK_PLAN = [
       },
       {
         mind: { title: 'Kitab at-Tawheed — Chapter 3', detail: '' },
-        body: { title: 'Weaponry session 2', detail: '' },
+        body: { title: 'Training session — Week 3 / 2', detail: '[Placeholder] Second full training session. Build on session 1 — increase reps, add complexity.' },
         survival: { title: 'Build a fire', detail: 'Using lighter + matches, build a fire from scratch. 3 attempts. Acquire bucket toilet system + sanitation supplies.' }
       },
       {
@@ -958,7 +967,7 @@ const WEEK_PLAN = [
       },
       {
         mind: { title: 'Kitab at-Tawheed — Chapter 5', detail: '' },
-        body: { title: 'Weaponry session — increase reps/duration', detail: 'Build on last week.' },
+        body: { title: 'Training session — Week 4', detail: '[Placeholder] Full training session. Increase load and complexity from week 3.' },
         survival: { title: 'Acquire compass + dosimeter + Geiger counter', detail: 'See gear list.' }
       },
       {
@@ -968,7 +977,7 @@ const WEEK_PLAN = [
       },
       {
         mind: { title: 'Kitab at-Tawheed — Chapter 6', detail: '' },
-        body: { title: 'Sprints + weaponry combo', detail: 'Sprint intervals, then immediately into weaponry drill. Simulate stress.' },
+        body: { title: 'Stress-inoculation session', detail: '[Placeholder] Sprint intervals then immediately into weapon drills — simulates adrenal stress response. Full structured session coming soon.' },
         survival: { title: 'Acquire two-way radio + coveralls + gloves', detail: 'Two-way radio, disposable coveralls, protective gloves. See gear list.' }
       },
       {
@@ -1041,13 +1050,13 @@ const DAILY_HABITS = {
     { key: 'prayer-asr',     label: 'Asr',     detail: 'Afternoon prayer', minWeek: 1, group: 'prayers' },
     { key: 'prayer-maghrib', label: 'Maghrib', detail: 'Sunset prayer', minWeek: 1, group: 'prayers' },
     { key: 'prayer-isha',    label: 'Isha',    detail: 'Night prayer', minWeek: 1, group: 'prayers' },
-    { key: 'dhikr-morning',  label: 'Morning Adhkar', detail: 'Ayatul Kursi × 3 + Surah Al-Ikhlas, Al-Falaq, An-Nas × 3', minWeek: 1, group: 'dhikr' },
-    { key: 'dhikr-evening',  label: 'Evening Adhkar', detail: 'Ayatul Kursi × 3 + last 2 ayat Surah Baqarah', minWeek: 1, group: 'dhikr' },
+    { key: 'dhikr-morning',  label: 'Morning Adhkar', detail: 'Subhanallah × 33 · Alhamdulillah × 33 · Allahu Akbar × 33', minWeek: 1, group: 'dhikr' },
+    { key: 'dhikr-evening',  label: 'Evening Adhkar', detail: 'Subhanallah × 33 · Alhamdulillah × 33 · Allahu Akbar × 34', minWeek: 1, group: 'dhikr' },
     { key: 'quran-reading',  label: 'Quran — 15 min', detail: 'Any portion. Consistency over quantity.', minWeek: 2, group: 'quran' },
   ],
   body: [
     { key: 'habit-movement', label: 'Daily movement', detail: 'Minimum: walk 20 min. Push harder if your protocol allows.', minWeek: 1 },
-    { key: 'habit-weapon',   label: 'Weapon drill — 10 min', detail: null, minWeek: 3 }, // detail injected at render time
+    { key: 'habit-weapon',   label: 'Daily drill — 10 min', detail: null, minWeek: 3 }, // detail injected at render time — this is the SHORT daily practice, distinct from full weekly training sessions
   ],
   survival: [
     { key: 'habit-awareness', label: 'Situational awareness', detail: 'One deliberate scan: exits, people, environment. 30 seconds. Build the instinct.', minWeek: 1 },
@@ -2043,6 +2052,23 @@ function renderHabitsSection(pillar) {
           <div class="habit-prayer-name">${h.label}</div>
         </div>`;
       });
+      // Ayatul Kursi habit cell — blocked until memorised
+      const akKnownHere = (userData.onboarding && userData.onboarding.ayatul_kursi === 'yes');
+      const akProg = getLearningProgress('ak');
+      const akCompleteHere = akKnownHere || Object.values(akProg).filter(Boolean).length === AYATUL_KURSI.length;
+      const akHabitDone = isHabitDone('habit-ak-recite');
+      if (akCompleteHere) {
+        inner += `<div class="habit-prayer-cell ak-cell ${akHabitDone ? 'done' : ''}" id="ak-habit-cell">
+          <div class="task-cb ${akHabitDone ? 'checked' : ''}" onclick="toggleHabit('habit-ak-recite', this); document.getElementById('ak-habit-cell').classList.toggle('done', isHabitDone('habit-ak-recite'))"></div>
+          <div class="habit-prayer-name">آية الكرسي</div>
+        </div>`;
+      } else {
+        inner += `<div class="habit-prayer-cell ak-cell ak-locked" title="Complete Ayatul Kursi memorisation first">
+          <div class="ak-locked-x">✕</div>
+          <div class="habit-prayer-name" style="color:var(--dim);">آية الكرسي</div>
+          <div class="ak-tooltip">Complete Ayatul Kursi learning first</div>
+        </div>`;
+      }
       inner += `</div></div>`;
     }
 
@@ -2169,17 +2195,14 @@ function renderWeekGoals(pillar) {
     const task = pillar === 'mind' ? day.mind : pillar === 'body' ? day.body : day.survival;
     const key = `w${week}-${pillarKey}-d${i}`;
     const done = isWeekDone(key);
-    const isFuture = i > dayIdx;
-    rows += `<div class="week-goal-row ${done ? 'completed' : ''} ${isFuture ? 'future' : ''}" id="wg-${key}">
-      <div class="wg-day">D${i + 1}</div>
+    const isToday = i === dayIdx;
+    rows += `<div class="week-goal-row ${done ? 'completed' : ''} ${isToday ? 'today-goal' : ''}" id="wg-${key}">
+      <div class="wg-day">${isToday ? '→' : `D${i + 1}`}</div>
       <div class="wg-body">
         <div class="wg-title">${task.title}</div>
         <div class="wg-detail">${task.detail}</div>
       </div>
-      <div class="task-cb ${done ? 'checked' : ''} ${isFuture ? '' : ''}"
-        onclick="${isFuture ? '' : `toggleWeekGoal('${key}', '${pillar}')`}"
-        style="${isFuture ? 'opacity:0.3;pointer-events:none;' : 'cursor:pointer;'}">
-      </div>
+      <div class="task-cb ${done ? 'checked' : ''}" onclick="toggleWeekGoal('${key}', '${pillar}')" style="cursor:pointer;"></div>
     </div>`;
   });
 
@@ -2654,14 +2677,18 @@ function renderSurvivalFirstAid() {
     }
     else { status = 'Available'; statusCls = 'available'; }
     const clickable = !locked && !lockout && !weekGated;
-    return `<div class="fa-session-row ${done ? 'completed' : ''} ${locked || weekGated ? 'locked' : ''}" ${clickable ? '' : ''}>
+    const rowInner = `
       <div class="fa-session-num">0${i+1}</div>
       <div class="fa-session-info">
         <div class="fa-session-name">${SESSION_LABELS[i]}</div>
         <div class="fa-session-week">Week ${SESSION_WEEKS[i]}</div>
       </div>
-      <div class="fa-session-status ${statusCls}">${status}</div>
-    </div>`;
+      <div class="fa-session-status ${statusCls}">${status}${clickable ? ' →' : ''}</div>
+    `;
+    if (clickable) {
+      return `<a class="fa-session-row ${done ? 'completed' : ''}" href="firstaid.html#${id}" style="text-decoration:none;display:flex;align-items:center;gap:16px;padding:14px 18px;border:1px solid ${done ? 'var(--green)' : 'var(--border)'};background:var(--deep);cursor:pointer;">${rowInner}</a>`;
+    }
+    return `<div class="fa-session-row ${done ? 'completed' : ''} ${locked || weekGated ? 'locked' : ''}">${rowInner}</div>`;
   }).join('');
 
   const html = `<div class="t-section">
