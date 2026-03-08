@@ -275,6 +275,63 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .fa-open-btn{display:inline-block;margin-top:20px;font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);padding:10px 24px;text-decoration:none;}
 .fa-open-btn:hover{background:rgba(200,169,110,0.08);}
 .fa-redirect-cb{font-family:var(--font-mono);font-size:12px;color:var(--gold);width:20px;height:20px;display:flex;align-items:center;justify-content:center;border:none;background:none;cursor:pointer;flex-shrink:0;margin-top:2px;}
+
+/* ── Daily habits section ── */
+.habits-section { margin-bottom: 0; }
+.habits-head { display: flex; align-items: center; justify-content: space-between; }
+.habits-date { font-family: var(--font-mono); font-size: 9px; color: var(--dim); letter-spacing: 0.1em; }
+
+/* Prayer strip */
+.habit-prayer-strip { padding: 0 0 4px; }
+.habit-strip-label { padding: 12px 24px 10px; border-bottom: 1px solid var(--border); }
+.habit-strip-title { font-family: var(--font-arabic, serif); font-size: 16px; color: var(--gold); display: block; margin-bottom: 4px; }
+.habit-strip-sub { font-family: var(--font-arabic, serif); font-size: 11px; color: var(--dim); }
+.habit-prayer-row { display: flex; padding: 4px 16px 12px; gap: 4px; }
+.habit-prayer-cell { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 4px 10px; border: 1px solid var(--border); transition: border-color 0.2s; }
+.habit-prayer-cell.done { border-color: var(--green); background: rgba(100,160,100,0.04); }
+.habit-prayer-name { font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+/* Habit rows (dhikr, quran, movement, awareness) */
+.habit-rows { display: flex; flex-direction: column; }
+.habit-row { display: flex; align-items: flex-start; gap: 14px; padding: 14px 24px; border-bottom: 1px solid var(--border); transition: background 0.2s; }
+.habit-row:last-child { border-bottom: none; }
+.habit-row.done { background: rgba(100,160,100,0.03); }
+.habit-info { flex: 1; }
+.habit-label { font-size: 13px; color: var(--cream); margin-bottom: 3px; }
+.habit-detail { font-family: var(--font-mono); font-size: 9px; color: var(--dim); letter-spacing: 0.05em; line-height: 1.5; }
+
+/* Missed inline */
+.missed-inline { border: 1px solid #3a1515; background: rgba(110,42,42,0.05); }
+.missed-inline-head { display: flex; align-items: center; gap: 10px; }
+.missed-task-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 24px; border-top: 1px solid rgba(138,40,40,0.2); }
+.missed-task-meta { font-family: var(--font-mono); font-size: 9px; color: #8b3030; letter-spacing: 0.1em; min-width: 36px; padding-top: 2px; }
+.missed-task-body { flex: 1; }
+.missed-task-title { font-size: 12px; color: var(--cream); margin-bottom: 3px; }
+.missed-task-detail { font-family: var(--font-mono); font-size: 9px; color: var(--dim); }
+.missed-catch-btn { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); background: none; border: 1px solid var(--gold); padding: 5px 10px; cursor: pointer; white-space: nowrap; margin-top: 2px; }
+.missed-catch-btn:hover { background: rgba(200,169,110,0.08); }
+
+/* Week goals list */
+.week-goals-head { display: flex; align-items: center; justify-content: space-between; }
+.week-goals-count { font-family: var(--font-mono); font-size: 9px; color: var(--gold); letter-spacing: 0.1em; }
+.week-goals-list { display: flex; flex-direction: column; }
+.week-goal-row { display: flex; align-items: flex-start; gap: 12px; padding: 14px 24px; border-bottom: 1px solid var(--border); transition: background 0.2s; }
+.week-goal-row:last-child { border-bottom: none; }
+.week-goal-row.completed { background: rgba(100,160,100,0.04); }
+.week-goal-row.future { opacity: 0.4; pointer-events: none; }
+.wg-day { font-family: var(--font-mono); font-size: 9px; color: var(--dim); min-width: 24px; padding-top: 3px; letter-spacing: 0.1em; }
+.wg-body { flex: 1; }
+.wg-title { font-size: 13px; color: var(--cream); margin-bottom: 3px; }
+.wg-detail { font-family: var(--font-mono); font-size: 9px; color: var(--dim); letter-spacing: 0.05em; line-height: 1.5; }
+
+/* Habit reminder strip (week tab) */
+.habit-reminder-section { }
+.habit-reminder-note { font-family: var(--font-mono); font-size: 9px; color: var(--dim); padding: 0 24px 12px; letter-spacing: 0.05em; }
+.habit-reminder-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 24px; border-bottom: 1px solid var(--border); }
+.habit-reminder-row:last-child { border-bottom: none; }
+.habit-reminder-label { font-family: var(--font-mono); font-size: 10px; color: var(--cream); letter-spacing: 0.08em; }
+.habit-reminder-count { font-family: var(--font-mono); font-size: 9px; color: var(--gold); letter-spacing: 0.1em; }
+
 </style>
 </head>
 <body>
@@ -972,6 +1029,60 @@ const WEEK_PLAN = [
 // GEAR LISTS
 // ════════════════════════════════════════════
 
+
+// ════════════════════════════════════════════
+// DAILY HABITS DEFINITIONS
+// Each habit: { key, label, detail, minWeek }
+// ════════════════════════════════════════════
+const DAILY_HABITS = {
+  mind: [
+    { key: 'prayer-fajr',    label: 'Fajr',    detail: 'Dawn prayer', minWeek: 1, group: 'prayers' },
+    { key: 'prayer-dhuhr',   label: 'Dhuhr',   detail: 'Midday prayer', minWeek: 1, group: 'prayers' },
+    { key: 'prayer-asr',     label: 'Asr',     detail: 'Afternoon prayer', minWeek: 1, group: 'prayers' },
+    { key: 'prayer-maghrib', label: 'Maghrib', detail: 'Sunset prayer', minWeek: 1, group: 'prayers' },
+    { key: 'prayer-isha',    label: 'Isha',    detail: 'Night prayer', minWeek: 1, group: 'prayers' },
+    { key: 'dhikr-morning',  label: 'Morning Adhkar', detail: 'Ayatul Kursi × 3 + Surah Al-Ikhlas, Al-Falaq, An-Nas × 3', minWeek: 1, group: 'dhikr' },
+    { key: 'dhikr-evening',  label: 'Evening Adhkar', detail: 'Ayatul Kursi × 3 + last 2 ayat Surah Baqarah', minWeek: 1, group: 'dhikr' },
+    { key: 'quran-reading',  label: 'Quran — 15 min', detail: 'Any portion. Consistency over quantity.', minWeek: 2, group: 'quran' },
+  ],
+  body: [
+    { key: 'habit-movement', label: 'Daily movement', detail: 'Minimum: walk 20 min. Push harder if your protocol allows.', minWeek: 1 },
+    { key: 'habit-weapon',   label: 'Weapon drill — 10 min', detail: null, minWeek: 3 }, // detail injected at render time
+  ],
+  survival: [
+    { key: 'habit-awareness', label: 'Situational awareness', detail: 'One deliberate scan: exits, people, environment. 30 seconds. Build the instinct.', minWeek: 1 },
+  ],
+};
+
+function getActiveHabits(pillar) {
+  const week = getCurrentWeek();
+  const ob = userData.onboarding || {};
+  return (DAILY_HABITS[pillar] || []).filter(h => {
+    if (week < h.minWeek) return false;
+    // Weapon drill only if user selected weapons
+    if (h.key === 'habit-weapon' && (!ob.weapons || !ob.weapons.length)) return false;
+    return true;
+  });
+}
+
+function habitWeekSummary(key) {
+  // Returns "X/7 this week" for the week tab habit reminder strip
+  const signup = userData.signup_date ? new Date(userData.signup_date) : null;
+  if (!signup) return '0/7';
+  const checkins = userData.daily_checkins || {};
+  const week = getCurrentWeek();
+  const weekStart = new Date(signup);
+  weekStart.setDate(weekStart.getDate() + (week - 1) * 7);
+  let count = 0;
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(weekStart);
+    d.setDate(d.getDate() + i);
+    const dateKey = d.toISOString().slice(0, 10);
+    if (checkins[dateKey] && checkins[dateKey].habits && checkins[dateKey].habits[key]) count++;
+  }
+  return `${count}/7`;
+}
+
 // ════════════════════════════════════════════
 // GEAR ↔ TASK SYNC MAP
 // ════════════════════════════════════════════
@@ -1364,16 +1475,65 @@ function getWeekDay() {
 function isDone(key) {
   const checkins = userData.daily_checkins || {};
   const today = getTodayKey();
-  return !!(checkins[today] && checkins[today][key]);
+  return !!(checkins[today] && checkins[today].tasks && checkins[today].tasks[key]);
 }
 
 function toggleDone(key) {
   const today = getTodayKey();
   if (!userData.daily_checkins) userData.daily_checkins = {};
   if (!userData.daily_checkins[today]) userData.daily_checkins[today] = {};
-  userData.daily_checkins[today][key] = !userData.daily_checkins[today][key];
+  if (!userData.daily_checkins[today].tasks) userData.daily_checkins[today].tasks = {};
+  userData.daily_checkins[today].tasks[key] = !userData.daily_checkins[today].tasks[key];
   scheduleSave();
-  return userData.daily_checkins[today][key];
+  return userData.daily_checkins[today].tasks[key];
+}
+
+// ── Habit helpers (reset daily, stored with date for stats) ──
+function isHabitDone(key) {
+  const checkins = userData.daily_checkins || {};
+  const today = getTodayKey();
+  return !!(checkins[today] && checkins[today].habits && checkins[today].habits[key]);
+}
+
+function toggleHabit(key, el) {
+  const today = getTodayKey();
+  if (!userData.daily_checkins) userData.daily_checkins = {};
+  if (!userData.daily_checkins[today]) userData.daily_checkins[today] = {};
+  if (!userData.daily_checkins[today].habits) userData.daily_checkins[today].habits = {};
+  const val = !userData.daily_checkins[today].habits[key];
+  userData.daily_checkins[today].habits[key] = val;
+  if (el) el.classList.toggle('checked', val);
+  scheduleSave();
+  return val;
+}
+
+function getHabitHistory(key, days) {
+  // Returns array of {date, done} for last N days
+  const checkins = userData.daily_checkins || {};
+  const result = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const dateKey = d.toISOString().slice(0, 10);
+    result.push({ date: dateKey, done: !!(checkins[dateKey] && checkins[dateKey].habits && checkins[dateKey].habits[key]) });
+  }
+  return result;
+}
+
+// ── Missed task: mark complete with late flag ──
+function completeMissedTask(key, pillar) {
+  const week = weekFromKey(key);
+  if (!userData.weekly_checkpoints) userData.weekly_checkpoints = {};
+  if (!userData.weekly_checkpoints[week]) userData.weekly_checkpoints[week] = {};
+  userData.weekly_checkpoints[week][key] = true;
+  // Store late completion in stats
+  const today = getTodayKey();
+  if (!userData.daily_checkins) userData.daily_checkins = {};
+  if (!userData.daily_checkins[today]) userData.daily_checkins[today] = {};
+  if (!userData.daily_checkins[today].late) userData.daily_checkins[today].late = [];
+  userData.daily_checkins[today].late.push({ key, pillar, completed: today });
+  scheduleSave();
+  renderAll();
 }
 
 function weekFromKey(key) {
@@ -1686,7 +1846,6 @@ function switchMindView(view, btn) {
   if (btn) {
     btn.classList.add('active');
   } else {
-    // Find by view name
     document.querySelectorAll('#panel-mind .sub-tab').forEach(b => {
       if (b.textContent.toLowerCase().includes(view === 'learn' ? 'memoris' : view)) b.classList.add('active');
     });
@@ -1852,30 +2011,248 @@ function toggleFAExternal() {
 // ════════════════════════════════════════════
 // MIND — TODAY
 // ════════════════════════════════════════════
+
+// ════════════════════════════════════════════
+// SHARED: renderHabitsSection(pillar)
+// ════════════════════════════════════════════
+function renderHabitsSection(pillar) {
+  const habits = getActiveHabits(pillar);
+  const ob = userData.onboarding || {};
+  if (!habits.length) return '';
+
+  // Mind: render prayers as a tight grid, dhikr + quran as regular rows
+  if (pillar === 'mind') {
+    const prayers = habits.filter(h => h.group === 'prayers');
+    const dhikr   = habits.filter(h => h.group === 'dhikr');
+    const quran   = habits.filter(h => h.group === 'quran');
+
+    let inner = '';
+
+    // Prayer grid row
+    if (prayers.length) {
+      inner += `<div class="habit-prayer-strip">
+        <div class="habit-strip-label">
+          <span class="habit-strip-title">الصَّلَاة</span>
+          <span class="habit-strip-sub">اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ</span>
+        </div>
+        <div class="habit-prayer-row">`;
+      prayers.forEach(h => {
+        const done = isHabitDone(h.key);
+        inner += `<div class="habit-prayer-cell ${done ? 'done' : ''}">
+          <div class="task-cb ${done ? 'checked' : ''}" onclick="toggleHabit('${h.key}', this); this.closest('.habit-prayer-cell').classList.toggle('done', isHabitDone('${h.key}'))"></div>
+          <div class="habit-prayer-name">${h.label}</div>
+        </div>`;
+      });
+      inner += `</div></div>`;
+    }
+
+    // Dhikr rows
+    if (dhikr.length) {
+      inner += `<div class="habit-rows">`;
+      dhikr.forEach(h => {
+        const done = isHabitDone(h.key);
+        inner += `<div class="habit-row ${done ? 'done' : ''}" id="hr-${h.key}">
+          <div class="task-cb ${done ? 'checked' : ''}" onclick="toggleHabit('${h.key}', this); document.getElementById('hr-${h.key}').classList.toggle('done', isHabitDone('${h.key}'))"></div>
+          <div class="habit-info">
+            <div class="habit-label">${h.label}</div>
+            <div class="habit-detail">${h.detail}</div>
+          </div>
+        </div>`;
+      });
+      inner += `</div>`;
+    }
+
+    // Quran
+    if (quran.length) {
+      inner += `<div class="habit-rows">`;
+      quran.forEach(h => {
+        const done = isHabitDone(h.key);
+        inner += `<div class="habit-row ${done ? 'done' : ''}" id="hr-${h.key}">
+          <div class="task-cb ${done ? 'checked' : ''}" onclick="toggleHabit('${h.key}', this); document.getElementById('hr-${h.key}').classList.toggle('done', isHabitDone('${h.key}'))"></div>
+          <div class="habit-info">
+            <div class="habit-label">${h.label}</div>
+            <div class="habit-detail">${h.detail}</div>
+          </div>
+        </div>`;
+      });
+      inner += `</div>`;
+    }
+
+    return `<div class="t-section habits-section">
+      <div class="t-section-head habits-head">Daily Habits <span class="habits-date">${new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})}</span></div>
+      ${inner}
+    </div>`;
+  }
+
+  // Body / Survival: simple habit rows
+  let inner = `<div class="habit-rows">`;
+  habits.forEach(h => {
+    const detail = h.key === 'habit-weapon' ? getWeaponDrillNote(ob.weapons) : h.detail;
+    const done = isHabitDone(h.key);
+    inner += `<div class="habit-row ${done ? 'done' : ''}" id="hr-${h.key}">
+      <div class="task-cb ${done ? 'checked' : ''}" onclick="toggleHabit('${h.key}', this); document.getElementById('hr-${h.key}').classList.toggle('done', isHabitDone('${h.key}'))"></div>
+      <div class="habit-info">
+        <div class="habit-label">${h.label}</div>
+        ${detail ? `<div class="habit-detail">${detail}</div>` : ''}
+      </div>
+    </div>`;
+  });
+  inner += `</div>`;
+
+  return `<div class="t-section habits-section">
+    <div class="t-section-head habits-head">Daily Habits <span class="habits-date">${new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})}</span></div>
+    ${inner}
+  </div>`;
+}
+
+// ════════════════════════════════════════════
+// SHARED: renderMissedSection(pillar)
+// Inline missed tasks for TODAY view
+// ════════════════════════════════════════════
+function renderMissedSection(pillar) {
+  const week = getCurrentWeek();
+  if (week <= 1) return '';
+  const wk = userData.weekly_checkpoints || {};
+  const missed = [];
+
+  for (let w = 1; w < week; w++) {
+    if (w - 1 >= WEEK_PLAN.length) continue;
+    WEEK_PLAN[w - 1].days.forEach((day, i) => {
+      const key = `w${w}-${pillar === 'survival' ? 'surv' : pillar}-d${i}`;
+      const done = !!(wk[w] && wk[w][key]);
+      if (!done) {
+        const task = pillar === 'mind' ? day.mind
+                   : pillar === 'body' ? day.body
+                   : day.survival;
+        missed.push({ key, title: task.title, detail: task.detail, w, i, pillar });
+      }
+    });
+  }
+
+  if (!missed.length) return '';
+
+  const rows = missed.map(m => `
+    <div class="missed-task-row" id="mtr-${m.key}">
+      <div class="missed-task-meta">W${m.w} · D${m.i+1}</div>
+      <div class="missed-task-body">
+        <div class="missed-task-title">${m.title}</div>
+        <div class="missed-task-detail">${m.detail}</div>
+      </div>
+      <button class="missed-catch-btn" onclick="completeMissedTask('${m.key}','${m.pillar}'); document.getElementById('mtr-${m.key}').remove()">
+        Done
+      </button>
+    </div>`).join('');
+
+  return `<div class="t-section missed-inline">
+    <div class="t-section-head missed-inline-head">
+      <span class="missed-label">Missed</span>
+      <span class="missed-count">${missed.length} task${missed.length !== 1 ? 's' : ''} to catch up</span>
+    </div>
+    ${rows}
+  </div>`;
+}
+
+// ════════════════════════════════════════════
+// SHARED: renderWeekGoals(pillar) — for THIS WEEK tab
+// All 7 progression tasks, checkable in any order
+// ════════════════════════════════════════════
+function renderWeekGoals(pillar) {
+  const week = getCurrentWeek();
+  const weekIdx = Math.min(week - 1, 4);
+  if (week > 5) return '';
+  const weekData = WEEK_PLAN[weekIdx];
+  const dayIdx = getWeekDay();
+  const pillarKey = pillar === 'survival' ? 'surv' : pillar;
+
+  let rows = '';
+  weekData.days.forEach((day, i) => {
+    const task = pillar === 'mind' ? day.mind : pillar === 'body' ? day.body : day.survival;
+    const key = `w${week}-${pillarKey}-d${i}`;
+    const done = isWeekDone(key);
+    const isFuture = i > dayIdx;
+    rows += `<div class="week-goal-row ${done ? 'completed' : ''} ${isFuture ? 'future' : ''}" id="wg-${key}">
+      <div class="wg-day">D${i + 1}</div>
+      <div class="wg-body">
+        <div class="wg-title">${task.title}</div>
+        <div class="wg-detail">${task.detail}</div>
+      </div>
+      <div class="task-cb ${done ? 'checked' : ''} ${isFuture ? '' : ''}"
+        onclick="${isFuture ? '' : `toggleWeekGoal('${key}', '${pillar}')`}"
+        style="${isFuture ? 'opacity:0.3;pointer-events:none;' : 'cursor:pointer;'}">
+      </div>
+    </div>`;
+  });
+
+  return `<div class="t-section">
+    <div class="t-section-head week-goals-head">
+      Weekly Goals
+      <span class="week-goals-count">${weekData.days.filter((_, i) => isWeekDone(`w${week}-${pillarKey}-d${i}`)).length}/7 done</span>
+    </div>
+    <div class="week-goals-list">${rows}</div>
+  </div>`;
+}
+
+function toggleWeekGoal(key, pillar) {
+  toggleTaskWithGearSync(key, false);
+  const done = isWeekDone(key);
+  const el = document.getElementById('wg-' + key);
+  if (el) {
+    el.classList.toggle('completed', done);
+    el.querySelector('.task-cb').classList.toggle('checked', done);
+  }
+  // Refresh today section if on today tab
+  renderAll();
+}
+
+// ════════════════════════════════════════════
+// SHARED: renderHabitReminderStrip(pillar) — read-only, week tab
+// ════════════════════════════════════════════
+function renderHabitReminderStrip(pillar) {
+  const habits = getActiveHabits(pillar);
+  if (!habits.length) return '';
+  const ob = userData.onboarding || {};
+
+  const rows = habits.map(h => {
+    const summary = habitWeekSummary(h.key);
+    const label = h.key === 'habit-weapon' ? getWeaponDrillNote(ob.weapons).split('.')[0] || h.label : h.label;
+    return `<div class="habit-reminder-row">
+      <div class="habit-reminder-label">${label}</div>
+      <div class="habit-reminder-count">${summary} this week</div>
+    </div>`;
+  });
+
+  return `<div class="t-section habit-reminder-section">
+    <div class="t-section-head">Daily Habits — This Week</div>
+    <div class="habit-reminder-note">Habits are tracked in Today. Check in daily.</div>
+    ${rows.join('')}
+  </div>`;
+}
+
 function renderMindToday() {
   const ob = userData.onboarding || {};
-  const akKnown = ob.ayatul_kursi === 'yes';
-  const kahfKnown = ob.kahf === 'yes';
+  const week = getCurrentWeek();
   const akProgress = getLearningProgress('ak');
   const kahfProgress = getLearningProgress('kahf');
+  const akKnown = ob.ayatul_kursi === 'yes';
+  const kahfKnown = ob.kahf === 'yes';
   const akComplete = akKnown || Object.values(akProgress).filter(Boolean).length === AYATUL_KURSI.length;
   const kahfComplete = kahfKnown || Object.values(kahfProgress).filter(Boolean).length === AL_KAHF.length;
 
   let html = '';
 
-  // ── Current memorisation line (compact, inline — not full module) ──
+  // ── 1. Daily habits (prayers, dhikr, quran) ──
+  html += renderHabitsSection('mind');
+
+  // ── 2. Today's memorisation task ──
   if (!akKnown && !akComplete) {
     const akProg = getLearningProgress('ak');
-    const currentIdx = (() => {
-      for (let i = 0; i < AYATUL_KURSI.length; i++) { if (!akProg[i]) return i; }
-      return AYATUL_KURSI.length;
-    })();
+    const currentIdx = (() => { for (let i = 0; i < AYATUL_KURSI.length; i++) { if (!akProg[i]) return i; } return AYATUL_KURSI.length; })();
     if (currentIdx < AYATUL_KURSI.length) {
       const item = AYATUL_KURSI[currentIdx];
       html += `<div class="t-section">
         <div class="t-section-head" style="display:flex;align-items:center;justify-content:space-between;">
-          <span>Memorisation — Ayatul Kursi</span>
-          <span style="font-family:var(--font-mono);font-size:9px;color:var(--dim);">Line ${currentIdx+1}/${AYATUL_KURSI.length}</span>
+          <span>Today's Task — Memorisation</span>
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--dim);">Ayatul Kursi · Line ${currentIdx+1}/${AYATUL_KURSI.length}</span>
         </div>
         <div class="learn-ayah" style="padding:20px 24px;">
           <div class="learn-ayah-arabic">${item.arabic}</div>
@@ -1899,16 +2276,13 @@ function renderMindToday() {
     }
   } else if (akComplete && !kahfKnown && !kahfComplete) {
     const kahfProg = getLearningProgress('kahf');
-    const currentIdx = (() => {
-      for (let i = 0; i < AL_KAHF.length; i++) { if (!kahfProg[i]) return i; }
-      return AL_KAHF.length;
-    })();
+    const currentIdx = (() => { for (let i = 0; i < AL_KAHF.length; i++) { if (!kahfProg[i]) return i; } return AL_KAHF.length; })();
     if (currentIdx < AL_KAHF.length) {
       const item = AL_KAHF[currentIdx];
       html += `<div class="t-section">
         <div class="t-section-head" style="display:flex;align-items:center;justify-content:space-between;">
-          <span>Memorisation — Al-Kahf (1–10)</span>
-          <span style="font-family:var(--font-mono);font-size:9px;color:var(--dim);">Ayah ${currentIdx+1}/10</span>
+          <span>Today's Task — Memorisation</span>
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--dim);">Al-Kahf · Ayah ${currentIdx+1}/10</span>
         </div>
         <div class="learn-ayah" style="padding:20px 24px;">
           <div class="learn-ayah-arabic">${item.arabic}</div>
@@ -1932,42 +2306,14 @@ function renderMindToday() {
     }
   }
 
-  // ── Daily prayers ──
-  const prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
-  const today = getTodayKey();
-  const checkins = userData.daily_checkins || {};
-  const todayData = checkins[today] || {};
+  // ── 3. Missed from previous weeks ──
+  html += renderMissedSection('mind');
 
-  html += `<div class="t-section">
-    <div class="t-section-head">Daily Prayers</div>
-    <div class="prayer-date">${new Date().toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long'})}</div>
-    <div class="prayer-grid">`;
-
-  prayers.forEach(p => {
-    const pKey = `prayer-${p.toLowerCase()}`;
-    const akKey = `ak-${p.toLowerCase()}`;
-    const pDone = !!todayData[pKey];
-    const akDone = !!todayData[akKey];
-    html += `<div class="prayer-row">
-      <div class="prayer-name">${p}</div>
-      <div class="prayer-cb-wrap">
-        <div class="prayer-cb-label">Prayer</div>
-        <div class="task-cb ${pDone ? 'checked' : ''}" onclick="togglePrayerCb('${pKey}', this)"></div>
-      </div>
-      <div class="prayer-cb-wrap">
-        <div class="prayer-cb-label">Ayatul Kursi</div>
-        <div class="task-cb ${akDone ? 'checked' : ''}" onclick="togglePrayerCb('${akKey}', this)" ${!akComplete ? 'style="opacity:0.35;pointer-events:none;"' : ''}></div>
-      </div>
-    </div>`;
-  });
-
-  html += `</div></div>`;
   document.getElementById('mind-today').innerHTML = html;
 }
 
 function togglePrayerCb(key, el) {
-  const done = toggleDone(key);
-  el.classList.toggle('checked', done);
+  toggleHabit(key, el);
   el.closest('.prayer-row').style.opacity = '';
 }
 
@@ -1978,18 +2324,14 @@ function renderMindWeek() {
   const week = getCurrentWeek();
   const weekIdx = Math.min(week - 1, 4);
   const isMaintenance = week > 5;
-
   let html = '';
 
   if (isMaintenance) {
     html += `<div class="maint-banner">You are in Maintenance Mode. The protocol is now a permanent habit.</div>`;
-    html += `<div class="t-section">
-      <div class="t-section-head">Weekly</div>
-      <div class="task-list">
-        ${taskItem('maint-kahf', 'Friday — Al-Kahf recitation', 'Recite all 10 ayat from memory.', 'Weekly / Mind', false)}
-        ${taskItem('maint-tawheed', 'One chapter Kitab at-Tawheed', 'Maintain your knowledge of Aqeedah.', 'Weekly / Mind', false)}
-      </div>
-    </div>`;
+    html += `<div class="t-section"><div class="t-section-head">Weekly</div><div class="task-list">
+      ${taskItem('maint-kahf', 'Friday — Al-Kahf recitation', 'Recite all 10 ayat from memory.', 'Weekly / Mind', false)}
+      ${taskItem('maint-tawheed', 'One chapter Kitab at-Tawheed', 'Maintain your knowledge of Aqeedah.', 'Weekly / Mind', false)}
+    </div></div>`;
     document.getElementById('mind-week').innerHTML = html;
     return;
   }
@@ -2003,25 +2345,8 @@ function renderMindWeek() {
     <div class="week-badge">Week ${week}</div>
   </div>`;
 
-  // Build this week's Mind tasks
-  const todayDayIdxM = getWeekDay();
-  html += `<div class="t-section">
-    <div class="t-section-head">This Week — Mind</div>
-    <div class="task-list">`;
-  weekData.days.forEach((day, i) => {
-    const isFuture = i > todayDayIdxM;
-    html += taskItem(`w${week}-mind-d${i}`, `Day ${i+1}: ${day.mind.title}`, day.mind.detail, `Week ${week} / Mind`, false, isFuture);
-  });
-  html += `</div></div>`;
-
-  // Missed from previous weeks
-  const missed = getMissedMindTasks(week);
-  if (missed.length) {
-    html += `<div class="missed-section">
-      <div class="missed-head"><span class="missed-label">Missed</span><span class="missed-count">${missed.length} task${missed.length!==1?'s':''} from previous weeks</span></div>
-      <div class="task-list">${missed.join('')}</div>
-    </div>`;
-  }
+  html += renderHabitReminderStrip('mind');
+  html += renderWeekGoals('mind');
 
   document.getElementById('mind-week').innerHTML = html;
 }
@@ -2052,37 +2377,30 @@ function renderBodyToday() {
   const isMaintenance = week > 5;
   const ob = userData.onboarding || {};
   const dayIdx = getWeekDay();
-
   let html = '';
 
   if (isMaintenance) {
-    html += `<div class="maint-banner">Maintenance Mode — daily movement and weekly drills continue forever.</div>`;
-    html += `<div class="t-section"><div class="t-section-head">Today</div><div class="task-list">
-      ${taskItem('maint-move', 'Daily movement', 'Walk minimum. Workout if routine applies.', 'Daily / Body', true)}
-      ${taskItem('maint-weapon', 'Weaponry drill — 10 min', getWeaponDrillNote(ob.weapons), 'Daily / Body', true)}
-    </div></div>`;
+    html += `<div class="maint-banner">Maintenance Mode — daily movement and weapon drills continue indefinitely.</div>`;
+    html += renderHabitsSection('body');
     document.getElementById('body-today').innerHTML = html;
     return;
   }
 
+  // 1. Daily habits
+  html += renderHabitsSection('body');
+
+  // 2. Today's progression task
   const dayData = WEEK_PLAN[weekIdx].days[dayIdx];
   const bodyTodayKey = `w${week}-body-d${dayIdx}`;
   html += `<div class="t-section">
-    <div class="t-section-head">Today — Day ${dayIdx + 1}</div>
+    <div class="t-section-head">Today's Task — Day ${dayIdx + 1}</div>
     <div class="task-list">
-      ${taskItem(bodyTodayKey, dayData.body.title, dayData.body.detail, `Week ${week} Day ${dayIdx+1} / Body`, false)}
+      ${taskItem(bodyTodayKey, dayData.body.title, dayData.body.detail, `Week ${week} / Body`, false)}
     </div>
   </div>`;
 
-  // Weaponry from week 3
-  if (week >= 3 && ob.weapons && ob.weapons.length) {
-    html += `<div class="t-section">
-      <div class="t-section-head">Weaponry</div>
-      <div class="task-list">
-        ${taskItem('today-weapon', 'Weaponry drill', getWeaponDrillNote(ob.weapons), 'Daily / Body', true)}
-      </div>
-    </div>`;
-  }
+  // 3. Missed
+  html += renderMissedSection('body');
 
   document.getElementById('body-today').innerHTML = html;
 }
@@ -2105,7 +2423,6 @@ function renderBodyWeek() {
   const week = getCurrentWeek();
   const weekIdx = Math.min(week - 1, 4);
   const isMaintenance = week > 5;
-
   let html = '';
 
   if (isMaintenance) {
@@ -2124,21 +2441,8 @@ function renderBodyWeek() {
     <div class="week-badge">Week ${week}</div>
   </div>`;
 
-  const todayDayIdx = getWeekDay();
-  html += `<div class="t-section"><div class="t-section-head">This Week — Body</div><div class="task-list">`;
-  weekData.days.forEach((day, i) => {
-    const isFuture = i > todayDayIdx;
-    html += taskItem(`w${week}-body-d${i}`, `Day ${i+1}: ${day.body.title}`, day.body.detail, `Week ${week} / Body`, false, isFuture);
-  });
-  html += `</div></div>`;
-
-  const missed = getMissedBodyTasks(week);
-  if (missed.length) {
-    html += `<div class="missed-section">
-      <div class="missed-head"><span class="missed-label">Missed</span><span class="missed-count">${missed.length} task${missed.length!==1?'s':''}</span></div>
-      <div class="task-list">${missed.join('')}</div>
-    </div>`;
-  }
+  html += renderHabitReminderStrip('body');
+  html += renderWeekGoals('body');
 
   document.getElementById('body-week').innerHTML = html;
 }
@@ -2167,11 +2471,11 @@ function renderSurvivalToday() {
   const weekIdx = Math.min(week - 1, 4);
   const isMaintenance = week > 5;
   const dayIdx = getWeekDay();
-
   let html = '';
 
   if (isMaintenance) {
     html += `<div class="maint-banner">Maintenance Mode.</div>`;
+    html += renderHabitsSection('survival');
     html += `<div class="t-section"><div class="t-section-head">Weekly</div><div class="task-list">
       ${taskItem('maint-gearcheck', 'Full gear check', 'Verify all Tier 1 items are in place.', 'Weekly / Survival', false)}
       ${taskItem('maint-tier2', 'Add one Tier 2 item', 'Gold/silver, extended food, shelter materials, antibiotics.', 'Monthly / Survival', false)}
@@ -2180,17 +2484,20 @@ function renderSurvivalToday() {
     return;
   }
 
-  const dayData = WEEK_PLAN[weekIdx].days[dayIdx];
+  // 1. Daily habits
+  html += renderHabitsSection('survival');
+
+  // 2. Today's task
   const survTaskKey = `w${week}-surv-d${dayIdx}`;
   const isFATask = FIRST_AID_TASK_KEYS.has(survTaskKey);
-  const isGearTask = !!(TASK_GEAR_MAP[survTaskKey]);
+  const dayData = WEEK_PLAN[weekIdx].days[dayIdx];
   let todayItem;
   if (isFATask) {
     const fap = userData.first_aid_progress || {};
     const SESSION_IDS = ['s1','s2','s3','s4','s5','s6'];
     const faCompleted = SESSION_IDS.filter(id => fap[id]?.completed).length;
-    todayItem = `<div class="task-item" id="ti-today-surv-main" onclick="switchSurvTab('firstaid', document.querySelector('.surv-sub[onclick*=firstaid]'))" style="cursor:pointer;">
-      <div class="task-cb fa-redirect-cb">→</div>
+    todayItem = `<div class="task-item" onclick="switchSurvTab('firstaid', document.querySelector('.surv-sub[onclick*=firstaid]'))" style="cursor:pointer;">
+      <div class="fa-redirect-cb">→</div>
       <div>
         <div class="task-name">${dayData.survival.title}</div>
         <div class="task-detail">${dayData.survival.detail}</div>
@@ -2198,29 +2505,27 @@ function renderSurvivalToday() {
       </div>
     </div>`;
   } else {
-    todayItem = taskItem(survTaskKey, dayData.survival.title, dayData.survival.detail, `Week ${week} Day ${dayIdx+1} / Survival`, false);
+    todayItem = taskItem(survTaskKey, dayData.survival.title, dayData.survival.detail, `Week ${week} / Survival`, false);
   }
   html += `<div class="t-section">
-    <div class="t-section-head">Today — Day ${dayIdx + 1}</div>
+    <div class="t-section-head">Today's Task — Day ${dayIdx + 1}</div>
     <div class="task-list">${todayItem}</div>
   </div>`;
+
+  // 3. Missed
+  html += renderMissedSection('survival');
 
   document.getElementById('survival-today').innerHTML = html;
 }
 
-// ════════════════════════════════════════════
-// SURVIVAL — THIS WEEK
-// ════════════════════════════════════════════
 function renderSurvivalWeek() {
   const week = getCurrentWeek();
   const weekIdx = Math.min(week - 1, 4);
   const isMaintenance = week > 5;
-
   let html = '';
 
   if (isMaintenance) {
     html += `<div class="maint-banner">Maintenance Mode.</div>`;
-    html += renderFirstAidModule();
     html += buildGearSection('All Gear', GEAR_TIER1);
     document.getElementById('survival-week').innerHTML = html;
     return;
@@ -2232,13 +2537,8 @@ function renderSurvivalWeek() {
     <div class="week-badge">Week ${week}</div>
   </div>`;
 
-  const todayDayIdxS = getWeekDay();
-  html += `<div class="t-section"><div class="t-section-head">This Week — Survival</div><div class="task-list">`;
-  weekData.days.forEach((day, i) => {
-    const isFuture = i > todayDayIdxS;
-    html += taskItem(`w${week}-surv-d${i}`, `Day ${i+1}: ${day.survival.title}`, day.survival.detail, `Week ${week} / Survival`, false, isFuture);
-  });
-  html += `</div></div>`;
+  html += renderHabitReminderStrip('survival');
+  html += renderWeekGoals('survival');
 
   // First aid course card from week 3
   if (week >= 3) {
@@ -2256,16 +2556,6 @@ function renderSurvivalWeek() {
         </div>
         <div class="fa-course-arrow">→ Open Course</div>
       </a>
-    </div>`;
-  }
-
-  // Gear now lives in its own tab — removed from week view
-
-  const missed = getMissedSurvTasks(week);
-  if (missed.length) {
-    html += `<div class="missed-section">
-      <div class="missed-head"><span class="missed-label">Missed</span><span class="missed-count">${missed.length} task${missed.length!==1?'s':''}</span></div>
-      <div class="task-list">${missed.join('')}</div>
     </div>`;
   }
 
