@@ -1682,12 +1682,12 @@ function switchMindView(view, btn) {
     if (el) el.style.display = v === view ? '' : 'none';
   });
   // Update sub-tab active state
-  document.querySelectorAll('#tab-mind .sub-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#panel-mind .sub-tab').forEach(b => b.classList.remove('active'));
   if (btn) {
     btn.classList.add('active');
   } else {
     // Find by view name
-    document.querySelectorAll('#tab-mind .sub-tab').forEach(b => {
+    document.querySelectorAll('#panel-mind .sub-tab').forEach(b => {
       if (b.textContent.toLowerCase().includes(view === 'learn' ? 'memoris' : view)) b.classList.add('active');
     });
   }
